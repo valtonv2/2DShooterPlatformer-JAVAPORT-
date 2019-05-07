@@ -1,3 +1,5 @@
+package main.java;
+
 
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
@@ -9,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.util.converter.*;
+import java.util.Optional;
 
 
 public class Helper{
@@ -43,21 +46,16 @@ public class Helper{
     
     
   //Metodi joka muuttaa minkä tahansa kuvan teksturoiduksi suorakulmioksi
-  public static Rectangle anySpriteFromImage(String imagePath, Pair<>location, spriteWidth:Double, spriteHeight:Double) = {
-    val image = new javafx.scene.image.Image(imagePath)
+  public static Rectangle anySpriteFromImage(String imagePath, Pair<Int, Int> location, DOuble spriteWidth, Double spriteHeight){
     
-    val texture = new ImagePattern( image, 1.0,1.0,1.0,1.0,true)
+	  Image image = new javafx.scene.image.Image(imagePath);
+    
+      ImagePattern texture = new ImagePattern( image, 1.0,1.0,1.0,1.0,true);
         
-        new Rectangle{
-          
-          fill = texture
-          width = spriteWidth
-          height = spriteHeight
-          x = location._1
-          y = location._2
-          
-        }
-    
+      Rectangle rect = new Rectangle(texture, spriteWidth, spriteHeight, location._1, location._2);
+    		  
+      return rect;
+   
   }
   
   def transformToNode[T <: Node](thing:T, transform:List[Transform]) = {
@@ -68,37 +66,39 @@ public class Helper{
   }
   
   //Metodi joka mahdollistaa helpon äänitiedostojen käytön
- def getAudioFromFolder(folderPath:String, fileNameStart:String, fileNumberRange:Range, fileType:String) = {
+  public static ArrayList<AudioClip> getAudioFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType) {
     
-    val fileList = Buffer[AudioClip]()
-    for (number <- fileNumberRange){
+    ArrayList<AudioClip> fileList = ArrayList<AudioClip>();
+    
+    for (number : fileNumberRange){
       
-      val filePath = folderPath + "/" + fileNameStart + number.toString() + fileType
-      fileList += new AudioClip(filePath)
+      String filePath = folderPath + "/" + fileNameStart + number.toString() + fileType;
+      fileList.add(Image(filePath));
+      System.out.println(filePath);
       
-      println(filePath)
       }
    
-    fileList
+    return fileList;
   }
   
  //Apumetodi etäisyyksien laskemiseen. Palauttaa suoraviivaisen etäisyyden.
- def absoluteDistance(a:(Double, Double), b:(Double, Double)) = {
+ public static Double absoluteDistance(Pair<Double, Double> a, Pair<Double, Double> b) {
     
-    val xDiff = abs(a._1 - b._1).toDouble
-    val yDiff = abs(a._2 - b._2).toDouble
+    Double xDiff = abs(a._1 - b._1).toDouble;
+    Double yDiff = abs(a._2 - b._2).toDouble;
     
-    if(xDiff == 0 && yDiff>0) yDiff
-    else if (yDiff == 0 && xDiff>0) xDiff
-    else if (xDiff>=1 && yDiff>=1) sqrt(xDiff*xDiff+yDiff*yDiff)
-    else sqrt(xDiff*xDiff+yDiff*yDiff)
+    if(xDiff == 0 && yDiff>0) {return yDiff;}
+    else if (yDiff == 0 && xDiff>0) {return xDiff;}
+    else if (xDiff>=1 && yDiff>=1) {return sqrt(xDiff*xDiff+yDiff*yDiff);}
+    else {return sqrt(xDiff*xDiff+yDiff*yDiff)}
   }
  
   //Apumetodi etäisyyksien laskemiseen. Erottelee x ja y akselit
-  def axisDistance(a:(Double, Double), b:(Double, Double)) = {
-    val xDiff = abs(a._1 - b._1).toDouble
-    val yDiff = abs(a._2 - b._2).toDouble
-    (xDiff, yDiff)
+  public static Pair<Double, Double> axisDistance(Pair<Double, Double> a, Pair<Double, Double> b)  {
+    Double xDiff = abs(a._1 - b._1).toDouble;
+    Double yDiff = abs(a._2 - b._2).toDouble;
+    Pair<Double, Double> pair = Pair(xDiff, yDiff);
+    return pair;
   } 
 }
 //#################################################################################################################################################################################
@@ -372,42 +372,62 @@ class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPo
   //Luokan GamePos tarkoitus on helpottaa pelin asioiden sijaintien käsittelyä. Sen avulla pelin varsinaisten koordinaattien ja kuvakoordinaattien välillä vaihtelu on helppoa.
   //Luokka otetaan käyttöön myöhemmin jos aikaa jää
   
-class GamePos(inGameCoordinates:(Double, Double), val isCenter:Boolean){
- 
- def center:Option[GameCamera] = GameWindow.gameCamera
+class GamePos{
 
- private var inGameX = inGameCoordinates._1
- private var inGameY = inGameCoordinates._2
- var playerHeightOffset = -10
+//Parametrit
+ Pair<Double, Double> inGameCoordinates;
+ Boolean isCenter;
+ 
+ public Optional<GameCamera> center = GameWindow.gameCamera;
+
+ private Double inGameX = inGameCoordinates._1;
+ private Double inGameY = inGameCoordinates._2;
+ private Double playerHeightOffset = -10;
   
- def locationInGame = (inGameX, inGameY) 
+ public Pair<Double, Double> locationInGame = (inGameX, inGameY); 
  
  //Jos jonkin asian sijainti muuttuu pelissä, sen sijainti muuttuu kuvassa. Pelaaja on poikkeus.
  
  
- def locationInImage:(Double, Double) = center match{
-   case Some(center) =>{
-    
-     if (!this.isCenter){(inGameX-center.location.locationInGame._1+center.location.locationInImage._1, inGameY - center.location.locationInGame._2 + center.location.locationInImage._2 + playerHeightOffset)}
-     else (GameWindow.stage.width.toDouble/2 ,GameWindow.stage.height.toDouble/2)
-   }
-   case None => (0.0,0.0)
+ public Pair<Double, Double> locationInImage = {
+		 
+	if(center.isPresent) {
+		
+		 if (!this.isCenter){return Pair(inGameX-center.location.locationInGame._1+center.location.locationInImage._1, inGameY - center.location.locationInGame._2 + center.location.locationInImage._2 + playerHeightOffset);}
+	     else { return Pair(GameWindow.stage.width.toDouble/2 ,GameWindow.stage.height.toDouble/2);}
+		
+		
+	} else {
+		
+		return Pair(0.0, 0.0);
+	
+	}	 		 
  }
+		 
+		 
+
   
- def move(dx: Double, dy: Double) = {
-   this.inGameX += dx
-   this.inGameY += dy
+ public void move(Double dx, Double dy) = {
+   this.inGameX = this.inGameX + dx;
+   this.inGameY = this.inGameY + dy;
  }
  
- def teleport(newLoc:(Double, Double)) = {
-   this.inGameX = newLoc._1
-   this.inGameY = newLoc._2
+ public void teleport(Pair<Double, Double> newLoc) = {
+   this.inGameX = newLoc._1;
+   this.inGameY = newLoc._2;
  }
  
- def zero = {
-   this.inGameX = 0
-   this.inGameY = 0
+ public void zero = {
+   this.inGameX = 0;
+   this.inGameY = 0;
    
+ }
+ 
+ //Konstruktori luokalle
+ 
+ public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
+ 	this.inGameCoordinates = inGameCoord;
+    this.isCenter = isCenterOfAll;
  }
   
 }
