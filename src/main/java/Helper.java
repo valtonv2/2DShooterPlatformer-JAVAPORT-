@@ -36,7 +36,7 @@ public class Helper{
     return fileList;
   }
   
-  //Metodi joka muuttaa kuvan teksturoiduksi suorakulmioksi. Käytetään erityisesti pelaajan ja vihollisen tapauksessa
+  //Metodi joka muuttaa kuvan teksturoiduksi suorakulmioksi. Kï¿½ytetï¿½ï¿½n erityisesti pelaajan ja vihollisen tapauksessa
     
   public static Rectangle spriteFromImage(Image image) {
         
@@ -49,7 +49,7 @@ public class Helper{
   }
     
     
-  //Metodi joka muuttaa minkä tahansa kuvan teksturoiduksi suorakulmioksi
+  //Metodi joka muuttaa minkï¿½ tahansa kuvan teksturoiduksi suorakulmioksi
   public static Rectangle anySpriteFromImage(String imagePath, Pair<Int, Int> location, DOuble spriteWidth, Double spriteHeight){
     
 	  Image image = new javafx.scene.image.Image(imagePath);
@@ -69,7 +69,7 @@ public class Helper{
     
   }
   
-  //Metodi joka mahdollistaa helpon äänitiedostojen käytön
+  //Metodi joka mahdollistaa helpon ï¿½ï¿½nitiedostojen kï¿½ytï¿½n
   public static ArrayList<AudioClip> getAudioFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType) {
     
     ArrayList<AudioClip> fileList = ArrayList<AudioClip>();
@@ -85,7 +85,7 @@ public class Helper{
     return fileList;
   }
   
- //Apumetodi etäisyyksien laskemiseen. Palauttaa suoraviivaisen etäisyyden.
+ //Apumetodi etï¿½isyyksien laskemiseen. Palauttaa suoraviivaisen etï¿½isyyden.
  public static Double absoluteDistance(Pair<Double, Double> a, Pair<Double, Double> b) {
     
     Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
@@ -97,7 +97,7 @@ public class Helper{
     else {return sqrt(xDiff*xDiff+yDiff*yDiff)}
   }
  
-  //Apumetodi etäisyyksien laskemiseen. Erottelee x ja y akselit
+  //Apumetodi etï¿½isyyksien laskemiseen. Erottelee x ja y akselit
   public static Pair<Double, Double> axisDistance(Pair<Double, Double> a, Pair<Double, Double> b)  {
     Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
     Double yDiff = abs(a.getValue() - b.getValue()).toDouble;
@@ -125,8 +125,8 @@ trait UsesAnimatedGameSprite extends UsesGameSprite{
   
 }
 //GameSprite-luokka yksinkertaistaa pelin olioiden kuvien laadintaa, muokkaamista ja liikuttamista
-//Käytetään aluksi esineiden kanssa ja myöhemmin jos aikaa riittää muuallakin
-//Kuva pelissä saa automaattisesti käyttäjänsä sijainnin joten sitä ei tarvitse grafiikkakomponentissa erikseen päivittää
+//Kï¿½ytetï¿½ï¿½n aluksi esineiden kanssa ja myï¿½hemmin jos aikaa riittï¿½ï¿½ muuallakin
+//Kuva pelissï¿½ saa automaattisesti kï¿½yttï¿½jï¿½nsï¿½ sijainnin joten sitï¿½ ei tarvitse grafiikkakomponentissa erikseen pï¿½ivittï¿½ï¿½
 
 class GameSprite {
   
@@ -149,7 +149,7 @@ class GameSprite {
  private ArrayList<Transform> transforms = ArrayList<Transform>();
   
   
- public Rectangle normalImage {
+ public Rectangle normalImage() {
   
   if(this.overrideLocation.isPresent) {
     
@@ -163,13 +163,13 @@ class GameSprite {
  }
  
  
- private Rectangle mirrorImage {
+ private Rectangle mirrorImage() {
    Rectangle img = normalImage;
    Helper.transformToNode(img, this.mirrorRotate);
    return img;
  }
  
- public Rectangle image {
+ public Rectangle image() {
 	 
 	 if(this.user.lookDirectionForSprite == "east") {
 		 return this.normalImage;
@@ -191,7 +191,7 @@ class GameSprite {
    
  }
  
- private Pair<Double, Double> userSpriteLocation {
+ private Pair<Double, Double> userSpriteLocation() {
 	 
 	 if(user.locationForSprite.isPresent) {
 		 return user.locationForSprite.get;
@@ -291,7 +291,7 @@ class AnimatedGameSprite(imageFolderPath:String, fileNameStart:String, fileNumbe
 
 //###########################################################################################################################################################################
 
-//Actoreille saatavilla oleva kääntyvä käsi. Huolehtii käden ja aseen käännöstä. Toistaiseksi vain pelaajan käytössä
+//Actoreille saatavilla oleva kï¿½ï¿½ntyvï¿½ kï¿½si. Huolehtii kï¿½den ja aseen kï¿½ï¿½nnï¿½stï¿½. Toistaiseksi vain pelaajan kï¿½ytï¿½ssï¿½
 class RotatingArm(user:Actor,val direction:DirectionVector){
   
  private val armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", None, (40, 25), user, (-5, -13), None)
@@ -330,7 +330,7 @@ class RotatingArm(user:Actor,val direction:DirectionVector){
 
 //#########################################################################################################################################################################
 
-//Luokka DirectionVector tarjoaa yksinkertaisemman tavan käsitellä suuntia esim ammusten tapauksessa
+//Luokka DirectionVector tarjoaa yksinkertaisemman tavan kï¿½sitellï¿½ suuntia esim ammusten tapauksessa
 class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPoint:(Double, Double)){
   
   var x = originalEndPoint.getKey() - originalStartPoint.getKey()
@@ -347,7 +347,7 @@ class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPo
     
   }
   
-  def toUnitVect:DirectionVector = { //Metodi muuttaa vektorin yksikkövektoriksi. Uuden vektorin alkupiste on vanhan alkupiste
+  def toUnitVect:DirectionVector = { //Metodi muuttaa vektorin yksikkï¿½vektoriksi. Uuden vektorin alkupiste on vanhan alkupiste
     
     val length = this.length
     
@@ -399,8 +399,8 @@ class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPo
 
 //###########################################################################################################################################################################
   
-  //Luokan GamePos tarkoitus on helpottaa pelin asioiden sijaintien käsittelyä. Sen avulla pelin varsinaisten koordinaattien ja kuvakoordinaattien välillä vaihtelu on helppoa.
-  //Luokka otetaan käyttöön myöhemmin jos aikaa jää
+  //Luokan GamePos tarkoitus on helpottaa pelin asioiden sijaintien kï¿½sittelyï¿½. Sen avulla pelin varsinaisten koordinaattien ja kuvakoordinaattien vï¿½lillï¿½ vaihtelu on helppoa.
+  //Luokka otetaan kï¿½yttï¿½ï¿½n myï¿½hemmin jos aikaa jï¿½ï¿½
   
 class GamePos{
 
@@ -414,12 +414,12 @@ class GamePos{
  private Double inGameY = inGameCoordinates.getValue();
  private Double playerHeightOffset = -10;
   
- public Pair<Double, Double> locationInGame = (inGameX, inGameY); 
+ public Pair<Double, Double> locationInGame { return new Pair<Double,Double>(inGameX, inGameY); } 
  
- //Jos jonkin asian sijainti muuttuu pelissä, sen sijainti muuttuu kuvassa. Pelaaja on poikkeus.
+ //Jos jonkin asian sijainti muuttuu pelissï¿½, sen sijainti muuttuu kuvassa. Pelaaja on poikkeus.
  
  
- public Pair<Double, Double> locationInImage = {
+ public Pair<Double, Double> locationInImage() {
 		 
 	if(center.isPresent) {
 		
@@ -437,17 +437,17 @@ class GamePos{
 		 
 
   
- public void move(Double dx, Double dy) = {
+ public void move(Double dx, Double dy) {
    this.inGameX = this.inGameX + dx;
    this.inGameY = this.inGameY + dy;
  }
  
- public void teleport(Pair<Double, Double> newLoc) = {
+ public void teleport(Pair<Double, Double> newLoc) {
    this.inGameX = newLoc.getKey();
    this.inGameY = newLoc.getValue();
  }
  
- public void zero = {
+ public void zero() {
    this.inGameX = 0;
    this.inGameY = 0;
    

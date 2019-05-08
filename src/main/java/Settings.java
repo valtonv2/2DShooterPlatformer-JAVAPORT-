@@ -1,27 +1,30 @@
-public class Settings{
+
+package main.java;
+
+class Settings{
   
  // def settingMenu = Menus.SettingsMenu
   
   
-  //Ääniasetukset
+  //ï¿½ï¿½niasetukset
   public boolean muteSound = false;
   
-  public Double musicVolume;{ 
+  public Double musicVolume() { 
 	 
 	  if(!muteSound) {
 		 return settingMenu.volumeSlider.currentValue/100.0;
 	  }else {
 		  
-		return  0.0;
+		return 0.0;
 		  
 	  }
 	  
-  };
+  }
   
   
   
   
-  public void toggleMute {
+  public void toggleMute() {
   
 	  if(muteSound == false) {
     	muteSound = true;
@@ -29,7 +32,7 @@ public class Settings{
     else muteSound = false;
   }
   
-  //Kehittäjätila(Loputon HP, energia ja hypyt)
+  //Kehittï¿½jï¿½tila(Loputon HP, energia ja hypyt)
   
   public boolean devMode = false;
   
