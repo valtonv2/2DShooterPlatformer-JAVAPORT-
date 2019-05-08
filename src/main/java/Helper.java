@@ -11,7 +11,11 @@ import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.util.converter.*;
+import javafx.util.*;
+
+import java.util.ArrayList;
 import java.util.Optional;
+import javafx.scene.transform.*;
 
 
 public class Helper{
@@ -52,7 +56,7 @@ public class Helper{
     
       ImagePattern texture = new ImagePattern( image, 1.0,1.0,1.0,1.0,true);
         
-      Rectangle rect = new Rectangle(texture, spriteWidth, spriteHeight, location._1, location._2);
+      Rectangle rect = new Rectangle(texture, spriteWidth, spriteHeight, location.getKey(), location.getValue());
     		  
       return rect;
    
@@ -84,8 +88,8 @@ public class Helper{
  //Apumetodi et‰isyyksien laskemiseen. Palauttaa suoraviivaisen et‰isyyden.
  public static Double absoluteDistance(Pair<Double, Double> a, Pair<Double, Double> b) {
     
-    Double xDiff = abs(a._1 - b._1).toDouble;
-    Double yDiff = abs(a._2 - b._2).toDouble;
+    Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
+    Double yDiff = abs(a.getValue() - b.getValue()).toDouble;
     
     if(xDiff == 0 && yDiff>0) {return yDiff;}
     else if (yDiff == 0 && xDiff>0) {return xDiff;}
@@ -95,8 +99,8 @@ public class Helper{
  
   //Apumetodi et‰isyyksien laskemiseen. Erottelee x ja y akselit
   public static Pair<Double, Double> axisDistance(Pair<Double, Double> a, Pair<Double, Double> b)  {
-    Double xDiff = abs(a._1 - b._1).toDouble;
-    Double yDiff = abs(a._2 - b._2).toDouble;
+    Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
+    Double yDiff = abs(a.getValue() - b.getValue()).toDouble;
     Pair<Double, Double> pair = Pair(xDiff, yDiff);
     return pair;
   } 
@@ -124,67 +128,93 @@ trait UsesAnimatedGameSprite extends UsesGameSprite{
 //K‰ytet‰‰n aluksi esineiden kanssa ja myˆhemmin jos aikaa riitt‰‰ muuallakin
 //Kuva peliss‰ saa automaattisesti k‰ytt‰j‰ns‰ sijainnin joten sit‰ ei tarvitse grafiikkakomponentissa erikseen p‰ivitt‰‰
 
-class GameSprite(imagePath:String, var imageStartLocation:Option[(Double, Double)], imageDimensions:(Double, Double), var user:UsesGameSprite, val locationOffset:(Double, Double), var overrideLocation:Option[(Double, Double)]){
+class GameSprite {
+  
+  //Parametrit
+	String imagePath;
+	Optional<Pair<Double, Double>> imageStartLocation;
+	Pair<Double, Double> imageDimensions;
+	UsesGameSprite user;
+    Pair<Double, Double> locationOffset;
+    Optional<Pair<Double, Double>> overrideLocation;
+	
+	
+	
+	
+	
+ public Double spriteWidth = imageDimensions.getKey();
+ public Double spriteHeight = imageDimensions.getValue();
+  
+ private ImagePattern texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
+ private ArrayList<Transform> transforms = ArrayList<Transform>();
   
   
- var spriteWidth = imageDimensions._1
- var spriteHeight = imageDimensions._2
+ public Rectangle normalImage {
   
- private val texture = new ImagePattern(new scalafx.scene.image.Image(imagePath), 0,0,1,1,true)
- private val transforms = List[Transform]()
-  
-  
-  def normalImage = overrideLocation match{
-   
-   case Some(location) =>  new Rectangle{
+  if(this.overrideLocation.isPresent) {
     
-    x = location._1 + locationOffset._1
-    y = location._2 + locationOffset._2
-    width = spriteWidth
-    height = spriteHeight
-    fill = texture
+  return new Rectangle(this.overrideLocation.get.getKey() + locationOffset.getKey(), this.overrideLocation.get.getValue() + locationOffset.getValue(), this.spriteWidth, this.spriteHeight, this.texture );
+    
+ }else { 
+   
+  return new Rectangle(user.locationForSprite.get.getKey() + locationOffset.getKey(), user.locationForSprite.get.getValue() + locationOffset.getValue(), spriteWidth, spriteHeight, texture);
     
   }
+ }
+ 
+ 
+ private Rectangle mirrorImage {
+   Rectangle img = normalImage;
+   Helper.transformToNode(img, this.mirrorRotate);
+   return img;
+ }
+ 
+ public Rectangle image {
+	 
+	 if(this.user.lookDirectionForSprite == "east") {
+		 return this.normalImage;
+	 }else {
+		 return this.mirrorImage;
+	 }
+
+ }
+ 
+ 
+ public void changeSize(Pair<Double, Double> newDimensions) {
+   this.spriteWidth = newDimensions.getKey();
+   this.spriteHeight= newDimensions.getValue();
+   }
+ 
+ public void rotate(Double amount, Pair<Double, Double> pivot) {
    
-   case None  =>  new Rectangle{
-    
-    x = user.locationForSprite.get._1 + locationOffset._1
-    y = user.locationForSprite.get._2 + locationOffset._2
-    width = spriteWidth
-    height = spriteHeight
-    fill = texture
-    
+   this.image.transforms.add(new Rotate(amount, pivot.getKey(), pivot.getValue()));
+   
+ }
+ 
+ private Pair<Double, Double> userSpriteLocation {
+	 
+	 if(user.locationForSprite.isPresent) {
+		 return user.locationForSprite.get;
+	 }else {
+		 Pair<Double, Double> done = Pair<Double, Double>(0.0, 0.0);
+		 return done;
+	 } 
+ }
+ 
+  private ArrayList<Rotate> mirrorRotate = ArrayList(new Rotate(180.0, userSpriteLocation.getKey(), userSpriteLocation.getValue() , 0, Rotate.YAxis));
+  
+  
+  //Konstruktori luokalle
+  public GameSprite(String imagePath, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double >imageDimensions, UsesGameSprite user, Pair<Double, Double> locationOffset, Optional<Pair<Double, Double>> overrideLocation) = {
+		  
+		  this.imagePath = imagePath;
+		  this.imageStartLocation = imageStartLocation;
+		  this.imageDimensions = imageDimensions;
+		  this.user = user;
+		  this.locationOffset = locationOffset;
+		  this.overrideLocation = overrideLocation;
+		  
   }
- }
- 
- private def mirrorImage = {
-   val img = normalImage
-   Helper.transformToNode(img, this.mirrorRotate)
-   img
- }
- 
- def image = this.user.lookDirectionForSprite match {
-   case "east" => normalImage
-   case _ => {
-     this.mirrorImage
-   }
- }
- 
- 
- def changeSize(newDimensions:(Double, Double)) = {
-   this.spriteWidth = newDimensions._1
-   this.spriteHeight= newDimensions._2
-   }
- 
- def rotate(amount:Double, pivot:(Double, Double)) = {
-   
-   this.image.transforms.add(new Rotate(amount, pivot._1, pivot._2))
-   
- }
- 
- private def userSpriteLocation = user.locationForSprite.getOrElse((0.0,0.0))
- 
-  private def mirrorRotate = List(new Rotate(180.0, userSpriteLocation._1, userSpriteLocation._2 , 0, Rotate.YAxis))
 }
 
 //##########################################################################################################################################################################################################
@@ -197,8 +227,8 @@ class AnimatedGameSprite(imageFolderPath:String, fileNameStart:String, fileNumbe
 
   private var time = 0
   private var spriteIndex = 0
-  var spriteWidth = imageDimensions._1
-  var spriteHeight = imageDimensions._2
+  var spriteWidth = imageDimensions.getKey()
+  var spriteHeight = imageDimensions.getValue()
   
   private def updateCurrentSpriteNumber = {
     
@@ -217,8 +247,8 @@ class AnimatedGameSprite(imageFolderPath:String, fileNameStart:String, fileNumbe
   
   def normalImage = new Rectangle{
     
-    x = user.locationForSprite.get._1 + locationOffset._1
-    y = user.locationForSprite.get._2 + locationOffset._2
+    x = user.locationForSprite.get.getKey() + locationOffset.getKey()
+    y = user.locationForSprite.get.getValue() + locationOffset.getValue()
     width = spriteWidth
     height = spriteHeight
     fill = textures(spriteIndex)  //Blue
@@ -249,11 +279,11 @@ class AnimatedGameSprite(imageFolderPath:String, fileNameStart:String, fileNumbe
  
  
  def changeSize(newDimensions:(Double, Double)) = {
-   this.spriteWidth = newDimensions._1
-   this.spriteHeight= newDimensions._2
+   this.spriteWidth = newDimensions.getKey()
+   this.spriteHeight= newDimensions.getValue()
    }
  
-  private def mirrorRotate = List(new Rotate(180.0, user.locationForSprite.get._1 ,user.locationForSprite.get._2, 0, Rotate.YAxis))
+  private def mirrorRotate = List(new Rotate(180.0, user.locationForSprite.get.getKey() ,user.locationForSprite.get.getValue(), 0, Rotate.YAxis))
   
 
   
@@ -265,15 +295,15 @@ class AnimatedGameSprite(imageFolderPath:String, fileNameStart:String, fileNumbe
 class RotatingArm(user:Actor,val direction:DirectionVector){
   
  private val armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", None, (40, 25), user, (-5, -13), None)
- private val armRotate = new Rotate(0.0, pivotPoint._1, pivotPoint._2, 400)
+ private val armRotate = new Rotate(0.0, pivotPoint.getKey(), pivotPoint.getValue(), 400)
   
  private def pivotPoint = user.location.locationInImage
   
   def completeImage = {
    
     armRotate.angle = this.direction.angle * 50
-    armRotate.pivotX = pivotPoint._1
-    armRotate.pivotY = pivotPoint._2
+    armRotate.pivotX = pivotPoint.getKey()
+    armRotate.pivotY = pivotPoint.getValue()
    
     val group = user.equippedWeapon match{
     
@@ -303,8 +333,8 @@ class RotatingArm(user:Actor,val direction:DirectionVector){
 //Luokka DirectionVector tarjoaa yksinkertaisemman tavan k‰sitell‰ suuntia esim ammusten tapauksessa
 class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPoint:(Double, Double)){
   
-  var x = originalEndPoint._1 - originalStartPoint._1
-  var y = originalEndPoint._2 - originalStartPoint._2
+  var x = originalEndPoint.getKey() - originalStartPoint.getKey()
+  var y = originalEndPoint.getValue() - originalStartPoint.getValue()
   
   def isTowardsLeft = this.x<0
   def isTowardsRight = this.x>0
@@ -348,7 +378,7 @@ class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPo
   
   def scalarProduct(x:Double):DirectionVector = {
     
-    new DirectionVector(this.originalStartPoint, (this.originalStartPoint._1 + x*this.x, this.originalStartPoint._2 +x*this.y))
+    new DirectionVector(this.originalStartPoint, (this.originalStartPoint.getKey() + x*this.x, this.originalStartPoint.getValue() +x*this.y))
     
     }
   
@@ -357,8 +387,8 @@ class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPo
     this.originalStartPoint = newStart
     this.originalEndPoint = newEnd
     
-    x = originalEndPoint._1 - originalStartPoint._1
-    y = originalEndPoint._2 - originalStartPoint._2
+    x = originalEndPoint.getKey() - originalStartPoint.getKey()
+    y = originalEndPoint.getValue() - originalStartPoint.getValue()
     
   }
   
@@ -380,8 +410,8 @@ class GamePos{
  
  public Optional<GameCamera> center = GameWindow.gameCamera;
 
- private Double inGameX = inGameCoordinates._1;
- private Double inGameY = inGameCoordinates._2;
+ private Double inGameX = inGameCoordinates.getKey();
+ private Double inGameY = inGameCoordinates.getValue();
  private Double playerHeightOffset = -10;
   
  public Pair<Double, Double> locationInGame = (inGameX, inGameY); 
@@ -393,7 +423,7 @@ class GamePos{
 		 
 	if(center.isPresent) {
 		
-		 if (!this.isCenter){return Pair(inGameX-center.location.locationInGame._1+center.location.locationInImage._1, inGameY - center.location.locationInGame._2 + center.location.locationInImage._2 + playerHeightOffset);}
+		 if (!this.isCenter){return Pair(inGameX-center.location.locationInGame.getKey()+center.location.locationInImage.getKey(), inGameY - center.location.locationInGame.getValue() + center.location.locationInImage.getValue() + playerHeightOffset);}
 	     else { return Pair(GameWindow.stage.width.toDouble/2 ,GameWindow.stage.height.toDouble/2);}
 		
 		
@@ -413,8 +443,8 @@ class GamePos{
  }
  
  public void teleport(Pair<Double, Double> newLoc) = {
-   this.inGameX = newLoc._1;
-   this.inGameY = newLoc._2;
+   this.inGameX = newLoc.getKey();
+   this.inGameY = newLoc.getValue();
  }
  
  public void zero = {
