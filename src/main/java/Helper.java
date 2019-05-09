@@ -24,7 +24,7 @@ public class Helper{
   //Metodi jonka avulla voi helposti lukea useita kuvatiedostoja kerralla
   public static ArrayList<Image> getSpritesFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType)  {
     
-    ArrayList<Image> fileList = ArrayList<Image>()
+    ArrayList<Image> fileList = new ArrayList<Image>();
     		
     for (Int number : fileNumberRange){
       
@@ -72,7 +72,7 @@ public class Helper{
   //Metodi joka mahdollistaa helpon ��nitiedostojen k�yt�n
   public static ArrayList<AudioClip> getAudioFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType) {
     
-    ArrayList<AudioClip> fileList = ArrayList<AudioClip>();
+    ArrayList<AudioClip> fileList = new ArrayList<AudioClip>();
     
     for (number : fileNumberRange){
       
@@ -107,21 +107,22 @@ public class Helper{
 }
 //#################################################################################################################################################################################
 
-trait UsesGameSprite{
+class UsesGameSprite{
   
-  var useMirror = false
-  def locationForSprite:Option[(Double, Double)]
-  def game:Game
-  def lookDirectionForSprite:String
+  Boolean useMirror = false;
+  public Optional<Pair<Double, Double>> locationForSprite();
+  public Game game();
+  public String lookDirectionForSprite();
   
 }
 
-trait UsesAnimatedGameSprite extends UsesGameSprite{
+class UsesAnimatedGameSprite extends UsesGameSprite{
+	
+	 public Optional<Pair<Double, Double>> locationForSprite();
+	 public Game game();
+	 public String lookDirectionForSprite();
  
-  def locationForSprite:Option[(Double, Double)]
-  def game:Game
-  def lookDirectionForSprite:String
-  def isMovingForSprite:Boolean
+     public Boolean isMovingForSprite();
   
 }
 //GameSprite-luokka yksinkertaistaa pelin olioiden kuvien laadintaa, muokkaamista ja liikuttamista
@@ -146,7 +147,7 @@ class GameSprite {
  public Double spriteHeight = imageDimensions.getValue();
   
  private ImagePattern texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
- private ArrayList<Transform> transforms = ArrayList<Transform>();
+ private ArrayList<Transform> transforms = new ArrayList<Transform>();
   
   
  public Rectangle normalImage() {
@@ -331,68 +332,82 @@ class RotatingArm(user:Actor,val direction:DirectionVector){
 //#########################################################################################################################################################################
 
 //Luokka DirectionVector tarjoaa yksinkertaisemman tavan k�sitell� suuntia esim ammusten tapauksessa
-class DirectionVector(var originalStartPoint:(Double, Double), var originalEndPoint:(Double, Double)){
+class DirectionVector {
   
-  var x = originalEndPoint.getKey() - originalStartPoint.getKey()
-  var y = originalEndPoint.getValue() - originalStartPoint.getValue()
+ public Pair<Double, Double>originalStartPoint;
+ public Pair<Double, Double>originalEndPoint;
+	
+	
+  public Double x = originalEndPoint.getKey() - originalStartPoint.getKey();
+  public Double y = originalEndPoint.getValue() - originalStartPoint.getValue();
   
-  def isTowardsLeft = this.x<0
-  def isTowardsRight = this.x>0
+  public Boolean isTowardsLeft() { return this.x<0; }
+  public Boolean isTowardsRight(){ return this.x>0; }
   
-  def length = {
+  public Double length () {
     
-    if(x != 0 && y != 0) sqrt(x*x + y*y)
-    else if(x==0) y
-    else x
+    if(x != 0 && y != 0) return sqrt(x*x + y*y);
+    else if(x==0) return y;
+    else return x;
     
   }
   
-  def toUnitVect:DirectionVector = { //Metodi muuttaa vektorin yksikk�vektoriksi. Uuden vektorin alkupiste on vanhan alkupiste
+  public DirectionVector toUnitVect() { //Metodi muuttaa vektorin yksikk�vektoriksi. Uuden vektorin alkupiste on vanhan alkupiste
     
-    val length = this.length
+    Double length = this.length;
     
-    if(length == 1) this
+    if(length == 1) return this;
     else{
-      this.x = this.x/length
-      this.y = this.y/length
-      this
+      this.x = this.x/length;
+      this.y = this.y/length;
+      return this;
       
     }
   }
   
-  def angle = {
-    atan(y/x)
+  public Double angle() {
+    return atan(y/x);
   }
     
-  def opposite:DirectionVector = {
+  public DirectionVector opposite() {
     
-    new DirectionVector(this.originalEndPoint, this.originalStartPoint)
+   return new DirectionVector(this.originalEndPoint, this.originalStartPoint);
     
     }
   
-  def sum(x:DirectionVector):DirectionVector = {
+  public DirectionVector sum(x:DirectionVector) {
     
-    new DirectionVector(this.originalStartPoint, x.originalEndPoint)
+   return new DirectionVector(this.originalStartPoint, x.originalEndPoint);
     
   }
   
-  def scalarProduct(x:Double):DirectionVector = {
+  public DirectionVector scalarProduct(x:Double){
     
-    new DirectionVector(this.originalStartPoint, (this.originalStartPoint.getKey() + x*this.x, this.originalStartPoint.getValue() +x*this.y))
+    return new DirectionVector(this.originalStartPoint, (this.originalStartPoint.getKey() + x*this.x, this.originalStartPoint.getValue() +x*this.y));
     
     }
   
-  def update(newStart:(Double, Double), newEnd:(Double, Double)){
+  public void update(newStart:(Double, Double), newEnd:(Double, Double)) {
     
-    this.originalStartPoint = newStart
-    this.originalEndPoint = newEnd
+    this.originalStartPoint = newStart;
+    this.originalEndPoint = newEnd;
     
-    x = originalEndPoint.getKey() - originalStartPoint.getKey()
-    y = originalEndPoint.getValue() - originalStartPoint.getValue()
+    x = originalEndPoint.getKey() - originalStartPoint.getKey();
+    y = originalEndPoint.getValue() - originalStartPoint.getValue();
     
   }
   
-  def copy = new DirectionVector(this.originalStartPoint, this.originalEndPoint)
+  public DirectionVector copy() {return new DirectionVector(this.originalStartPoint, this.originalEndPoint); }
+		  
+		  
+  //Konstruktori luokalle
+  public DirectionVector(Pair<Double, Double> originalStartPoint, Pair<Double, Double> originalEndPoint) {
+	  
+	  this.originalStartPoint = originalStartPoint;
+	  this.originalEndPoint = originalEndPoint;
+	  
+	  
+  }
   
   
 }
