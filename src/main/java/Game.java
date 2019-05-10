@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+
 import javafx.scene.Scene;
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
@@ -12,11 +14,11 @@ public class Game {
   public int time = 0;
   public Scene fullImage = new Scene;
   
-  AudioClip backGroundMusic = new AudioClip("file:src/main/resources/sound/BackGroundBeat.wav")
-  AudioClip timeSlowAmbience = new AudioClip("file:src/main/resources/sound/TimeStopAmbience.wav")
-  AudioClip val skyWalkSounds = Helper.getAudioFromFolder("file:src/main/resources/sound/ProjectileBlips", "Blip", 1 to 6, ".wav")
+  AudioClip backGroundMusic = new AudioClip("file:src/main/resources/sound/BackGroundBeat.wav");
+  AudioClip timeSlowAmbience = new AudioClip("file:src/main/resources/sound/TimeStopAmbience.wav");
+  ArrayList<AudioClip> skyWalkSounds = Helper.getAudioFromFolder("file:src/main/resources/sound/ProjectileBlips", "Blip", 6, ".wav");
   
-  val player = new Player(0, 0, this) //Sijainnin oltava tässä (0,0) jotta levelin spawn-location menee oikein
+  val player = new Player(0, 0, this) //Sijainnin oltava tï¿½ssï¿½ (0,0) jotta levelin spawn-location menee oikein
   
   var enemies = Buffer[Enemy]()
  
@@ -95,7 +97,7 @@ public class Game {
     
   }
   
-  //Tässä tehdään kuva joka vältetään GUI:lle
+  //Tï¿½ssï¿½ tehdï¿½ï¿½n kuva joka vï¿½ltetï¿½ï¿½n GUI:lle
   
   fullImage.content = camera.cameraImage
   

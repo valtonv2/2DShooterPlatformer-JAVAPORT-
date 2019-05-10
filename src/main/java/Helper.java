@@ -5,6 +5,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.*;
 import javafx.scene.transform.*;
 import javafx.scene.media.*;
+
+import java.lang.reflect.Array;
 import java.math.*;
 import javafx.scene.paint.*;
 import javafx.scene.Node;
@@ -12,23 +14,26 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.util.converter.*;
 import javafx.util.*;
+import java.util.stream.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import javafx.scene.transform.*;
+import java.util.stream.Collectors;
+
 
 
 public class Helper{
   
   
   //Metodi jonka avulla voi helposti lukea useita kuvatiedostoja kerralla
-  public static ArrayList<Image> getSpritesFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType)  {
+  public static ArrayList<Image> getSpritesFromFolder(String folderPath, String fileNameStart, int fileAmount, String fileType)  {
     
     ArrayList<Image> fileList = new ArrayList<Image>();
     		
-    for (Int number : fileNumberRange){
+    for (int number : IntStream.rangeClosed(1, fileAmount).limit(fileAmount).toArray()){
       
-      String filePath = folderPath + "/" + fileNameStart + number.toString() + fileType;
+      String filePath = folderPath + "/" + fileNameStart + number + fileType;
       fileList.add(new Image(filePath));
       System.out.println(filePath);
       }
@@ -42,7 +47,8 @@ public class Helper{
         
        ImagePattern texture = new ImagePattern( image, -0.25,-0.1,1.5,1.5,true);
         
-       Rectangle rect = new Rectangle(texture, 60, 90, 400 - 30, 400 - 45);
+       Rectangle rect = new Rectangle(400 - 30, 400 - 45, 60, 90);
+       rect.setFill(texture);
         
        return rect;
      
@@ -50,31 +56,31 @@ public class Helper{
     
     
   //Metodi joka muuttaa mink� tahansa kuvan teksturoiduksi suorakulmioksi
-  public static Rectangle anySpriteFromImage(String imagePath, Pair<Int, Int> location, Double spriteWidth, Double spriteHeight){
+  public static Rectangle anySpriteFromImage(String imagePath, Pair<Double, Double> location, Double spriteWidth, Double spriteHeight){
     
 	  Image image = new javafx.scene.image.Image(imagePath);
     
       ImagePattern texture = new ImagePattern( image, 1.0,1.0,1.0,1.0,true);
         
-      Rectangle rect = new Rectangle(texture, spriteWidth, spriteHeight, location.getKey(), location.getValue());
-    		  
+      Rectangle rect = new Rectangle(location.getKey(), location.getValue(), spriteWidth, spriteHeight);
+      rect.setFill(texture);
       return rect;
    
   }
   
-  def transformToNode[T <: Node](thing:T, transform:List[Transform]) = {
+  public static <T extends Node, U extends Transform> T transformToNode(T thing, ArrayList<U> transform) {
     
-    thing.transforms = transform
-    thing
+    thing.getTransforms().addAll(transform);
+    return thing;
     
   }
   
   //Metodi joka mahdollistaa helpon ��nitiedostojen k�yt�n
-  public static ArrayList<AudioClip> getAudioFromFolder(String folderPath, String fileNameStart, Range fileNumberRange, String fileType) {
+  public static ArrayList<AudioClip> getAudioFromFolder(String folderPath, String fileNameStart, int fileAmount, String fileType) {
     
     ArrayList<AudioClip> fileList = new ArrayList<AudioClip>();
     
-    for (int number : fileNumberRange){
+    for (int number : IntStream.rangeClosed(1, fileAmount).limit(fileAmount).toArray()){
       
       String filePath = folderPath + "/" + fileNameStart + number + fileType;
       fileList.add(new AudioClip(filePath));
@@ -84,30 +90,30 @@ public class Helper{
    
     return fileList;
   }
-  
+
  //Apumetodi et�isyyksien laskemiseen. Palauttaa suoraviivaisen et�isyyden.
  public static Double absoluteDistance(Pair<Double, Double> a, Pair<Double, Double> b) {
     
-    Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
-    Double yDiff = abs(a.getValue() - b.getValue()).toDouble;
+    Double xDiff = Math.abs(a.getKey() - b.getKey());
+    Double yDiff = Math.abs(a.getValue() - b.getValue());
     
     if(xDiff == 0 && yDiff>0) {return yDiff;}
     else if (yDiff == 0 && xDiff>0) {return xDiff;}
-    else if (xDiff>=1 && yDiff>=1) {return sqrt(xDiff*xDiff+yDiff*yDiff);}
-    else {return sqrt(xDiff*xDiff+yDiff*yDiff);}
+    else if (xDiff>=1 && yDiff>=1) {return Math.sqrt(xDiff*xDiff+yDiff*yDiff);}
+    else {return Math.sqrt(xDiff*xDiff+yDiff*yDiff);}
   }
  
   //Apumetodi et�isyyksien laskemiseen. Erottelee x ja y akselit
   public static Pair<Double, Double> axisDistance(Pair<Double, Double> a, Pair<Double, Double> b)  {
-    Double xDiff = abs(a.getKey() - b.getKey()).toDouble;
-    Double yDiff = abs(a.getValue() - b.getValue()).toDouble;
+    Double xDiff = Math.abs(a.getKey() - b.getKey());
+    Double yDiff = Math.abs(a.getValue() - b.getValue());
     Pair<Double, Double> pair = new Pair<Double, Double>(xDiff, yDiff);
     return pair;
   } 
 }
 //#################################################################################################################################################################################
 
-class UsesGameSprite{
+abstract class UsesGameSprite{
   
   Boolean useMirror = false;
   public Optional<Pair<Double, Double>> locationForSprite;
@@ -116,7 +122,7 @@ class UsesGameSprite{
   
 }
 
-class UsesAnimatedGameSprite extends UsesGameSprite{
+abstract class UsesAnimatedGameSprite extends UsesGameSprite{
 	
 	 public Optional<Pair<Double, Double>> locationForSprite;
 	 public Game game;
@@ -148,25 +154,30 @@ class GameSprite {
   
  private ImagePattern texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
  private ArrayList<Transform> transforms = new ArrayList<Transform>();
+
   
   
  public Rectangle normalImage() {
   
   if(this.overrideLocation.isPresent()) {
     
-  return new Rectangle(this.overrideLocation.get().getKey() + locationOffset.getKey(), this.overrideLocation.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight, texture);
-    
+  Rectangle rect = new Rectangle(this.overrideLocation.get().getKey() + locationOffset.getKey(), this.overrideLocation.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+  rect.setFill(texture);
+  return rect;
+  
+  
  }else { 
    
-  return new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(), user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight, texture);
-    
+  Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(), user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+  rect.setFill(texture);
+  return rect;
   }
  }
  
  
  private Rectangle mirrorImage() {
    Rectangle img = normalImage();
-   Helper.transformToNode(img, this.mirrorRotate);
+   Helper.transformToNode(img, this.mirrorRotate());
    return img;
  }
  
@@ -188,7 +199,7 @@ class GameSprite {
  
  public void rotate(Double amount, Pair<Double, Double> pivot) {
    
-   this.image().transforms.add(new Rotate(amount, pivot.getKey(), pivot.getValue()));
+   this.image().getTransforms().add(new Rotate(amount, pivot.getKey(), pivot.getValue()));
    
  }
  
@@ -197,12 +208,19 @@ class GameSprite {
 	 if(user.locationForSprite.isPresent()) {
 		 return user.locationForSprite.get();
 	 }else {
-		 Pair<Double, Double> done = Pair<Double, Double>(0.0, 0.0);
+		 Pair<Double, Double> done = new Pair<Double, Double>(0.0, 0.0);
 		 return done;
 	 } 
  }
  
-  private ArrayList<Rotate> mirrorRotate = ArrayList(new Rotate(180.0, userSpriteLocation.getKey(), userSpriteLocation.getValue() , 0, Rotate.YAxis));
+
+ 
+  private ArrayList<Rotate> mirrorRotate() {
+	 ArrayList<Rotate> done = new ArrayList<Rotate>();
+	 done.add(new Rotate(180.0, userSpriteLocation().getKey(), userSpriteLocation().getValue() , 0, Rotate.Y_AXIS));
+	 return done;
+  }
+  
   
   
   //Konstruktori luokalle
@@ -226,7 +244,7 @@ class AnimatedGameSprite{
 	
 	String imageFolderPath;
 	String fileNameStart;
-	Range fileNumberRange;
+	int fileAmount;
 	String fileType;
 	Optional<Pair<Double, Double>> imageStartLocation;
 	Pair<Double, Double> imageDimensions;
@@ -235,8 +253,8 @@ class AnimatedGameSprite{
 	Boolean isAlwaysMoving;
 	
 	
-  private ArrayList<Image> images = Helper.getSpritesFromFolder(imageFolderPath, fileNameStart, fileNumberRange, fileType);
-  private ArrayList<Image> textures = images.map(image ->new ImagePattern(image, 0,0,1,1,true) );
+  private ArrayList<Image> images = Helper.getSpritesFromFolder(imageFolderPath, fileNameStart, fileAmount, fileType);
+  private List<ImagePattern> textures = images.stream().map( img -> new ImagePattern(img, 0,0,1,1,true)).collect(Collectors.toList());
  
 
   private int time = 0;
@@ -246,14 +264,14 @@ class AnimatedGameSprite{
   
   private void updateCurrentSpriteNumber() {
     
-    if (this.time % 5 == 0 && spriteIndex < textures.size-1 && (this.user.isMovingForSprite || this.isAlwaysMoving)) {
+    if (this.time % 5 == 0 && spriteIndex < textures.size()-1 && (this.user.isMovingForSprite || this.isAlwaysMoving)) {
       
-      spriteIndex += 1
+      spriteIndex += 1;
      
       
-    }else if ((this.time % 5 == 0 && spriteIndex == textures.size-1) || (!this.user.isMovingForSprite && !this.isAlwaysMoving)){
+    }else if ((this.time % 5 == 0 && spriteIndex == textures.size()-1) || (!this.user.isMovingForSprite && !this.isAlwaysMoving)){
       
-      spriteIndex = 0
+      spriteIndex = 0;
       
       }
    
@@ -261,8 +279,9 @@ class AnimatedGameSprite{
   
  private Rectangle normalImage() { 
 		  
-   return new Rectangle(user.locationForSprite.get.getKey() + locationOffset.getKey(),user.locationForSprite.get.getValue() + locationOffset.getValue(), spriteWidth, spriteHeight, textures(spriteIndex));
-  
+   Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(),user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+   rect.setFill(textures.get(spriteIndex));
+   return rect;
   }
   
   
@@ -278,7 +297,7 @@ class AnimatedGameSprite{
     time += 1 ;
     updateCurrentSpriteNumber();
     
-    if(user.lookDirectionForSprite() == "east") return normalImage();
+    if(this.user.lookDirectionForSprite == "east") return normalImage();
     else return mirrorImage();
      
   }
@@ -289,15 +308,19 @@ class AnimatedGameSprite{
    this.spriteHeight= newDimensions.getValue();
    }
  
-  private ArrayList<Rotate> mirrorRotate() { return new ArrayList<Rotate>(new Rotate(180.0, user.locationForSprite.get.getKey() ,user.locationForSprite.get.getValue(), 0, Rotate.YAxis)); }
+ private ArrayList<Rotate> mirrorRotate() {
+	 ArrayList<Rotate> done = new ArrayList<Rotate>();
+	 done.add(new Rotate(180.0, this.user.locationForSprite.orElse(new Pair<Double, Double>(0.0, 0.0)).getKey(), this.user.locationForSprite.orElse(new Pair<Double, Double>(0.0, 0.0)).getValue() , 0, Rotate.Y_AXIS));
+	 return done;
+  }
   
 //Konstruktori luokalle
 		  
-public AnimatedGameSprite(String imageFolderPath, String fileNameStart, Range fileNumberRange, String fileType, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double> imageDimensions, UsesAnimatedGameSprite user, Pair<Double, Double> locationOffset, Boolean isAlwaysMoving) {
+public AnimatedGameSprite(String imageFolderPath, String fileNameStart, int fileAmount, String fileType, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double> imageDimensions, UsesAnimatedGameSprite user, Pair<Double, Double> locationOffset, Boolean isAlwaysMoving) {
 	 
 	 this.imageFolderPath = imageFolderPath;
 	 this.fileNameStart = fileNameStart;
-	 this.fileNumberRange = fileNumberRange;
+	 this.fileAmount = fileAmount;
 	 this.fileType = fileType;
 	 this.imageStartLocation = imageStartLocation;
 	 this.imageDimensions = imageDimensions;
@@ -319,35 +342,43 @@ class RotatingArm{
 Actor user;
 DirectionVector direction;
   
- private GameSprite armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", None, new Pair<Double, Double>(40, 25), user, new Pair<Double, Double>(-5, -13), new Optional<Pair<Double, Double>>());
+ private GameSprite armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
  private Rotate armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
   
- private Pair<Double, Double> pivotPoint() {return user.location.locationInImage;}
+ private Pair<Double, Double> pivotPoint() {return user.location.locationInImage();}
   
  public Group completeImage() {
    
-    armRotate.angle = this.direction.angle * 50;
-    armRotate.pivotX = pivotPoint.getKey();
-    armRotate.pivotY = pivotPoint.getValue();
+    armRotate.setAngle( this.direction.angle() * 50);
+    armRotate.setPivotX(pivotPoint().getKey());
+    armRotate.setPivotY(pivotPoint().getValue());
    
-    val group = user.equippedWeapon match{
+    Group group = switch(user.equippedWeapon) {
     
-    case Some(weapon) => new Group(armImage.image, weapon.sprites(2).image)
-    case None => new Group(armImage.image)
+    case Weapon weapon:
+    	 return new Group(armImage.image(), weapon.sprites(2).image);
+    	 break;
+    case Optional.empty(): 
+    	return new Group(armImage.image());
+        break;
     
   }
     
     
-   user.lookDirectionForSprite match{
+   switch (user.lookDirectionForSprite) {
       
-      case "east" => group.transforms.addAll(armRotate)
-      case _ => group.transforms.addAll(armRotate)
+      case "east":
+    	   group.getTransforms().addAll(armRotate);
+    	   break;
+      default: 
+    	  group.getTransforms().addAll(armRotate);
+    	  break;
       
       } 
       
       
 
-    group
+   return group;
     
   }
  
@@ -357,8 +388,6 @@ DirectionVector direction;
 	 
 	 this.user = user;
 	 this.direction = direction;
-	 
-	 
 	 
  }
   
@@ -381,7 +410,7 @@ class DirectionVector {
   
   public Double length () {
     
-    if(x != 0 && y != 0) return sqrt(x*x + y*y);
+    if(x != 0 && y != 0) return Math.sqrt(x*x + y*y);
     else if(x==0) return y;
     else return x;
     
@@ -401,7 +430,7 @@ class DirectionVector {
   }
   
   public Double angle() {
-    return atan(y/x);
+    return Math.atan(y/x);
   }
     
   public DirectionVector opposite() {
@@ -479,7 +508,7 @@ class GamePos{
 		
 	} else {
 		
-		return new Pair(0.0, 0.0);
+		return new Pair<Double, Double>(0.0, 0.0);
 	
 	}	 		 
  }
