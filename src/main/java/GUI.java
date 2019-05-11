@@ -52,7 +52,7 @@ public void start(Stage primaryStage) {
     primaryStage.setScene(Menus.MainMenu.scene());
     
 
-    menuClock.start
+    menuClock.start();
     this.gameCamera = Some(currentGame.camera);
     
 		

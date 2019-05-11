@@ -199,7 +199,7 @@ class Level {
      
    }
   
-  public Pair<Double, Double> dimensions(){ return Pair<Double, Double>(this.levelImage.width.toDouble*50, this.levelImage.height.toDouble*50);}
+  public Pair<Double, Double> dimensions(){ return new Pair<Double, Double>(this.levelImage.getWidth()*50.0, this.levelImage.getHeight()*50.0);}
     
   //Konstruktori luokalle
   public Level(String name, int levelNO, String layoutPath, String backGroundPath, Game game) {
@@ -233,7 +233,7 @@ class Level {
     public GamePos location = new GamePos(new Pair<Double, Double>(startX, startY), false);
     public Pair<Double, Double>locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
     
-    public Rectangle tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue(), pattern);
+    public Rectangle tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
    
  }
   
@@ -248,6 +248,8 @@ class Level {
 		  this.pattern = pattern;
 		  this.width2 = width2;
 		  this.height2 = height2;
+		  
+		  tileImage.setFill(pattern);
 				  
 	  }  
   }
@@ -274,6 +276,8 @@ class Level {
 		  this.width2 = width2;
 		  this.height2 = height2;
 		  this.function = function;
+		  
+		  tileImage.setFill(pattern);
 				  
 	  }  
 }
