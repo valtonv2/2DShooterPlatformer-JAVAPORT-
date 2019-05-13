@@ -1,23 +1,47 @@
+package main.java;
+import java.math.*;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-import scala.math._
-import scalafx.scene.shape.Circle
-import scalafx.scene.paint.Color.Red
+import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 // Collider mahdollistaa "puskurien" luomisen pelaajan ympärille
 
-class Collider(val identifier:String, actor:Actor, xOffset:Int, yOffset:Int, val orientation:String ){
+class Collider{
+	
+	String identifier;
+	Actor actor;
+	Integer xOffset;
+	Integer yOffset;
+	String orientation;
  
- def actorLocationInGame = actor.location.locationInGame
- var collides = false
- var coillisionDistance = 35
-  
+ 
+ Boolean collides = false;
+ Double coillisionDistance = 35.0;
+ 
+ //Luokan konstruktori
+ public Collider(String identifier, Actor actor, Integer xOffset, Integer yOffset, String orientation ){
+	 
+	 this.identifier = identifier;
+	 this.actor = actor;
+	 this.xOffset = xOffset;
+	 this.yOffset = yOffset;
+	 this.orientation = orientation;
+			 
+	 
+	 
+ }
+ 
+ public Pair<Double, Double> actorLocationInGame(){ return actor.location.locationInGame();}
+ 
 // Update-metodi tarkkailee colliderin tilaa
- def update = {
+ public void update() {
   
-   val nearbyTiles = actor.game.currentLevel.allTiles.filter(tile => Helper.absoluteDistance(tile.location.locationInGame, actorLocationInGame)<100)
+   ArrayList<GameTile> nearbyTiles = actor.game.currentLevel.allTiles.stream().filter(tile -> Helper.absoluteDistance(tile.location.locationInGame, actorLocationInGame)<100).collect(Collectors.toList());
    
    //Seinät 
-  if (this.locations.exists(location => nearbyTiles.filter(_.hasCoillision).map(tile => tile.locationForCollider).exists(location2 => Helper.axisDistance(location, location2)._1  <= coillisionDistance && Helper.axisDistance(location, location2)._2 <= coillisionDistance))){
+  if (this.locations.stream().anyMatch(location -> nearbyTiles.stream().filter(tile -> tile.hasCoillision).stream().map(tile -> tile.locationForCollider).stream().anyMatch(location2 -> Helper.axisDistance(location, location2)._1  <= coillisionDistance && Helper.axisDistance(location, location2)._2 <= coillisionDistance))){
    
     if (this.collides == false){ 
       actor.stop
