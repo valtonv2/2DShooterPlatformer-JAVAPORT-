@@ -1,33 +1,41 @@
-
+package main.java;
 import java.math.*;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import javafx.scene.shape.Rectangle;
+import javafx.util.Pair;
 import javafx.scene.media.*;
 
 //Item on pelin esineitä kuvaava piirreluokka joka sisältää kaikille esineille yhteiset ominaisuudet
 
-abstract class Item(val name:String, var game:Game) extends UsesGameSprite{
+abstract class Item extends UsesGameSprite{
   
-  val player = game.player
+  String name;
+  Game game;
+	
+	
+  public Player player = game.player;
   
-  def ID:String
+  public String ID;
     
-  var isInWorld = false
+  public Boolean isInWorld = false;
     
   //Kun esine on pelaajan tai vihollisen tavaraluettelossa sijaintia maailmassa ei ole
   //Sijainnille annetaan arvo kun esine on vapaana maailmassa
-  var locationInWorld:Option[GamePos] = None 
+  public Optional<GamePos> locationInWorld = Optional.empty();
      
-  def sprites:Array[GameSprite] //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
+  public ArrayList<GameSprite> sprites(); //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
   
-  def locationForSprite = {
+  public Optional<Pair<Double, Double>> locationForSprite() {
     
-    val pos = this.locationInWorld.getOrElse(new GamePos((0,0),false))
-    val value = pos.locationInImage
-    Some(value)
+     GamePos pos = this.locationInWorld.orElseGet(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
+     Pair <Double, Double >value = pos.locationInImage();
+     return Optional.of(value);
     
   }
   
-  override def toString = this.name
+  public String toString() { return this.name;}
   
 }
 
@@ -36,21 +44,23 @@ abstract class Item(val name:String, var game:Game) extends UsesGameSprite{
 // UtilityItem toimii lajittelun apuna. Sitä hyödynnetään kun maailmasta poimittua esinettä ollaan 
 // sijoittamassa tavaraluetteloon.
 
-abstract class UtilityItem(name:String, game:Game, useTimes:Int) extends Item(name, game) {
+abstract class UtilityItem extends Item {
   
-  var amountOfUseTimes = useTimes
+  public String name;
+  public Game game;
+  public Integer useTimes;
+  public Integer strength;
   
-  def isSpent = (this.amountOfUseTimes == 0)
+  
+  public Integer amountOfUseTimes() {return useTimes;}
+  
+  public Boolean isSpent() {return (this.useTimes == 0);}
  
-  def use:Unit
+  public void use();
   
-  def strength:Int
+  public ArrayList<GameSprite> sprites();
   
-  def useTimesLeft = amountOfUseTimes
-  
-  def sprites:Array[GameSprite]
-  
-  def lookDirectionForSprite = "east"
+  public String lookDirectionForSprite = "east";
   
 }
 
@@ -58,19 +68,23 @@ abstract class UtilityItem(name:String, game:Game, useTimes:Int) extends Item(na
 
 //Weapon kuvaa erilaisia aseita.
 
-abstract class Weapon(name:String, var user:Option[Actor], game:Game) extends Item(name, game){
+abstract class Weapon extends Item{
+	
+  String name;
+  Optional<Actor> user;
+  Game game;
   
-  private def cursor = this.game.mouseCursor
+  private MouseCursor cursor() {return this.game.mouseCursor;}
   
-  val equippedLocation = (game.player.location.locationInGame._1, game.player.location.locationInGame._2)
+  private Pair<Double, Double> equippedLocation = new Pair<Double, Double>(game.player.location.locationInGame().getKey(), game.player.location.locationInGame().getValue());
   
-  var isEquipped = false
+  public Boolean isEquipped = false;
   
-  def fire:Unit
+  public void fire();
   
-  def sprites:Array[GameSprite]
+  public ArrayList<GameSprite> sprites();
   
-  protected def currentTime = game.time
+  protected Integer currentTime = game.time;
   
   }
  
@@ -78,59 +92,84 @@ abstract class Weapon(name:String, var user:Option[Actor], game:Game) extends It
 
 //HealthPack parantaa pelaajaa pelaajan käyttäessä sitä.
 
-class HealthPack(game:Game, useTimes:Int) extends UtilityItem("Health Pack", game, useTimes){
+class HealthPack extends UtilityItem{
+	
+  public Game game;
+  public Integer useTimes;
+  public String  name = "Health Pack";
   
-  def ID = "HP" + this.useTimesLeft // Hyödynnetään tallentamisessa
+  public String ID = "HP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
   
-  val strength = 500 //Parannuksen voimakkuus
+  public Double strength = 500.0; //Parannuksen voimakkuus
   
   
-  def use ={ 
+  public void use() { 
     
-    player.heal(min(strength, (player.maxHP-player.HP).toInt)) //Pelaajan elinvoiman ei anneta kasvaa yli maksimaalisen määrän
-    this.amountOfUseTimes -= 1
+    player.heal(Math.min(strength, (player.maxHP-player.HP))); //Pelaajan elinvoiman ei anneta kasvaa yli maksimaalisen määrän
+    this.useTimes -= 1.0;
     
-    PlayerHUD.equipmentBox.updateItems
+    PlayerHUD.equipmentBox.updateItems();
   }
   
- lazy val sprites = Array(
-      
-      new GameSprite("file:src/main/resources/Pictures/HealthPack.png", None, (45.0,45.0), this, (0,0), None), //World image
-      new GameSprite("file:src/main/resources/Pictures/HealthPack.png", None, (25.0,25.0), this, (15,15), Some(EquipmentBox.location))  //Inventory image
+  ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
   
-  )
+  //Konstruktori
   
-  
+  public HealthPack(Game game, Integer useTimes) {
+	  
+	  this.game = game;
+	  this.useTimes = useTimes;
+			  
+	  
+	  sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
+	  sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(EquipmentBox.location)));  //Inventory image
+	    
+  }
+       
  }
  
 //####################################################################################################################################################################################
 
 //EnergyPack kasvattaa pelaajan energian määrää pelaajan käyttäessä sitä.
 
-class EnergyPack(game:Game, useTimes:Int) extends UtilityItem("Energy Pack", game, useTimes){
-  
-  def ID = "EP" + this.useTimesLeft
-  
-  val strength = 500 //voimakkuus
-  
-  def use = { 
-    
-    player.energy += min(strength, player.maxEnergy-player.energy)//Pelaajan energian ei anneta kasvaa yli maksimaalisen määrän
-    this.amountOfUseTimes -= 1 
-    PlayerHUD.notificationArea.announce("Used energy pack. Current energy: " + player.energy)  
-    PlayerHUD.equipmentBox.updateItems
-    
-  }
-  
-  lazy val sprites = Array(
-      
-      new GameSprite("file:src/main/resources/Pictures/Energypack.png", None, (45.0,45.0), this, (0,0), None), //World image
-      new GameSprite("file:src/main/resources/Pictures/Energypack.png", None, (25.0,25.0), this, (15,15), Some(EquipmentBox.location))  //Inventory image
-  
-  )
- 
-  
- }
+
+class EnergyPack extends UtilityItem{
+	
+	  public Game game;
+	  public Integer useTimes;
+	  public String  name = "Energy Pack";
+	  
+	  public String ID = "EP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
+	  
+	  public Double strength = 500.0; //Parannuksen voimakkuus
+	  
+	  
+	  public void use() { 
+	    
+		  player.energy += Math.min(strength, player.maxEnergy-player.energy);//Pelaajan energian ei anneta kasvaa yli maksimaalisen määrän
+		  this.useTimes -= 1.0; 		    
+		  PlayerHUD.notificationArea.announce("Used energy pack. Current energy: " + player.energy); 
+		  PlayerHUD.equipmentBox.updateItems;
+	  }
+	  
+	  ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
+	  
+	  //Konstruktori
+	  
+	  public EnergyPack(Game game, Integer useTimes) {
+		  
+		  this.game = game;
+		  this.useTimes = useTimes;
+				  
+		  
+		  sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
+		  sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(EquipmentBox.location)));  //Inventory image
+		    
+	  }
+	       
+	 }
+	 
+
  
 //####################################################################################################################################################################################
   
