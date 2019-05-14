@@ -1,35 +1,38 @@
-import scalafx.scene.shape.Rectangle
-import scalafx.Includes
-import scalafx.scene.control.ProgressBar
-import scala.math._
-import scalafx.scene.text.Text
-import scalafx.scene.Node
-import scala.collection.mutable.Buffer
-import scalafx.scene.Group
+package main.java;
+
+import javafx.scene.shape.Rectangle;
+import javafx.scene.control.ProgressBar;
+import java.math.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javafx.scene.text.Text;
+import javafx.util.Pair;
+import javafx.scene.Node;
+import javafx.scene.Group;
 
 //PlayerHUD - olio kokoaa pelaajan HUDin osaset yhteen
 
-object PlayerHUD{
+class PlayerHUD{
 
   
-  val weaponHud = WeaponHud         //Asevalikko
-  val equipmentBox = EquipmentBox   //Hyötytavaralaatikko
-  val healthBar = new GameBar("file:src/main/resources/StyleSheets/HealthBarStyle.css",(1, 200), GameWindow.currentGame)
-  val energyBar = new GameBar("file:src/main/resources/StyleSheets/EnergyBarStyle.css",(1, 240), GameWindow.currentGame)
-  val notificationArea = NotificationArea //Ilmoitusalue
+  public static WeaponHud weaponHud = new WeaponHud;            //Asevalikko
+  public static EquipmentBox equipmentBox = new EquipmentBox;   //Hyötytavaralaatikko
+  public static GameBar healthBar = new GameBar("file:src/main/resources/StyleSheets/HealthBarStyle.css",new Pair<Double, Double>(1.0, 200.0), GameWindow.currentGame);
+  public static GameBar = new GameBar("file:src/main/resources/StyleSheets/EnergyBarStyle.css",new Pair<Double, Double>(1.0, 240.0), GameWindow.currentGame);
+  public static NotificationArea notificationArea = new NotificationArea; //Ilmoitusalue
   
-  def image:Group = {
+  public static Group image {
     
-    val v = Vector(notificationArea.image, weaponHud.image, equipmentBox.image, healthBar.image, energyBar.image).flatten 
-    val g = new Group()
-    g.children_=(v.toIterable)
-    g
+	return Group(notificationArea.image(), weaponHud.image(), equipmentBox.image(), healthBar.image(), energyBar.image());
+   
   }
   
-  def clearAll = {
-    weaponHud.empty
-    equipmentBox.empty
-    notificationArea.clear 
+  public static void clearAll {
+    weaponHud.empty();
+    equipmentBox.empty();
+    notificationArea.clear();
   }
 
 }
@@ -39,89 +42,79 @@ object PlayerHUD{
 // EquipmentBox näyttää pelaajalle mukaan poimitut hyötytavarat kuten HealthPackit ja mahdollistaa 
 // niiden välillä valitsemisen
 
-object EquipmentBox {
+class EquipmentBox {
   
-  def player = GameWindow.player
-  val location = (10.0, 80.0)
-  val box = new ItemBox(location, GameWindow.currentGame)
-  private var selectedIndex = 0
  
-  private def possibleContents = player.inventory.values.filter(item => item.isInstanceOf[UtilityItem] && !item.asInstanceOf[UtilityItem].isSpent).toArray
+  public Pair<Double, Double> location = new Pair<Double, Double>(10.0, 80.0);
+  public ItemBox box = new ItemBox(location, GameWindow.currentGame);
+  private int selectedIndex = 0;
+ 
+  private List<UtilityItem> possibleContents = player().inventory.values().stream().filter(item -> item instanceof UtilityItem ).map(item -> (UtilityItem)item).collect(Collectors.toList());
   
-  def moveRight = {
+  
+  public Player player() {return GameWindow.currentGame.player;}
+  
+  
+  public void moveRight() {
     
-    possibleContents.lift(selectedIndex + 1) match{
-     
-      case Some(item:UtilityItem)=>{
-        
-        selectedIndex += 1
-        this.updateItems
-        
-      }
-      
-      case None => {
-        
-        selectedIndex = 0
-        this.updateItems
-        
-      }
-      
-      case _ => selectedIndex = 0
-     }
+    if(this.selectedIndex < this.possibleContents.length - 1) {
+    	
+    	selectedIndex += 1;
+    	this.updateItems();
+    	
+    }else {
+    	
+    	this.selectedIndex = 0;
+    	this.updateItems;
+    	
     }
+
+  }
   
-   def moveLeft = {
+   public void moveLeft() {
     
-    possibleContents.lift(selectedIndex - 1) match{
+	   if(this.selectedIndex > 0) {
+		    	
+		    selectedIndex =  selectedIndex - 1;
+		    this.updateItems();
+		    	
+	   }else{
+		    	
+		    this.selectedIndex = this.possibleContents.length - 1;
+		    this.updateItems();
+		    	
+		    }
      
-      case Some(item:UtilityItem)=>{
-        
-        selectedIndex -= 1
-        this.updateItems
-        
-      }
-      
-      case None => {
-        
-        selectedIndex = possibleContents.size-1
-        this.updateItems
-       
-      }
-      
-        
-     }
     } 
    
-   def updateItems = {
+   public void updateItems(){
+	   
+	 Optional<UtilityItem> possibleItem = (Optional<UtilityItem>) box.containedItem;
      
-     if(box.item.isDefined && box.item.get.asInstanceOf[UtilityItem].isSpent){
-       this.box.removeItem
-       player.equippedUtilityItem = None
+     if(possibleItem.isPresent() && possibleItem.get.isSpent()){
+       this.box.removeItem()
+       player.equippedUtilityItem = Optional<UtilityItem>.empty();
      }
      
-     if (!this.possibleContents.indices.contains(selectedIndex)) selectedIndex = max(this.possibleContents.size-1,0)
+     if (!this.possibleContents.indices.contains(selectedIndex)) selectedIndex = math.max(this.possibleContents.length-1,0);
        
-       
-     this.possibleContents.isEmpty match{
-  
-     case false =>{
-     val item = possibleContents(selectedIndex).asInstanceOf[UtilityItem]
-     box.insertItem(item)
-     player.equipUtilItem(item)
-     }
-     
-     case true => println("Tried to update utilityitems but there were none in player inventory")
+     if(this.possibleContents.length == 0) {System.out.println("Tried to update utilityitems but there were none in player inventory");} 
+     else {
+    	 UtilityItem item = possibleContents(selectedIndex);
+         box.insertItem(item);
+    	 player.equipUtilItem(item);
+    	 
+    	 
+     } 
    }
+   
+  public void empty() {
+     
+     if (!this.box.isFree) this.box.removeItem();
      
    }
    
-   def empty = {
-     
-     if (!this.box.isFree) this.box.removeItem
-     
-   }
-   
-   def image = box.fullImage
+  public Group image = box.fullImage;
      
 }
 

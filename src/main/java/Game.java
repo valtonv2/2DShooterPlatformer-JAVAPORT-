@@ -26,7 +26,7 @@ public class Game {
   AudioClip timeSlowAmbience = new AudioClip("file:src/main/resources/sound/TimeStopAmbience.wav");
   ArrayList<AudioClip> skyWalkSounds = Helper.getAudioFromFolder("file:src/main/resources/sound/ProjectileBlips", "Blip", 6, ".wav");
   
-  public Player player = new Player(0, 0, this); //Sijainnin oltava t�ss� (0,0) jotta levelin spawn-location menee oikein
+  public Player player = new Player(0.0, 0.0, this); //Sijainnin oltava t�ss� (0,0) jotta levelin spawn-location menee oikein
   
   public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
  

@@ -499,8 +499,8 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  }
 	  
 	  //Pelaajan parantaminen
-	  public void heal(int amount) {
-	    this.HP += amount;
+	  public void heal(double d) {
+	    this.HP += d;
 	    PlayerHUD.notificationArea.announce("Healed. Current HP: " + this.HP);
 	  }
 	  

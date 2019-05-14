@@ -24,8 +24,8 @@ public static void main() {
 		launch();
 	}
 	
-public Game currentGame = new Game();
-public GameCamera gameCamera;
+public static Game currentGame = new Game();
+public static GameCamera gameCamera;
 
 
 
@@ -38,7 +38,7 @@ public static AnimationTimer mapClock = new AnimationTimer(changeMap);
 public static AnimationTimer menuClock = AnimationTimer(changeMenus);
 
 //Luodaan ikkuna
-public void start(Stage primaryStage) {
+public static void start(Stage primaryStage) {
 		
 	Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
 	
@@ -72,7 +72,7 @@ public void start(Stage primaryStage) {
 //NEW GAME
 
   PlayerHUD;
-  public Player player() { return currentGame.player;};
+  public static Player player() { return currentGame.player;};
 
  
   //Tänne laitetaan jutut jotka tehdään joka tick

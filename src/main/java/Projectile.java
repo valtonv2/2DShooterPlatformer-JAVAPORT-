@@ -18,8 +18,8 @@ class Projectile extends UsesGameSprite {
   Game game;
   DirectionVector direction;
   Double speed;
-  int locationModifierX;
-  int locationModifierY;
+  Double locationModifierX;
+  Double locationModifierY;
   Actor shooter;
   
   private Player player = game.player;
@@ -35,8 +35,8 @@ class Projectile extends UsesGameSprite {
   
   Boolean hasCollided = false;
   
-  public Double xCoordinate() { return shooter.location.locationInGame()().getKey() + locationModifierX; };
-  public Double yCoordinate() { return shooter.location.locationInGame()().getValue() + locationModifierY; };
+  public Double xCoordinate() { return shooter.location.locationInGame().getKey() + locationModifierX; };
+  public Double yCoordinate() { return shooter.location.locationInGame().getValue() + locationModifierY; };
   
   public GamePos location = new GamePos(new Pair<Double, Double>(xCoordinate(), yCoordinate()), false);
   
@@ -52,7 +52,7 @@ class Projectile extends UsesGameSprite {
   
   GameSprite sprite = new GameSprite("file:src/main/resources/Pictures/Projectile.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), this, new Pair<Double, Double>(0.0,7.0), Optional.empty());
   
-  public Circle debugLoc() { return new Circle(10, location.locationInGame()().getKey(), location.locationInGame()().getValue());}
+  public Circle debugLoc() { return new Circle(10, location.locationInGame().getKey(), location.locationInGame().getValue());}
   
   
   public void addSpeedModifier(Double modifier){
@@ -147,7 +147,7 @@ class Projectile extends UsesGameSprite {
    public String lookDirectionForSprite() { return "east"; }
    
    //Konstruktori luokalle
-   public Projectile(Game game, DirectionVector direction, Double speed, int locationModifierX, int locationModifierY, Actor shooter) {
+   public Projectile(Game game, DirectionVector direction, Double speed, Double locationModifierX, Double locationModifierY, Actor shooter) {
 	  
 	  this.game = game;
 	  this.direction = direction;
@@ -157,7 +157,7 @@ class Projectile extends UsesGameSprite {
 	  this.shooter = shooter;
 	  
 	  //Lisätään ammus pelin ammusten listaan. Sen avulla kaikkia ammuksia on helppo hallita
-	  game.projectiles += this
+	  game.projectiles.add(this);
 	  
 	  
 	  

@@ -7,9 +7,9 @@ class Settings{
   
   
   //��niasetukset
-  public boolean muteSound = false;
+  public static boolean muteSound = false;
   
-  public Double musicVolume() { 
+  public static Double musicVolume() { 
 	 
 	  if(!muteSound) {
 		 return settingMenu.volumeSlider.currentValue/100.0;
@@ -24,7 +24,7 @@ class Settings{
   
   
   
-  public void toggleMute() {
+  public static void toggleMute() {
   
 	  if(muteSound == false) {
     	muteSound = true;
@@ -34,7 +34,7 @@ class Settings{
   
   //Kehitt�j�tila(Loputon HP, energia ja hypyt)
   
-  public boolean devMode = false;
+  public static boolean devMode = false;
   
   
   
