@@ -2,6 +2,7 @@ package main.java;
 import java.lang.reflect.Array;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import javafx.scene.shape.Rectangle;
@@ -26,7 +27,7 @@ abstract class Item extends UsesGameSprite{
   //Sijainnille annetaan arvo kun esine on vapaana maailmassa
   public Optional<GamePos> locationInWorld = Optional.empty();
      
-  public ArrayList<GameSprite> sprites; //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
+  public GameSprite[] sprites; //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
   
   public Optional<Pair<Double, Double>> locationForSprite() {
     
@@ -59,7 +60,7 @@ abstract class UtilityItem extends Item {
  
   abstract public void use();
   
-  public ArrayList<GameSprite> sprites;
+  public GameSprite[] sprites;
   
   public String lookDirectionForSprite = "east";
   
@@ -83,7 +84,7 @@ abstract class Weapon extends Item{
   
   abstract public void fire();
   
-  public ArrayList<GameSprite> sprites;
+  public GameSprite[] sprites;
   
   protected Integer currentTime = game.time;
   
@@ -115,7 +116,7 @@ class HealthPack extends UtilityItem{
   public GameSprite sprites[] = {
 		  
 		  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),
-		  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(EquipmentBox.location))
+		  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location))
 		  
 		  
   };
@@ -158,7 +159,7 @@ class EnergyPack extends UtilityItem{
 	  public GameSprite sprites[] = {
 			  
 			  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),
-			  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(EquipmentBox.location))
+			  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location))
 			   
 	  };
 	  

@@ -1,9 +1,11 @@
 package main.java;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javafx.scene.shape.Circle;
+import javafx.util.Pair;
 import javafx.scene.paint.Color;
 
 // Collider mahdollistaa "puskurien" luomisen pelaajan ympärille
@@ -38,10 +40,10 @@ class Collider{
 // Update-metodi tarkkailee colliderin tilaa
  public void update() {
   
-   ArrayList<GameTile> nearbyTiles = actor.game.currentLevel.allTiles.stream().filter(tile -> Helper.absoluteDistance(tile.location.locationInGame, actorLocationInGame)<100).collect(Collectors.toList());
+   List<GameTile> nearbyTiles = actor.game.currentLevel.allTiles.stream().filter(tile -> Helper.absoluteDistance(tile.location.locationInGame(), actorLocationInGame)<100).collect(Collectors.toList());
    
    //Seinät 
-  if (this.locations.stream().anyMatch(location -> nearbyTiles.stream().filter(tile -> tile.hasCoillision).stream().map(tile -> tile.locationForCollider).stream().anyMatch(location2 -> Helper.axisDistance(location, location2)._1  <= coillisionDistance && Helper.axisDistance(location, location2)._2 <= coillisionDistance))){
+  if (this.locations.stream().anymatch(location -> nearbyTiles.stream().filter(tile -> tile.hasCoillision).map(tile -> tile.locationForCollider()).anyMatch(location2 -> Helper.axisDistance(location, location2).getKey()  <= coillisionDistance && Helper.axisDistance(location, location2).getValue() <= coillisionDistance))){
    
     if (this.collides == false){ 
       actor.stop
@@ -91,11 +93,12 @@ class Collider{
   def imgY = actor.location.locationInImage._2 + yOffset
   
   //Määrittää sijainnit pelaajan ympärillä
-  def locations = {
-    val pHeight = this.actor.height.toDouble
-    val pWidth = this.actor.width.toDouble
+  public Array<Optional<Pair<Double, Double>>> locations() {
+    Double pHeight = (double) this.actor.height;
+    Double pWidth = (double) this.actor.width;
+    Array<Optional>
     if (orientation == "horizontal")
-      Vector( (this.x-(pWidth/2) + 20 , this.y), (this.x, this.y), (this.x + (pWidth/2) - 20, this.y) )
+       (this.x-(pWidth/2) + 20 , this.y), (this.x, this.y), (this.x + (pWidth/2) - 20, this.y) )
     else
       Vector( (this.x, this.y - (pHeight/2) + 36 ), (this.x, this.y), (this.x, this.y+(pHeight/2) -11) )
     
