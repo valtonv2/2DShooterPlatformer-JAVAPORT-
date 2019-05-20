@@ -1,59 +1,72 @@
-import scalafx.scene.shape.Rectangle
-import scalafx.scene.image._
-import javafx.scene.paint.ImagePattern
-import scalafx.Includes._
-import scalafx.scene.paint.Color._
-import scalafx.scene.input._
-import scalafx.animation._
-import scalafx.event._
-import scala.collection.mutable.Buffer
-import scala.math._
-import scala.util.Random
-import scalafx.scene.media._
+package main.java;
+
+import javafx.scene.shape.Rectangle;
+import javafx.util.Pair;
+import javafx.scene.image.*;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Color.*;
+import javafx.scene.input.*;
+import javafx.animation.*;
+import javafx.event.*;
+import java.math.*;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Random;
+import javafx.scene.media.*;
 
 
 
-trait Enemy extends Actor{
+abstract class Enemy extends Actor{
   
-val location:GamePos  
-var HP:Double
-var energy = 0.0
-var currentAction:String
-var isActive:Boolean
-var ySpeed:Double = 0.0
-var xSpeed:Double = 0.0
-val arm:Option[RotatingArm] = None
-def isDead = this.HP<=0
-def update:Unit
+GamePos location;
+Double HP;
+Double energy = 0.0;
+String currentAction;
+Boolean isActive;
+Double ySpeed = 0.0;
+Double xSpeed = 0.0;
+Optional<RotatingArm> arm = Optional.empty();
+Boolean isDead() { return this.HP<=0;}
+void update();
 
-def addSpeedModifier(modifier:Double) = {
+public void addSpeedModifier(Double modifier) {
     
-     this.xSpeed = modifier * this.xSpeed
-     this.ySpeed = modifier * this.ySpeed
+     this.xSpeed = modifier * this.xSpeed;
+     this.ySpeed = modifier * this.ySpeed;
   }
   
 }
 
-class ShooterEnemy(val name:String, val game:Game,  locationX:Double, locationY:Double) extends Enemy {
+class ShooterEnemy extends Enemy {
   
-  val location = new GamePos((locationX, locationY), false)
+	String name;
+	String game;
+	Double locationX;
+	Double locationY;
+	
+  public GamePos location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
  
+  public Double HP = 200.0;
+  private int actionCounter = 0;
+  private int actionNumber = 0;
+  private String lookDirection = "east";
+  public Boolean isActive = false; //Monet raskaat toiminnot suoritetaan vain kun tämä on true. Vaikutus suorituskykyyn on huima
+  private Boolean isReadyForNextAction = true;
+  private Boolean moves = false;
+  private Boolean idles = false;
+  public Player player = game.player();
+  private int itemDropIndex = 0;
+
+  private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -38.0), Optional.empty());
+  private String currentAction = "idling";
   
-  var HP = 200
-  var actionCounter = 0
-  var actionNumber = 0
-  var lookDirection = "east"
-  var isActive = false //Monet raskaat toiminnot suoritetaan vain kun tämä on true. Vaikutus suorituskykyyn on huima
-  var isReadyForNextAction = true
-  var moves = false
-  var idles = false
-  val player = game.player
-  val itemDropIndex = Random.nextInt(5)
-  def itemDrop = this.inventory.values.toArray.lift(itemDropIndex)
-  val newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", None, (60, 90), this, (-30, -38), None)
-  var currentAction = "idling"
+  public Optional<Item> itemDrop() { this.inventory.values()[itemDropIndex];}
   
-  def image = Vector(this.newImage.image)
+  public ArrayList<Node> image(){
+	  ArrayList<Node> done = new ArrayList<Node>(); 
+	  done.add(this.newImage.image());
+	  return done;
+  }
   //Audio
    val enemyHurtSound = new AudioClip("file:src/main/resources/sound/EnemyHurt.wav")
   //Seuraavat Colliderit huolehtivat vihollisen törmäyksistä
@@ -64,7 +77,26 @@ class ShooterEnemy(val name:String, val game:Game,  locationX:Double, locationY:
   
   var colliders = Vector(northCollider, eastCollider, southCollider, westCollider)
    
- //Seuraava metodi hallitsee vihollisen ampumista laskemalla suunnan kohti pelaajaa ja luomala ammuksen
+ 
+  //Konstruktori luokalle
+  public ShooterEnemy(String name, Game game, Double locationX, Double locationY) {
+	  
+	  this.name = name;
+	  this.game = game;
+	  this.locationX = locationX;
+	  this.locationY = locationY;	  
+	  
+	  
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  //Seuraava metodi hallitsee vihollisen ampumista laskemalla suunnan kohti pelaajaa ja luomala ammuksen
   def shoot = {
     
     val aimDirection = new DirectionVector(this.location.locationInGame, player.location.locationInGame)
