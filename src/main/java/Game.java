@@ -70,6 +70,7 @@ public class Game {
      
   }
   
+  //Metodi joka vaihtaa kentt‰‰
   public void swapLevel(Int levelNo){
      player.HP = player.maxHP;
      player.energy = player.maxEnergy;
