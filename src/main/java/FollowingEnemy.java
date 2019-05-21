@@ -53,48 +53,57 @@ class FollowingEnemy extends Enemy{
 	  this.game = game;
 	  this.locationX = locationX;
 	  this.locationY = locationY;
+	  
+	  //Lisätään esine vihollisen tavaraluetteloon
+	  this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
 
   }
   
   
   
-  def update:Unit = {
+  public void update() {
     
-    if(!this.isActive && this.absDistToPlayer <= (GameWindow.stage.width.toDouble/2)+200) this.isActive = true //Aktiivisuuden säätely
-    else if(this.absDistToPlayer > (GameWindow.stage.width.toDouble/2)+200) this.isActive == false
+    if(!this.isActive && this.absDistToPlayer() <= (GameWindow.stage.width.toDouble/2)+200) {
+    	this.isActive = true; //Aktiivisuuden säätely
+    }else if(this.absDistToPlayer() > (GameWindow.stage.width.toDouble/2)+200) {
+    	this.isActive = false;
+    }
     
      //Aina suoritettavat toiminnot
     
-    this.colliders.foreach(_.update)
-    if(!this.southCollider.collides) this.ySpeed += 1
-    this.arm.get.direction.update(this.location.locationInImage, this.game.player.location.locationInImage)
-    if(this.isShielding) this.energy -= 5
-    if(this.isShielding && !this.shieldSound.isPlaying) this.shieldSound.play()
-    if(this.energy <= 0 ) this.isShielding = false
-    if(this.location.locationInGame._2 > this.game.currentLevel.dimensions._2) this.takeDamage(9999) 
+    this.colliders.forEach(collider -> collider.update);
+    if(!this.southCollider.collides) { this.ySpeed += 1.0;}
+    this.arm.get().direction.update(this.location.locationInImage, this.game.player.location.locationInImage);
+    if(this.isShielding) { this.energy = this.energy - 5.0;}
+    if(this.isShielding && !this.shieldSound.isPlaying) {this.shieldSound.play();}
+    if(this.energy <= 0 ) { this.isShielding = false;}
+    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions.getValue()) { this.takeDamage(9999); }
     
      //Esineiden pudottaminen
     try{
-    if(this.isDead) this.drop(this.inventory.values.head)
-    }catch{
-      case x:NoSuchElementException => println("FollowingEnemy item drop is acting up.")
+    if(this.isDead) { this.drop(this.inventory.values.head);}
+    }catch(NoSuchElementException x){
+      System.out.println("FollowingEnemy item drop is acting up.");
     }
     //Kun vihollinen on aktiivinen
     if(this.isActive){
       
-      if(this.playerLocator._1 == "left" && !this.isStuck) this.xSpeed = -2
-      if(this.playerLocator._1 == "right" && !this.isStuck) this.xSpeed = 2
+      if(this.playerLocator._1 == "left" && !this.isStuck) {this.xSpeed = -2.0;}
+      if(this.playerLocator._1 == "right" && !this.isStuck) {this.xSpeed = 2.0;}
       
-      this.move
+      this.move();
       
-      if(this.energy >0 && game.projectiles.exists(bolt => Helper.absoluteDistance(this.location.locationInGame, bolt.location.locationInGame) < 300 && bolt.shooter != this)) this.shieldOn
-      else this.shieldOff
+      if(this.energy >0 && game.projectiles.exists(bolt => Helper.absoluteDistance(this.location.locationInGame, bolt.location.locationInGame) < 300 && bolt.shooter != this)) {
+    	  this.shieldOn();
+      }else {
+    	  this.shieldOff();
+      }
       
     }
     
     //Kun vihollinen ei ole aktiivinen
     if(!this.isActive){
-      this.stop
+      this.stop();
     }
     
    
@@ -105,126 +114,127 @@ class FollowingEnemy extends Enemy{
  
   
   
- private def playerLocator:(String, String) = {
+ private Pair<String, String> playerLocator() {
     
-    val xDiff = this.distToPlayer._1
-    val yDiff = this.distToPlayer._2
+    Double xDiff = this.distToPlayer.getKey();
+    Double yDiff = this.distToPlayer.getValue();
     
-    var xStatus = ""
-    var yStatus = ""
+    String xStatus = "";
+    String yStatus = "";
     
-    if(xDiff < -50)  xStatus = "left"
-    else if(xDiff > 50) xStatus = "right"
-    else xStatus = "nearby"
+    if(xDiff < -50) {xStatus = "left";}
+    else if(xDiff > 50) {xStatus = "right";}
+    else {xStatus = "nearby";}
       
-    if(yDiff < -5) yStatus = "above"
-    else if(yDiff > 5) yStatus = "below"
-    else yStatus = "onlevel"
+    if(yDiff < -5) {yStatus = "above";}
+    else if(yDiff > 5) {yStatus = "below";}
+    else {yStatus = "onlevel";}
     
-    (xStatus, yStatus)
+    return new Pair<String, String>(xStatus, yStatus);
       
   }
   
- private def shoot = this.equippedWeapon match{
-    
-    case None => this.equipWeapon(Some(new RapidFireWeapon(this.game, Some(this))))
-    case Some(gun) => if(this.game.time % 50 == 0) gun.fire
-    
+ private void shoot() {
+	 
+	 if(this.equippedWeapon.isPresent()) {
+		 
+		 if(this.game.time % 50 == 0) {this.equippedWeapon.get().fire();} 
+	
+	 }else{
+		
+		 this.equipWeapon(Optional.of(new RapidFireWeapon(this.game, Optional.of(this))));
+	 }
   }
   
- def stop = {
-    this.xSpeed = 0
-    this.ySpeed = 0
-    this.isMovingForSprite = false
+ public void stop()  {
+    this.xSpeed = 0.0;
+    this.ySpeed = 0.0;
+    this.isMovingForSprite = false;
   } 
  
  
  //Move metodi hallitsee tämän vihollisen liikkumista playerlocatorin tietojen avulla
-  private def move = {
+  private void move() {
     
-    if(!this.isStuck && ((this.playerLocator._1 != "nearby") || ((this.playerLocator._2 != "onlevel") || !this.isOnLadder))){
+    if(!this.isStuck() && ((this.playerLocator().getKey() != "nearby") || ((this.playerLocator().getValue() != "onlevel") || !this.isOnLadder))){
       
       
-      this.location.move(this.xSpeed, this.ySpeed)
+      this.location.move(this.xSpeed, this.ySpeed);
      
-      this.isMovingForSprite = true
+      this.isMovingForSprite = true;
       
-    }else this.stop
+    }else{
+    	this.stop();
+    }
     
     
-    if(this.xSpeed<0) this.lookDirectionForSprite = "west"
-    if(this.xSpeed>0) this.lookDirectionForSprite = "east"
+    if(this.xSpeed<0) {this.lookDirectionForSprite = "west";}
+    if(this.xSpeed>0) {this.lookDirectionForSprite = "east";}
     
-    if(this.northCollider.collides) this.stop
+    if(this.northCollider.collides) {this.stop();}
     
-    if(this.eastCollider.collides ^ this.westCollider.collides) this.jump(10)
+    if(this.eastCollider.collides ^ this.westCollider.collides) {this.jump(10.0);}
     
-    if(this.isOnLadder && this.playerLocator._2 == "above") this.ySpeed = -5
-    else if(!this.isOnLadder && this.playerLocator._1 == "nearby" && this.playerLocator._2 == "above") this.jump(10)
+    if(this.isOnLadder && this.playerLocator().getValue() == "above") {this.ySpeed = -5.0;}
+    else if(!this.isOnLadder && this.playerLocator().getKey() == "nearby" && this.playerLocator().getValue() == "above") {this.jump(10.0);}
     
-    this.shoot
+    this.shoot();
     
-     if(this.isStuckBelow){
+     if(this.isStuckBelow()){
        
-        location.move(0, -1)
+        location.move(0.0, -1.0);
        // Pelastetaan jumiutunut vihollinen
      }
     
-    if(this.isStuckAbove){
+    if(this.isStuckAbove()){
       
-      this.location.move(0, 7)
+      this.location.move(0.0, 7.0);
       
     }
   }
   
-  private def jump(strength:Int) = {
+  private void jump(Double strength) {
     
    if(this.jumpCount < 3){
-     this.ySpeed = -strength
-     this.jumpCount += 1
+     this.ySpeed = -strength;
+     this.jumpCount += 1;
    }else if(this.southCollider.collides){
-     this.jumpCount = 0
-     this.ySpeed = -strength
-     this.jumpCount += 1
+     this.jumpCount = 0;
+     this.ySpeed = -strength;
+     this.jumpCount += 1;
    }
   }
   
-  private def shieldOn = if(this.energy > 0) this.isShielding = true
-  private def shieldOff = this.isShielding = false
+  private void shieldOn() { if(this.energy > 0) {this.isShielding = true;}}
+  private void shieldOff() { {this.isShielding = false;} }
     
 //#########################################################################################################################################################
 
   def image:Vector[Node] = if(!this.isShielding) Vector(body.image, arm.get.completeImage) else Vector(body.image, arm.get.completeImage, shield.image)
   
-  def takeDamage(amount:Int):Unit = {
+  public void takeDamage(Double amount) {
     
-    this.HP -= amount
-    this.jump(5)
-    this.hurtSound.play()
-    this.xSpeed -= 10
-    
-   
-   
-    
+    this.HP = this.HP - amount;
+    this.jump(5.0);
+    this.hurtSound.play();
+    this.xSpeed =  this.xSpeed - 10.0;
+     
   }
   
   //Metodi, joka vähentää vihollisen energiaa. Käytetään pelin lataamisen yhteydessä
-  def useEnergy(amount:Int):Unit = {
-    this.energy -= amount
+  public void useEnergy(Double amount) {
+    this.energy = this.energy - amount;
   }
   
- def isStuck = isStuckBelow || isStuckAbove
+ public Boolean isStuck() { return isStuckBelow() || isStuckAbove() ;}
   
- private def isStuckBelow = this.eastCollider.collides && this.westCollider.collides && this.southCollider.collides
+ private Boolean isStuckBelow() { return this.eastCollider.collides && this.westCollider.collides && this.southCollider.collides; }
   
- private def isStuckAbove = this.eastCollider.collides && this.westCollider.collides && this.northCollider.collides
+ private Boolean isStuckAbove() { return this.eastCollider.collides && this.westCollider.collides && this.northCollider.collides; }
   
- private def distToPlayer = (this.game.player.location.locationInGame._1 - this.location.locationInGame._1, this.game.player.location.locationInGame._2 - this.location.locationInGame._2)
+ private Pair<Double, Double> distToPlayer() { return new Pair<Double, Double>(this.game.player.location.locationInGame().getKey() - this.location.locationInGame().getKey(), this.game.player.location.locationInGame().getValue() - this.location.locationInGame().getValue());}
   
- private def absDistToPlayer = Helper.absoluteDistance(this.game.player.location.locationInGame, this.location.locationInGame)
+ private Double absDistToPlayer() {return Helper.absoluteDistance(this.game.player.location.locationInGame(), this.location.locationInGame());}
 
- 
- //Lisätään esine vihollisen tavaraluetteloon
- this.inventory += ("Health Pack" -> new HealthPack(this.game, 5))  
  
 }

@@ -46,7 +46,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
   Optional<Pair<Double, Double>> locationForSprite = Optional.ofNullable(location.locationInImage());
   String lookDirectionForSprite;
   abstract void stop();
-  abstract void takeDamage(int amount);
+  abstract void takeDamage(Double amount);
   ArrayList<Node> image;
   
   //Esineen poimiminen maailmasta
