@@ -1,44 +1,62 @@
-import scalafx.scene.shape.Rectangle
-import scalafx.scene.image._
-import javafx.scene.paint.ImagePattern
-import scalafx.Includes._
-import scalafx.scene.paint.Color._
-import scalafx.scene.input._
-import scalafx.animation._
-import scalafx.event._
-import scala.collection.mutable.Buffer
-import scala.math._
-import scala.util.Random
-import scalafx.scene.media._
-import scalafx.scene.Node
-import scalafx.scene.media.AudioClip
+package main.java;
 
-class FollowingEnemy(val name:String, val game:Game,  locationX:Double, locationY:Double) extends Enemy with UsesAnimatedGameSprite {
-  
-  val location = new GamePos((locationX, locationY), false)
-  var HP = 500.0
-  energy = 500
-  var isActive = false
-  var currentAction = ""
-  private var jumpCount = 0
+import javafx.scene.shape.Rectangle;
+import javafx.util.Pair;
+import javafx.scene.image.*;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Color.*;
+import javafx.scene.input.*;
+import javafx.animation.*;
+import javafx.event.*;
+import java.math.*;
+import java.util.Optional;
+import java.util.Random;
+import javafx.scene.media.*;
+import javafx.scene.Node;
+import javafx.scene.media.AudioClip;
+
+class FollowingEnemy extends Enemy{
+  String name; 
+  Game game;
+  Double locationX;
+  Double locationY;
+
+  public GamePos location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+  public Double HP = 500.0;
+  public Double energy = 500.0;
+  public Boolean isActive = false;
+  private String currentAction = "";
+  private int jumpCount = 0;
   
   //Vihollisen kuva
-  private val body = new AnimatedGameSprite("file:src/main/resources/Pictures/CorruptedMoonmanWalk", "MoonmanWalk", 2 to 6, ".png", None, (60,90), this, (-30,-45), false)
-  override val arm = Some(new RotatingArm(this, new DirectionVector(this.location.locationInImage, this.game.player.location.locationInImage))) 
-  private val shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 1 to 5, ".png", None, (60,90), this, (-30,-45), true)
-  var lookDirectionForSprite: String = "east"
-  var isMovingForSprite = false
+  private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/CorruptedMoonmanWalk", "MoonmanWalk", 6, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
+  public Optional<RotatingArm> arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), this.game.player.location.locationInImage())));
+  private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
+  public String lookDirectionForSprite = "east";
+  public Boolean isMovingForSprite = false;
   
   //Vihollisen Colliderit
-  private val northCollider = new Collider("Enorth", this, 0,  -this.body.spriteHeight.toInt/2 +15, "horizontal")
-  private val southCollider = new Collider("Esouth", this, 0,  this.body.spriteHeight.toInt/2 -12, "horizontal")
-  private val eastCollider = new Collider("Eeast", this, this.body.spriteWidth.toInt/2, -30, "vertical")
-  private val westCollider = new Collider("Ewest", this, -this.body.spriteWidth.toInt/2, -30, "vertical")
-  var colliders:Vector[Collider] = Vector(northCollider, eastCollider, southCollider, westCollider)
+  private Collider northCollider = new Collider("Enorth", this, 0.0,  -this.body.spriteHeight/2.0 +15, "horizontal");
+  private Collider southCollider = new Collider("Esouth", this, 0.0,  this.body.spriteHeight/2.0 -12, "horizontal");
+  private Collider eastCollider = new Collider("Eeast", this, this.body.spriteWidth/2.0, -30.0, "vertical");
+  private Collider westCollider = new Collider("Ewest", this, -this.body.spriteWidth/2.0, -30.0, "vertical");
+  public Collider colliders[] = {northCollider, eastCollider, southCollider, westCollider};
   
   //Audio
-  private val shieldSound = this.game.player.shieldSound
-  private val hurtSound = new AudioClip("file:src/main/resources/sound/CorruptedHurt.wav")
+  private AudioClip shieldSound = this.game.player.shieldSound;
+  private AudioClip hurtSound = new AudioClip("file:src/main/resources/sound/CorruptedHurt.wav");
+  
+  //Konstruktori
+  public FollowingEnemy(String name, Game game,  Double locationX, Double locationY) {
+	  
+	  this.name = name;
+	  this.game = game;
+	  this.locationX = locationX;
+	  this.locationY = locationY;
+
+  }
+  
+  
   
   def update:Unit = {
     

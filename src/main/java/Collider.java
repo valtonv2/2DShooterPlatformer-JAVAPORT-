@@ -14,8 +14,8 @@ class Collider{
 	
 	String identifier;
 	Actor actor;
-	Integer xOffset;
-	Integer yOffset;
+	Double xOffset;
+	Double yOffset;
 	String orientation;
  
  
@@ -23,7 +23,7 @@ class Collider{
  Double coillisionDistance = 35.0;
  
  //Luokan konstruktori
- public Collider(String identifier, Actor actor, Integer xOffset, Integer yOffset, String orientation ){
+ public Collider(String identifier, Actor actor, Double xOffset, Double yOffset, String orientation ){
 	 
 	 this.identifier = identifier;
 	 this.actor = actor;

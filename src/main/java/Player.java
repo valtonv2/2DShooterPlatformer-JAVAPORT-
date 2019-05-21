@@ -157,7 +157,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  
 	  //Audio
 	  private AudioClip playerHurtSound = new AudioClip("file:src/main/resources/sound/PlayerHurt.wav");
-	  private AudioClip shieldSound = new AudioClip("file:src/main/resources/sound/ShieldSound.wav");
+	  AudioClip shieldSound = new AudioClip("file:src/main/resources/sound/ShieldSound.wav");
 	  private AudioClip shieldBounceSound = new AudioClip("file:src/main/resources/sound/ShieldBounce.wav");
 	  
 	  /* 
@@ -168,12 +168,12 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	   * Kolmea sijaintia käytetään, jotta pelaaja ei tietyin välimatkoin pääsisi "putoamaan" maan sisään.
 	  */
 	   
-	 private Collider northCollider = new Collider("north", this, 0,  -this.body.spriteHeight/2+15, "horizontal");
-	 private Collider southCollider = new Collider("south", this, 0,  this.body.spriteHeight/2-12, "horizontal");
-	 private Collider eastCollider = new Collider("east", this, this.body.spriteWidth/2 - 20, -30, "vertical");
-	 private Collider westCollider = new Collider("west", this, -this.body.spriteWidth/2 + 20, -30, "vertical");
+	 private Collider northCollider = new Collider("north", this, 0.0,  -this.body.spriteHeight/2+15, "horizontal");
+	 private Collider southCollider = new Collider("south", this, 0.0,  this.body.spriteHeight/2-12, "horizontal");
+	 private Collider eastCollider = new Collider("east", this, this.body.spriteWidth/2 - 20, -30.0, "vertical");
+	 private Collider westCollider = new Collider("west", this, -this.body.spriteWidth/2 + 20, -30.0, "vertical");
 	  
-	 public Array<Collider> colliders = Collider arr[] {northCollider, eastCollider, southCollider, westCollider};
+	 public Collider colliders[] =  {northCollider, eastCollider, southCollider, westCollider};
 	  
 	 
 	//Konstruktori luokalle
