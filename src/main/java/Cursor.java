@@ -33,8 +33,8 @@ class MouseCursor{
   
   
 
-  private Double playerXDiff = this.xCoordinate - player.location.locationInImage.getkey();
-  private Double playerYDiff = this.yCoordinate - player.location.locationInImage.getValue();
+  private Double playerXDiff = this.xCoordinate - player.location.locationInImage().getKey();
+  private Double playerYDiff = this.yCoordinate - player.location.locationInImage().getValue();
         
   public Pair<Double, Double> location = new Pair<Double, Double>(this.xCoordinate, this.yCoordinate);
   

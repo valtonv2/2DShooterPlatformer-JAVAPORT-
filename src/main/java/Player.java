@@ -158,7 +158,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  //Audio
 	  private AudioClip playerHurtSound = new AudioClip("file:src/main/resources/sound/PlayerHurt.wav");
 	  AudioClip shieldSound = new AudioClip("file:src/main/resources/sound/ShieldSound.wav");
-	  private AudioClip shieldBounceSound = new AudioClip("file:src/main/resources/sound/ShieldBounce.wav");
+	  AudioClip shieldBounceSound = new AudioClip("file:src/main/resources/sound/ShieldBounce.wav");
 	  
 	  /* 
 	   * Seuraavat Colliderit muodostavat pelaajan sijainnin ympärille "puskurit" jotka tunnistavat

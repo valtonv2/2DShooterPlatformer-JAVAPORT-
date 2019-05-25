@@ -5,6 +5,7 @@ import javafx.scene.image.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Color.*;
 import javafx.scene.input.*;
+import javafx.scene.media.AudioClip;
 import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
@@ -63,66 +64,66 @@ class Projectile extends UsesGameSprite {
         
   
   //Huolehtii törmäyksistä
-  public void coillisionDetection  {
+  public void coillisionDetection()  {
     //Ammus ja seinä
     if(level.levelGeometryHitBox.exists(coordPair => axisDistance(coordPair, this.location.locationInGame()).getKey() <= projectileRadius + 25  && axisDistance(coordPair, this.location.locationInGame()).getValue() <= projectileRadius + 25)){
-      this.hasCollided = true
+      this.hasCollided = true;
       
      }
     
     //Ammus ja vihollinen
     if (game.enemies.exists(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && !enemy.isShielding)){
-      this.hasCollided = true
+      this.hasCollided = true;
       game.enemies.filter(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30).foreach(_.takeDamage(100))
     
     }else if(game.enemies.exists(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && enemy.isShielding)){
       
-      this.setDir = this.setDir.opposite
-      this.shooter = this.game.enemies.head
-      this.game.player.shieldBounceSound.play(Settings.musicVolume)
+      this.setDir = this.setDir.opposite();
+      this.shooter = this.game.enemies.get(0);
+      this.game.player.shieldBounceSound.play(Settings.musicVolume());
       
     }
    
   
   //Ammus ja pelaaja
   if (axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding == false && this.shooter != player && !player.isSlowingTime){
-    player.takeDamage(333)
-    this.hasCollided = true
+    player.takeDamage(333);
+    this.hasCollided = true;
     
   }else if(axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding  && this.shooter != player && !player.isSlowingTime){
     //Kimpoaminen takaisin
-    this.setDir = this.setDir.opposite
-    this.game.player.shieldBounceSound.play(Settings.musicVolume)
-    this.shooter = player
+    this.setDir = this.setDir.opposite();
+    this.game.player.shieldBounceSound.play(Settings.musicVolume());
+    this.shooter = player;
     
    }
   
    else if(player.southCollider.locations.exists(location =>axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player && player.isShielding){
     //Kävely ammusten päällä kun suojakenttä on käytössä
-     player.ySpeed = -3
-     this.setDir = this.setDir.opposite
-     this.shooter = player
+     player.ySpeed = -3.0;
+     this.setDir = this.setDir.opposite();
+     this.shooter = player;
    }
   
   else if(player.southCollider.locations.exists(location =>axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player){
     //Kävely ammusten päällä
-     player.ySpeed = -3
+     player.ySpeed = -3.0;
      
-     val blip = game.skyWalkSounds(randomizer.nextInt(5))
+     AudioClip blip = game.skyWalkSounds.get(randomizer.nextInt(5));
      if (!blip.isPlaying()){
-       blip.play(Settings.musicVolume)
+       blip.play(Settings.musicVolume());
      }
    }
   
    else if(axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding  && this.shooter != player && player.isSlowingTime){
-    this.setDir = this.setDir.opposite
-    this.game.player.shieldBounceSound.play(Settings.musicVolume)
-    this.shooter = player
+    this.setDir = this.setDir.opposite();
+    this.game.player.shieldBounceSound.play(Settings.musicVolume());
+    this.shooter = player;
    }
   
   else if (axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding == false && this.shooter != player){
-    player.takeDamage(100)
-    this.hasCollided = true
+    player.takeDamage(100);
+    this.hasCollided = true;
     
   }
   
@@ -135,8 +136,8 @@ class Projectile extends UsesGameSprite {
     if (this.game.time%100 == 0 && Helper.absoluteDistance(player.location.locationInGame(), this.location.locationInGame())>this.range) {
     	this.hasCollided  = false;
     }
-    this.coillisionDetection;
-    this.move;
+    this.coillisionDetection();
+    this.move();
     
   }
   

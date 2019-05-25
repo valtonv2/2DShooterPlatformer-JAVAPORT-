@@ -500,7 +500,7 @@ class GamePos{
  
  public Pair<Double, Double> locationInImage() {
 		 
-	if(center.isPresent) {
+	if(center.isPresent()) {
 		
 		 if (!this.isCenter){return Pair(inGameX-center.location.locationInGame.getKey()+center.location.locationInImage.getKey(), inGameY - center.location.locationInGame.getValue() + center.location.locationInImage.getValue() + playerHeightOffset);}
 	     else { return Pair(GameWindow.stage.width.toDouble/2 ,GameWindow.stage.height.toDouble/2);}
@@ -530,6 +530,26 @@ class GamePos{
    this.inGameX = 0.0;
    this.inGameY = 0.0;
    
+ }
+ 
+ public Boolean isNearOther(GamePos other, int limitDistance) {
+	 
+	 Pair<Double, Double> help = Helper.axisDistance(other.locationInGame(), this.locationInGame());
+	 Double xDiff = help.getKey();
+	 Double yDiff = help.getValue();
+	 
+	 return (xDiff <= limitDistance && yDiff <= limitDistance);
+	 
+ }
+ 
+ public Boolean isNearCoordPair(Pair<Double, Double> coord, int limitDistance) {
+	 
+	 Pair<Double, Double> help = Helper.axisDistance(coord, this.locationInGame());
+	 Double xDiff = help.getKey();
+	 Double yDiff = help.getValue();
+	 
+	 return (xDiff <= limitDistance && yDiff <= limitDistance);
+	 
  }
  
  //Konstruktori luokalle

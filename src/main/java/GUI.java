@@ -27,18 +27,12 @@ public static void main() {
 public static Game currentGame = new Game();
 public static GameCamera gameCamera;
 
-
-
-
-
-
-
 public static AnimationTimer clock = new AnimationTimer(changeThings);
 public static AnimationTimer mapClock = new AnimationTimer(changeMap);		 
 public static AnimationTimer menuClock = AnimationTimer(changeMenus);
 
 //Luodaan ikkuna
-public static void start(Stage primaryStage) {
+public void start(Stage primaryStage) {
 		
 	Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
 	
@@ -55,60 +49,49 @@ public static void start(Stage primaryStage) {
     menuClock.start();
     this.gameCamera = Some(currentGame.camera);
     
-		
-		
-		
-		
-		
+			
 		
 	}
 
 
-
-
-
-
-
-//NEW GAME
-
-  PlayerHUD;
   public static Player player() { return currentGame.player;};
 
  
   //Tänne laitetaan jutut jotka tehdään joka tick
-  def changeThings(time:Long):Unit = {
+  public void changeThings(Long time) {
     
     try{
     
-   GameWindow.currentGame.fullImage.cursor.value_=(Cursor.NONE)
+  GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
+  
   if(!currentGame.isOver){
     
-    currentGame.camera.update
-    player.updateState
-    currentGame.fullImage.content = currentGame.camera.cameraImage // Muuttaa fullimagen sisältöä ja näin animoi asiat
-    currentGame.cleanUp
+    currentGame.camera.update();
+    player().updateState();
+    currentGame.imageContent.getChildren().addAll(currentGame.camera.cameraImage()); // Muuttaa fullimagen sisältöä ja näin animoi asiat
+    currentGame.cleanUp();
     
-    if (!currentGame.backGroundMusic.isPlaying() && !player.isSlowingTime){
-      currentGame.backGroundMusic.play(Settings.musicVolume)
-      currentGame.timeSlowAmbience.stop()
-    }else if(currentGame.backGroundMusic.isPlaying) currentGame.backGroundMusic.volume = Settings.musicVolume
+    if (!currentGame.backGroundMusic.isPlaying() && !player().isSlowingTime){
+      currentGame.backGroundMusic.play(Settings.musicVolume());
+      currentGame.timeSlowAmbience.stop();
+    }else if(currentGame.backGroundMusic.isPlaying()) currentGame.backGroundMusic.setVolume(Settings.musicVolume());
    
-    if(player.isSlowingTime){
-     currentGame.backGroundMusic.stop()
-     if(!currentGame.timeSlowAmbience.isPlaying()) currentGame.timeSlowAmbience.play(Settings.musicVolume)
-     if(currentGame.timeSlowAmbience.isPlaying) currentGame.timeSlowAmbience.volume = Settings.musicVolume
+    if(player().isSlowingTime){
+     currentGame.backGroundMusic.stop();
+     if(!currentGame.timeSlowAmbience.isPlaying()) currentGame.timeSlowAmbience.play(Settings.musicVolume());
+     if(currentGame.timeSlowAmbience.isPlaying()) currentGame.timeSlowAmbience.setVolume(Settings.musicVolume()); 
      }
    
-    if (currentGame.time < 100000) currentGame.time += 1
-    else currentGame.time = 0
+    if (currentGame.time < 100000) currentGame.time += 1;
+    else currentGame.time = 0;
     
     }else{
       
-    this.clock.stop()
-    this.menuClock.start()
-    Menus.currentMenu = Menus.DeathMenu
-    if(!Menus.fullScreenStatus) this.stage.scene = Menus.DeathMenu.scene 
-    else{GameWindow.stage.scene = Menus.DeathMenu.scene; GameWindow.stage.setFullScreen(true) }
+    this.clock.stop();
+    this.menuClock.start();
+    Menus.currentMenu = Menus.DeathMenu;
+    if(!Menus.fullScreenStatus) this.stage.scene = Menus.DeathMenu.scene; 
+    else{GameWindow.stage.scene = Menus.DeathMenu.scene; GameWindow.stage.setFullScreen(true); }
      }
    
     }catch{
