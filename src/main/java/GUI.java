@@ -7,6 +7,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.application.Application;
 
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.*;
@@ -20,16 +21,28 @@ import javafx.scene.paint.Color.*;
 
 class GameWindow extends Application {
   
-public static void main() {
+public void main() {
 		launch();
 	}
 	
-public static Game currentGame = new Game();
-public static GameCamera gameCamera;
+public Game currentGame = new Game();
+public GameCamera gameCamera;
+public static Stage stage;
 
-public static AnimationTimer clock = new AnimationTimer(changeThings);
-public static AnimationTimer mapClock = new AnimationTimer(changeMap);		 
-public static AnimationTimer menuClock = AnimationTimer(changeMenus);
+public AnimationTimer clock = new AnimationTimer() {
+	@Override 
+	public void handle(long time) {changeThings();}
+};
+
+public AnimationTimer menuClock = new AnimationTimer() {
+	@Override 
+	public void handle(long time) {changeMenus();}
+};
+
+public AnimationTimer mapClock = new AnimationTimer() {
+	@Override 
+	public void handle(long time) {changeMap();}
+};
 
 //Luodaan ikkuna
 public void start(Stage primaryStage) {
@@ -45,24 +58,24 @@ public void start(Stage primaryStage) {
     primaryStage.setFullScreenExitKeyCombination(KeyCombination("Jee"));
     primaryStage.setScene(Menus.MainMenu.scene());
     
-
+    GameWindow.stage = primaryStage;
     menuClock.start();
-    this.gameCamera = Some(currentGame.camera);
+    this.gameCamera = Optional.ofNullable(currentGame.camera);
     
-			
-		
+    primaryStage.show();
+    
 	}
 
 
-  public static Player player() { return currentGame.player;};
+  public Player player() { return currentGame.player;}
 
  
   //Tänne laitetaan jutut jotka tehdään joka tick
-  public void changeThings(Long time) {
+  public void changeThings() {
     
     try{
     
-  GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
+  this.currentGame.fullImage.setCursor(Cursor.NONE);
   
   if(!currentGame.isOver){
     
@@ -90,91 +103,81 @@ public void start(Stage primaryStage) {
     this.clock.stop();
     this.menuClock.start();
     Menus.currentMenu = Menus.DeathMenu;
-    if(!Menus.fullScreenStatus) this.stage.scene = Menus.DeathMenu.scene; 
+    if(!Menus.fullScreenStatus) GameWindow.stage.scene = Menus.DeathMenu.scene; 
     else{GameWindow.stage.scene = Menus.DeathMenu.scene; GameWindow.stage.setFullScreen(true); }
      }
    
-    }catch{
+    }catch(Exception e){
  
-      case e:Exception => exceptionScreen("Something is wrong. + \n" + e)
-      case _ :Throwable => exceptionScreen("Something is wrong.")
+      exceptionScreen("Something is wrong. + \n" + e);
       
     }
    
   }
+  
   //Tämä metodi huolehtii menujen tilanpäivityksestä
-  def changeMenus(time:Long) = {
+  public void changeMenus() {
     
     try{
     
-    Menus.currentMenu.scene.cursor.value_=(Cursor.Default)
-    Menus.currentMenu.refresh
-    if(Menus.currentMenu.theme.isDefined && !Menus.currentMenu.theme.get.isPlaying()) Menus.currentMenu.theme.get.play(Settings.musicVolume)
-    if(Menus.currentMenu.theme.isDefined && Menus.currentMenu.theme.get.isPlaying()){
-      Menus.currentMenu.theme.get.setVolume(Settings.musicVolume) 
+    Menus.currentMenu.scene.setCursor(Cursor.DEFAULT);
+    Menus.currentMenu.refresh();
+    if(Menus.currentMenu.theme.isPresent() && !Menus.currentMenu.theme.get.isPlaying()) Menus.currentMenu.theme.get.play(Settings.musicVolume());
+    if(Menus.currentMenu.theme.isPresent() && Menus.currentMenu.theme.get.isPlaying()){
+      Menus.currentMenu.theme.get.setVolume(Settings.musicVolume());
      
     }
    
-    }catch{
-      case e:Exception => exceptionScreen("Something is wrong. + \n" + e)
-      case _ :Throwable => exceptionScreen("Something is wrong.")
+    }catch(Exception e){
+      
+     exceptionScreen("Something is wrong. + \n" + e);
+     
     }
   }
   
   //Karttatilan päivitys
-  def changeMap(time:Long) ={
+  public void changeMap() {
     
     try{
     
-    val cam = this.currentGame.camera
-    cam.location.move(cam.xSpeed, cam.ySpeed)
-    cam.zoomIn(cam.zInSpeed)
-    cam.zoomOut(cam.zOutSpeed)
+    GameCamera cam = this.currentGame.camera;
+    cam.location.move(cam.xSpeed, cam.ySpeed);
+    cam.zoomIn(cam.zInSpeed);
+    cam.zoomOut(cam.zOutSpeed);
     
-    }catch{
+    }catch(Exception e){
       
-      case e:Exception => exceptionScreen("Something is wrong. + \n" + e)
-      case _ :Throwable => exceptionScreen("Something is wrong.")
+     exceptionScreen("Something is wrong. + \n" + e);
+
     }
-      
-    
-    
+       
   }
   
   //Näyttö joka näkyy jos peliä suoritettaessa tapahtuu poikkeus. Estää pelin jäätymisen.
-  def exceptionScreen(msg:String):Unit = {
-    println("Moving to exScreen")
-    this.clock.stop()
-    this.menuClock.stop()
-    this.mapClock.stop()
-    val scene = new Scene
-    val text = new Text(GameWindow.stage.width.toDouble/2, GameWindow.stage.height.toDouble/2, msg)
-    val backGround =  new Rectangle{
-          
-          fill = Gray
-          width = 8000
-          height = 8000
-          x = -2000
-          y = -2000
-          
-        }
+  public void exceptionScreen(String msg) {
+
+    this.clock.stop();
+    this.menuClock.stop();
+    this.mapClock.stop();
     
-    scene.content = (List[Node](backGround, text))
-    text.setFill(Red)
+    Group windowContent = new Group();
+    Scene scene = new Scene(windowContent, 800, 800);
     
-    GameWindow.stage.scene = scene
+    Text text = new Text(GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2, msg);
+    Rectangle backGround =  new Rectangle(-2000, -2000, 8000, 8000);
+    
+    windowContent.getChildren().add(backGround);
+    windowContent.getChildren().add(text);
+    
+    
+    text.setFill(Color.RED);
+    
+    GameWindow.stage.setScene(scene);
     
   }
   
-  //Luodaan kello jonka tikittäessä asioita muutetaan. Pelin main loop.
-  //Ottaa parametrikseen funktion changeThings, joka sisältää muutokset.
-  val clock = AnimationTimer(changeThings)
-  
-  val mapClock = AnimationTimer(changeMap)
- 
-  //Kuin ylempi clock mutta päivittää pelin menuja
-  val menuClock = AnimationTimer(changeMenus)
-  menuClock.start
   
 }
+
+
 
