@@ -1,6 +1,7 @@
 package main.java;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Color.*;
 import java.math.*;
 import java.util.ArrayList;
@@ -20,15 +21,15 @@ import javafx.scene.text.Text;
 
 //2DGameCamera piirtää pelin kuvan ja liikuttaa piirrettävää ympäristöä
 
-class GameCamera{
+class GameCamera {
 	
-	public Player followee;
+  public Player followee;
   
   public GamePos location = new GamePos(new Pair<Double, Double>(followee.location.locationInGame().getKey()+400.0,followee.location.locationInGame().getValue()+200), true);
   private Double zoomCoefficient = 1.0;    // Zoomauskerroin
-  private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, GameWindow.stage.width.toDouble/2, GameWindow.stage.height.toDouble/2);
+  private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2);
   private Boolean followPlayer = true;
-  public int drawDistance = GameWindow.stage.width.toDouble/2+200;
+  public int drawDistance = (int) (GameWindow.stage.getWidth()/2+200);
   
   public Double xSpeed = 0.0;
   public Double ySpeed = 0.0;
@@ -47,16 +48,13 @@ class GameCamera{
 	    
   }
   
-  
-  
-  
   public Level level() {return this.game.currentLevel;}
   
   public ArrayList<GameTile> entireEnvironment() {
     return level().allTiles;
   }
   
-  public List colliderImages() { followee.colliders.stream().flatMap(collider -> collider.images()).collect(Collectors.toList());}
+  public List<Node> colliderImages() { followee.colliders.stream().flatMap(collider -> collider.images()).collect(Collectors.toList());}
  
   //Karttatilan kuvat
   

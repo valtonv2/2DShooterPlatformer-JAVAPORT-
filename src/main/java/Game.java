@@ -1,4 +1,4 @@
-
+package main.java;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class Game {
   
   public Player player = new Player(0.0, 0.0, this); //Sijainnin oltava t�ss� (0,0) jotta levelin spawn-location menee oikein
   
-  public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+  public List<Enemy> enemies = new ArrayList<Enemy>();
  
   public Level currentLevel = firstLevel();
   public String currentLevelName = "";
@@ -49,7 +49,7 @@ public class Game {
   public void cleanUp(){
     
     this.projectiles = this.projectiles.stream().filter(projectile -> projectile.hasCollided == false).collect(Collectors.toList());
-    this.enemies = this.enemies.stream().filter(enemy -> enemy.isDead == false).collect(Collectors.toList());
+    this.enemies = this.enemies.stream().filter(enemy -> enemy.isDead() == false).collect(Collectors.toList());
     
   }
   
@@ -60,8 +60,8 @@ public class Game {
     player.HP = player.maxHP;
     player.energy = player.maxEnergy;
     player.isDead = false;
-    player.xSpeed = 0;
-    player.ySpeed = 0;
+    player.xSpeed = 0.0;
+    player.ySpeed = 0.0;
     player.inventory.clear();
     Pair<Double, Double> pos = player.location.locationInGame();
     player.location.move(-pos.getKey(), -pos.getValue());    // Pelaajan sijainti on nollattava
@@ -79,8 +79,8 @@ public class Game {
      player.equippedWeapon = Optional.empty();
      Pair<Double, Double> pos = player.location.locationInGame();
      player.location.move(-pos.getKey(), -pos.getValue());   // Pelaajan sijainti on nollattava
-     player.xSpeed = 0;
-     player.ySpeed = 0;
+     player.xSpeed = 0.0;
+     player.ySpeed = 0.0;
     
      this.enemies.clear();
      
@@ -102,13 +102,13 @@ public class Game {
      this.isInmapMode = true;
      
      camera.changeZoom(0.5);
-     camera.toggleFreeCamera;
+     camera.toggleFreeCamera();
      GameWindow.mapClock.start();
     }else{
       this.isInmapMode = false;
      GameWindow.mapClock.stop();
       camera.changeZoom(1);
-      camera.toggleFreeCamera;
+      camera.toggleFreeCamera();
     }
     
     

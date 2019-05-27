@@ -235,8 +235,8 @@ abstract class Actor extends UsesAnimatedGameSprite {
 		  	      if(event.getCode() == KeyCode.ESCAPE){
 		  	      GameWindow.clock.stop();
 		  	      GameWindow.menuClock.start();
-		  	      if(Menus.fullScreenStatus == false) { GameWindow.stage.scene = Menus.PauseMenu.scene; }
-		  	      else{GameWindow.stage.scene = Menus.PauseMenu.scene; GameWindow.stage.setFullScreen(true); }
+		  	      if(Menus.fullScreenStatus == false) { GameWindow.stage.setScene(Menus.PauseMenu.scene); }
+		  	      else{GameWindow.stage.setScene(Menus.PauseMenu.scene); GameWindow.stage.setFullScreen(true); }
 		  	      Menus.currentMenu = Menus.PauseMenu;
 		  	    }
 		  	     
@@ -388,11 +388,11 @@ abstract class Actor extends UsesAnimatedGameSprite {
 		  };
 				  
 		  
-		  this.player.game.fullImage().addEventFilter(KeyEvent.KEY_PRESSED, playerKeyPressedHandler);
-		  this.player.game.fullImage().addEventFilter(KeyEvent.KEY_RELEASED, playerKeyRaisedHandler);
-		  this.player.game.fullImage().addEventFilter(KeyEvent.KEY_PRESSED, playerKeyPressedHandler);
-		  this.player.game.fullImage().addEventFilter(MouseEvent.MOUSE_CLICKED, playerMouseClickHandler);
-		  this.player.game.fullImage().addEventFilter(ScrollEvent.SCROLL, playerScrollHandler);
+		  this.game.fullImage.addEventFilter(KeyEvent.KEY_PRESSED, playerKeyPressedHandler);
+		  this.game.fullImage.addEventFilter(KeyEvent.KEY_RELEASED, playerKeyRaisedHandler);
+		  this.game.fullImage.addEventFilter(KeyEvent.KEY_PRESSED, playerKeyPressedHandler);
+		  this.game.fullImage.addEventFilter(MouseEvent.MOUSE_CLICKED, playerMouseClickHandler);
+		  this.game.fullImage.addEventFilter(ScrollEvent.SCROLL, playerScrollHandler);
 	  }
 	  
 	  
@@ -417,14 +417,14 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  
 	 public void updateState() {
 	     
-	    this.expMove;
+	    this.expMove();
 	    
 	    
 	    if (this.game.mouseCursor.isOnLeft) {this.lookDirection = "west";}
 	    else {this.lookDirection = "east";}
 	    
 	    //Päivittää pelaajan collidereja ja mahdollistaa törmäykset
-	    this.colliders.foreach(_.update);
+	    this.colliders.forEach(collider -> collider.update());
 	    
 	    if((this.eastCollider.collides || this.westCollider.collides) && this.game.time % 5 == 0) {this.isWalking = false;}
 	    
@@ -434,12 +434,12 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	    if(!this.southCollider.collides && !this.isOnLadder) { this.game.currentLevel.gravity(0.2);}
 	    
 	    if(this.isShielding && !this.shieldSound.isPlaying() && Settings.muteSound == false){
-	       this.shieldSound.play(Settings.musicVolume)
+	       this.shieldSound.play(Settings.musicVolume());
 	        }
 	    
-	    if(this.isShielding && !Settings.devMode) {this.energy = math.max(0, this.energy-1);}
+	    if(this.isShielding && !Settings.devMode) {this.energy = Math.max(0, this.energy-1);}
 	    
-	    if (this.isSlowingTime && !Settings.devMode) this.energy = {math.max(0, this.energy-1);}
+	    if (this.isSlowingTime && !Settings.devMode) { this.energy = Math.max(0, this.energy-1);}
 	    
 	    if(this.isSlowingTime && this.energy == 0) {this.toggleSlowTime();}
 	    
@@ -453,38 +453,52 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	    
 	    PlayerHUD.energyBar.setValue(this.energy / this.maxEnergy);
 	    
-	    if(this.location.locationInGame.getValue() > this.game.currentLevel.dimensions.getValue()){
-	      println("You fell off map")
+	    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()){
+
 	      this.takeDamage(9999);
 	    }
 	  }
 	   
 	  //Luodaan scalafx:n mukainen kuva
-	 public Array image() { 
+	 public ArrayList<Node> image() { 
 	  
-	      if (!this.isShielding) Array<Node>(body.image, arm.get.completeImage);
-	      else Array<Node>(body.image, arm.get.completeImage, shield.image);
+		 ArrayList<Node> done = new ArrayList<Node>();
+		 
+	      if (!this.isShielding) {
+	    	  
+	    	  done.add(body.image());
+	    	  done.add(arm.get().completeImage());
+	    	  return done;
+	      }
+	      else {
+	    	  done.add(body.image());
+	    	  done.add(arm.get().completeImage());
+	    	  done.add(shield.image());
+	    	  return done;
+	      }
 	      
 	  }
 	  
 	 
 	 //Seuraava shoot-metodi laukaisee aseen.
-	  public void shoot() { switch(this.equippedWeapon){
-	    
-	    case Optional<Weapon>: 
-	    	if(!this.game.isInmapMode) {this.equippedWeapon.get().fire;}
-	        break;
-	    case Optional.empty():
-	    	PlayerHUD.notificationArea.announce("You have not equipped a weapon");
-	        break;
-	  
-	  }
+	  public void shoot() { 
+		  
+		  if(this.equippedWeapon.isPresent()) {
+			  
+			  if(!this.game.isInmapMode) {this.equippedWeapon.get().fire();}
+			  
+		  }else {
+			  
+			  PlayerHUD.notificationArea.announce("You have not equipped a weapon");
+			  
+		  }
+		  
 	 }
 	  
 	  //Pelaajan vahingoittaminen
 	  public void takeDamage(int amount) {
 	   
-		  if(Settings.muteSound == false) {playerHurtSound.play(Settings.musicVolume);}
+		  if(Settings.muteSound == false) {playerHurtSound.play(Settings.musicVolume());}
 	    
 	      if(Settings.devMode == false) { this.HP -= amount;}
 	     
@@ -494,8 +508,8 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  
 	  public void stop() {
 	    
-	    this.xSpeed = 0;
-	    this.ySpeed = 0;
+	    this.xSpeed = 0.0;
+	    this.ySpeed = 0.0;
 	  }
 	  
 	  //Pelaajan parantaminen
@@ -559,5 +573,5 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  
 	 public Boolean isMovingForSprite() {return this.isWalking;}
 	  
-	 public String toString() {this.name + " now at (" + this.location.locationInGame._1 +" ; "+ this.location.locationInGame._2 + ")"}
+	 public String toString() {this.name + " now at (" + this.location.locationInGame().getKey() +" ; "+ this.location.locationInGame().getValue() + ")"}
 	}

@@ -8,7 +8,6 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import javafx.scene.input.*;
@@ -21,7 +20,6 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import java.util.concurrent.Callable;
 
 
 
@@ -50,7 +48,7 @@ class Menus{
 	    private Rectangle gameLogo = Helper.anySpriteFromImage("file:src/main/resources/Pictures/GameLogo.png", new Pair<Double, Double>(0.0,0.0), 600.0, 250.0);
 	   
 	        
-	    private GameButton playButton = new AnimatedButton(
+	    private AnimatedButton playButton = new AnimatedButton(
 	      "Play Game", //Button text
 	       new Pair<Double, Double>(0.0, -100.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -58,8 +56,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>actionjaa = () ->{    //Action
+	        new Runnable(){    //Action
 	      
+	    	  @Override
+	    	  public void run() {
+	    	  
 	    	   GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
 	           GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
@@ -67,11 +68,12 @@ class Menus{
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           GameWindow.stage.setFullScreen(true);
 	           }
+	           }
 	            
 	        });
 	    
 	   
-	    private GameButton settingsButton = new AnimatedButton(
+	    private AnimatedButton settingsButton = new AnimatedButton(
 	       "Settings", //Button text
 	       new Pair<Double, Double>(0.0, -25.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -79,19 +81,24 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>action0 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	  
 	    	   if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.SettingsMenu.scene);}
 	    	   else{GameWindow.stage.setScene(Menus.SettingsMenu.scene); 
 	    	        GameWindow.stage.setFullScreen(true); }
 	    		       
 	    	   Menus.currentMenu = Menus.SettingsMenu;
-	    	   Menus.SettingsMenu.arrivedFrom = this;
+	    	   Menus.SettingsMenu.arrivedFrom = Menus.MainMenu;
+		    	  }
 	    	   
 	    	        });
 	    
 	    
-	    private GameButton levelSelectButton = new AnimatedButton(
+	    private AnimatedButton levelSelectButton = new AnimatedButton(
 	       "Select Level", //Button text
 	       new Pair<Double, Double>(0.0, 50.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -99,7 +106,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>action1 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    	   if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.LevelSelectMenu.scene);}
 	    	   else{
@@ -107,12 +118,13 @@ class Menus{
 	    	     GameWindow.stage.setFullScreen(true);
 	    	     }
 	    	   Menus.currentMenu = Menus.LevelSelectMenu;
+		    	  }
 	    	   
 	    	    	  });
 	    	    
 	    
 	    
-	    private GameButton loadButton = new AnimatedButton(
+	    private AnimatedButton loadButton = new AnimatedButton(
 	       "Load Game", //Button text
 	        new Pair<Double, Double>(0.0, 125.0), //Offset from center
 	        new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -120,7 +132,11 @@ class Menus{
 	    	"file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	    	"file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	    	Optional.empty(), //Announcement
-	    	Callable<Void>action2 = () ->{    //Action
+	    	new Runnable(){    //Action
+	  	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	      
 	    		
 	    		if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.LoadMenu.scene);}
@@ -129,11 +145,11 @@ class Menus{
 		    	     GameWindow.stage.setFullScreen(true);
 		    	     }
 		    	   Menus.currentMenu = Menus.LoadMenu;
-	    		
+		    	  }
 	    		
 	    	    	   });
 	    
-	    private GameButton saveButton = new AnimatedButton(
+	    private AnimatedButton saveButton = new AnimatedButton(
 	 	    "Save Game", //Button text
 	 	     new Pair<Double, Double>(0.0, 200.0), //Offset from center
 	 	     new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -141,7 +157,11 @@ class Menus{
 	 	     "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	 	     "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	 	     Optional.empty(), //Announcement
-	 	     Callable<Void>action3 = () ->{    //Action
+	 	    new Runnable(){    //Action
+	 		      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	 	    	      
 	 	    		
 	 	   	if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.SaveMenu.scene);}
@@ -150,12 +170,12 @@ class Menus{
 	 		     GameWindow.stage.setFullScreen(true);
 	 		    }
 	 		Menus.currentMenu = Menus.SaveMenu;
-	 	    		
+		    	  }
 	 	    		
 	 	    	        });
 	    	    
 	    
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 		 	 "Exit Game", //Button text
 		 	 new Pair<Double, Double>(0.0, 275.0), //Offset from center
 		 	 new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -163,17 +183,22 @@ class Menus{
 		 	 "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 		 	 "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 		 	 Optional.empty(), //Announcement
-		 	 Callable<Void>action4 = () ->{    //Action
+		 	new Runnable(){    //Action
+			      
+		    	  @Override
+		    	  public void run() {
+		    	  
 		 	    	      
 		 		GameWindow.stage.close();
-		        GameWindow.stopApp();
+	
+		    	  }
 		 	   
 		 	    	        });
 	    
 
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/MainMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 2783.0 ,2484.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
 	    private Group content = new Group();
@@ -193,7 +218,7 @@ class Menus{
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText); 
+	    	  content.getChildren().addAll(backGround, header, annotationText, gameLogo); 
 	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
 	          
 	      }
@@ -233,7 +258,7 @@ class Menus{
 	    private Text annotationText = new Text(0,0,"");
 	   
 	        
-	    private GameButton resumeButton = new AnimatedButton(
+	    private AnimatedButton resumeButton = new AnimatedButton(
 	      "", //Button text
 	       new Pair<Double, Double>(-200.0, 0.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -241,7 +266,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/SquarePlayButton.png", //Hover image path
 	       "file:src/main/resources/Pictures/SquarePlayButton.png",//Pressed image path
 	       Optional.of("Resume game"), //Announcement
-	       Callable<Void>action1 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   GameWindow.clock.start();
 	           GameWindow.menuClock.stop();
 	           if(!Menus.fullScreenStatus) {
@@ -250,10 +279,11 @@ class Menus{
 	        	   GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           GameWindow.stage.setFullScreen(true); 
 	           }
+	           }
 	        });
 	    
 	   
-	    private GameButton settingsButton = new AnimatedButton(
+	    private AnimatedButton settingsButton = new AnimatedButton(
 	       "", //Button text
 	       new Pair<Double, Double>(0.0, 0.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -261,7 +291,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/SquareSettingButton.png", //Hover image path
 	       "file:src/main/resources/Pictures/SquareSettingButton.png",//Pressed image path
 	       Optional.of("Game Settings"), //Announcement
-	       Callable<Void>action2 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   GameWindow.clock.stop();
 	           GameWindow.menuClock.start();
 	           if(!Menus.fullScreenStatus) {
@@ -271,11 +305,12 @@ class Menus{
 	        	   GameWindow.stage.setFullScreen(true);
 	        	   }
 	           Menus.currentMenu = Menus.SettingsMenu;
-	           Menus.SettingsMenu.arrivedFrom = this;
+	           Menus.SettingsMenu.arrivedFrom = Menus.PauseMenu;
+		    	  }
 	    	        });
 	    
 	    
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(200.0, 0.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -283,7 +318,11 @@ class Menus{
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
 	    	  Optional.of("Return to Main Menu"), //Announcement
-	    	  Callable<Void>exit = () ->{    //Action
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
@@ -292,12 +331,12 @@ class Menus{
 	    			  }
 	    		
 	    		 Menus.currentMenu = Menus.MainMenu;
-	    		  
+		    	  }
 	    		  
 	    	    	   });
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/MenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
 	    private Group content = new Group();
@@ -357,7 +396,7 @@ class Menus{
 	    private Text annotationText = new Text(0,0,"");
 	   
 	        
-	    private GameButton restartButton = new AnimatedButton(
+	    private AnimatedButton restartButton = new AnimatedButton(
 	      "", //Button text
 	       new Pair<Double, Double>(-300.0, -150.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -365,7 +404,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/SquarePlayButton.png", //Hover image path
 	       "file:src/main/resources/Pictures/SquarePlayButton.png",//Pressed image path
 	       Optional.of("Restart Game"), //Announcement
-	       Callable<Void>action1 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	       
 	           GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
@@ -379,11 +422,11 @@ class Menus{
 	                GameWindow.stage.setFullScreen(true); 
 	                }
 	    	   
-	    	   
+		    	  }
 	        });
 	        
 	    
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -391,7 +434,11 @@ class Menus{
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
 	    	  Optional.of("Return to Main Menu"), //Announcement
-	    	  Callable<Void>exit = () ->{    //Action
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    		    GameWindow.clock.stop();
 	    	        GameWindow.menuClock.start();
@@ -407,11 +454,11 @@ class Menus{
 	    	        PlayerHUD.equipmentBox.updateItems();
 	    	        Menus.currentMenu = Menus.MainMenu;
 	    		  
-	    		  
+		    	  }
 	    	    	   });
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.of(new AudioClip("file:src/main/resources/sound/DWADeathMenuTheme.wav"));
 	    private Group content = new Group();
@@ -468,7 +515,7 @@ class Menus{
 	    private Text annotationText = new Text(0,0,"");
 	   
 	        
-	    private GameButton level1Button = new AnimatedButton(
+	    private AnimatedButton level1Button = new AnimatedButton(
 	      "Level 1", //Button text
 	       new Pair<Double, Double>(30.0, -245.0), //Offset from center
 	       new Pair<Double, Double>(140.0, 95.0),  //Dimensions
@@ -476,7 +523,11 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.of("large City"), //Announcement
-	       Callable<Void>action1 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	       
 	    	   GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
@@ -488,9 +539,10 @@ class Menus{
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); }
 	           }
+	      
 	        });
 	    
-	    private GameButton level2Button = new AnimatedButton(
+	    private AnimatedButton level2Button = new AnimatedButton(
 	  	      "Level 2", //Button text
 	  	       new Pair<Double, Double>(30.0, -100.0), //Offset from center
 	  	       new Pair<Double, Double>(140.0, 95.0),  //Dimensions
@@ -498,7 +550,11 @@ class Menus{
 	  	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	  	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	  	       Optional.of("large City"), //Announcement
-	  	       Callable<Void>action2 = () ->{    //Action
+	  	     new Runnable(){    //Action
+	  		      
+	 	    	  @Override
+	 	    	  public void run() {
+	 	    	  
 	  	       
 	  	    	   GameWindow.menuClock.stop();
 	  	           GameWindow.clock.start();
@@ -510,11 +566,12 @@ class Menus{
 	  	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	  	                GameWindow.stage.setFullScreen(true); }
 	  	           }
+	  	     
 	  	        });
 	    
 	   
 	    
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -522,7 +579,11 @@ class Menus{
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
 	    	  Optional.of("Return to Main Menu"), //Announcement
-	    	  Callable<Void>exit = () ->{    //Action
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
@@ -531,6 +592,7 @@ class Menus{
 	    			  }
 	    		
 	    		 Menus.currentMenu = Menus.MainMenu;
+		    	  }
 	    		  
 	    	    	   });
 	    
@@ -540,14 +602,14 @@ class Menus{
 		  	public void handle(ScrollEvent event) {
 		  		
 		  		if(event.getDeltaY()>0 && scrollPart.getLayoutY() < 0){
-		    	        scrollPart.setLayoutY(scrollPart.getLayoutY + 5);
-		    	        lv1Button.changeOffset(0, 5);
-		    	        lv2Button.changeOffset(0,5);
+		    	        scrollPart.setLayoutY(scrollPart.getLayoutY() + 5);
+		    	        level1Button.changeOffset(0.0, 5.0);
+		    	        level2Button.changeOffset(0.0,5.0);
 		    	      
-		  		}else if(event.getDeltaY()<0 && scrollPart.getLayoutY() > GameWindow.stage.height() - 2500){
-		    	        scrollPart.setLayoutY(scrollPart.layoutY - 5);
-		    	        lv1Button.changeOffset(0, -5);
-		    	        lv2Button.changeOffset(0, -5);
+		  		}else if(event.getDeltaY()<0 && scrollPart.getLayoutY() > GameWindow.stage.getHeight() - 2500){
+		    	        scrollPart.setLayoutY(scrollPart.getLayoutY() - 5);
+		    	        level1Button.changeOffset(0.0, -5.0);
+		    	        level2Button.changeOffset(0.0, -5.0);
 		    	      }
 
 		  		
@@ -556,7 +618,7 @@ class Menus{
 	    
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/Lastembers.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    private Rectangle scrollPartImg = Helper.anySpriteFromImage("file:src/main/resources/Pictures/LevelMenuScrollPart.png", new Pair<Double, Double>(0.0,0.0), 800.0, 2500.0);
 	    public Optional<AudioClip> theme = Optional.empty();
@@ -603,12 +665,12 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if(GameWindow.currentGame.levelCompletionStatus.get(0) == false && !this.lv2Button.isLocked){
-	          this.lv2Button.lock();
+	      if(GameWindow.currentGame.levelCompletionStatus.get(0) == false && !this.level2Button.isLocked){
+	          this.level2Button.lock();
 
 	        }
-	      else if(GameWindow.currentGame.levelCompletionStatus(0) == true && this.lv2Button.isLocked){
-	          this.lv2Button.unlock();
+	      else if(GameWindow.currentGame.levelCompletionStatus.get(0) == true && this.level2Button.isLocked){
+	          this.level2Button.unlock();
 	         
 	        }
 	      
@@ -637,7 +699,7 @@ class Menus{
 	    public GameCheckBox devModeCheckBox = new GameCheckBox("Dev Mode", new Pair<Double, Double>(-150.0, 130.0));
 	    	    
 	    private Rectangle checkBoxBackground = Helper.anySpriteFromImage("file:src/main/resources/Pictures/CBbackground.png", new Pair<Double, Double>(0.0,0.0), 400.0 ,1000.0 );
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -645,7 +707,11 @@ class Menus{
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
 	    	  Optional.of("Return to Main Menu"), //Announcement
-	    	  Callable<Void>exit = () ->{    //Action
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(arrivedFrom.scene); }
 	    		  else{
@@ -655,11 +721,11 @@ class Menus{
 	    		
 	    		 Menus.currentMenu = arrivedFrom;
 	    		  
-	    		  
+		    	  }
 	    	    	   });
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<GameButton> buttons = new ArrayList<GameButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/SettingsMenuBG.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
 	    private Group content = new Group();
@@ -727,7 +793,7 @@ class Menus{
 	    private Text annotationText = new Text(0,0,"");
 	   
 	        
-	    private GameButton slot1Button = new AnimatedButton(
+	    private AnimatedButton slot1Button = new AnimatedButton(
 	      "Slot 1", //Button text
 	       new Pair<Double, Double>(-100.0, -150.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -735,13 +801,18 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>action1 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	       SaveHandler.loadGame("src/main/resources/SaveFiles/Save1.DWAsave");
-	       this.annotationText.setText("Slot 1 loaded");
+	       annotationText.setText("Slot 1 loaded");
+		    	  }
 	        });
 	    
 	   
-	    private GameButton slot2Button = new AnimatedButton(
+	    private AnimatedButton slot2Button = new AnimatedButton(
 	       "Slot 2", //Button text
 	       new Pair<Double, Double>(-100.0, -25.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -749,13 +820,18 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>action2 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   SaveHandler.loadGame("src/main/resources/SaveFiles/Save2.DWAsave");
-	    	   this.annotationText.setText("Slot 2 loaded");
+	    	   annotationText.setText("Slot 2 loaded");
+		    	  }
 	    	        });
 	    
 	    
-	    private GameButton slot3Button = new AnimatedButton(
+	    private AnimatedButton slot3Button = new AnimatedButton(
 	       "Slot 3", //Button text
 	       new Pair<Double, Double>(-100.0, -100.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -763,14 +839,19 @@ class Menus{
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	       Optional.empty(), //Announcement
-	       Callable<Void>action3 = () ->{    //Action
+	       new Runnable(){    //Action
+	 	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	     SaveHandler.loadGame("src/main/resources/SaveFiles/Save3.DWAsave");
-	    	     this.annotationText.setText("Slot 3 loaded");
+	    	     annotationText.setText("Slot 3 loaded");
+		    	  }
 	    	    	  });
 	    	    
 	    
 	    
-	    private GameButton slot4Button = new AnimatedButton(
+	    private AnimatedButton slot4Button = new AnimatedButton(
 	       "Slot 4", //Button text
 	        new Pair<Double, Double>(-100.0, 225.0), //Offset from center
 	        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -778,13 +859,18 @@ class Menus{
 	    	"file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	    	"file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
 	    	Optional.empty(), //Announcement
-	    	Callable<Void>action4 = () ->{    //Action
+	    	new Runnable(){    //Action
+	  	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	      SaveHandler.loadGame("src/main/resources/SaveFiles/Save4.DWAsave");
-	    	      this.annotationText.setText("Slot 4 loaded");
+	    	      annotationText.setText("Slot 4 loaded");
+		    	  }
 	    	    	   });
 	    	    
 	    
-	    private GameButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -792,7 +878,11 @@ class Menus{
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
 	    	  Optional.of("Return to Main Menu"), //Announcement
-	    	  Callable<Void>exit = () ->{    //Action
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
 	    	   
 	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
@@ -800,13 +890,13 @@ class Menus{
 	    			  GameWindow.stage.setFullScreen(true);
 	    			  }
 	    		
-	    		 Menus.currentMenu = MainMenu;
-	    		  
+	    		 Menus.currentMenu = Menus.MainMenu;
+		    	  }
 	    		  
 	    	    	   });
 	    	    	    
 	    
-	    private ArrayList<GameButton> buttons = new ArrayList(); 
+	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
 	    private Group content = new Group();
@@ -863,7 +953,7 @@ class Menus{
     private Text annotationText = new Text(0,0,"");
    
         
-    private GameButton slot1Button = new AnimatedButton(
+    private AnimatedButton slot1Button = new AnimatedButton(
       "Slot 1", //Button text
        new Pair<Double, Double>(-100.0, -150.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -871,13 +961,18 @@ class Menus{
        "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
        "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
        Optional.empty(), //Announcement
-       Callable<Void>action1 = () ->{    //Action
+       new Runnable(){    //Action
+ 	      
+	    	  @Override
+	    	  public void run() {
+	    	  
        SaveHandler.saveGame("src/main/resources/SaveFiles/Save1.DWAsave");
-       this.annotationText.setText("Slot 1 saved");
+       annotationText.setText("Slot 1 saved");
+	    	  }
         });
     
    
-    private GameButton slot2Button = new AnimatedButton(
+    private AnimatedButton slot2Button = new AnimatedButton(
        "Slot 2", //Button text
        new Pair<Double, Double>(-100.0, -25.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -885,13 +980,18 @@ class Menus{
        "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
        "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
        Optional.empty(), //Announcement
-       Callable<Void>action2 = () ->{    //Action
+       new Runnable(){    //Action
+ 	      
+	    	  @Override
+	    	  public void run() {
+	    	  
     	   SaveHandler.saveGame("src/main/resources/SaveFiles/Save2.DWAsave");
-    	   this.annotationText.setText("Slot 2 saved");
+    	   annotationText.setText("Slot 2 saved");
+	    	  }
     	        });
     
     
-    private GameButton slot3Button = new AnimatedButton(
+    private AnimatedButton slot3Button = new AnimatedButton(
        "Slot 3", //Button text
        new Pair<Double, Double>(-100.0, -100.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -899,14 +999,19 @@ class Menus{
        "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
        "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
        Optional.empty(), //Announcement
-       Callable<Void>action3 = () ->{    //Action
+       new Runnable(){    //Action
+ 	      
+	    	  @Override
+	    	  public void run() {
+	    	  
     	     SaveHandler.saveGame("src/main/resources/SaveFiles/Save3.DWAsave");
-    	     this.annotationText.setText("Slot 3 saved");
+    	     annotationText.setText("Slot 3 saved");
+	    	  }
     	    	  });
     	    
     
     
-    private GameButton slot4Button = new AnimatedButton(
+    private AnimatedButton slot4Button = new AnimatedButton(
        "Slot 4", //Button text
         new Pair<Double, Double>(-100.0, 225.0), //Offset from center
         new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -914,13 +1019,18 @@ class Menus{
     	"file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
     	"file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
     	Optional.empty(), //Announcement
-    	Callable<Void>action4 = () ->{    //Action
+    	new Runnable(){    //Action
+  	      
+	    	  @Override
+	    	  public void run() {
+	    	  
     	      SaveHandler.saveGame("src/main/resources/SaveFiles/Save4.DWAsave");
-    	      this.annotationText.setText("Slot 4 saved");
+    	      annotationText.setText("Slot 4 saved");
+	    	  }
     	    	   });
     	    
     
-    private GameButton exitButton = new AnimatedButton(
+    private AnimatedButton exitButton = new AnimatedButton(
     	 "", //Button text
     	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
     	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -928,7 +1038,11 @@ class Menus{
     	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
     	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
     	  Optional.of("Return to Main Menu"), //Announcement
-    	  Callable<Void>exit = () ->{    //Action
+    	  new Runnable(){    //Action
+    	      
+	    	  @Override
+	    	  public void run() {
+	    	  
     	   
     		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
     		  else{
@@ -937,12 +1051,12 @@ class Menus{
     			  }
     		
     		 Menus.currentMenu = Menus.MainMenu;
-    		  
+	    	  }
     		  
     	    	   });
     	    	    
     
-    private ArrayList<GameButton> buttons = new ArrayList(); 
+    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
     private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
     public Optional<AudioClip> theme = Optional.empty();
     private Group content = new Group();
@@ -1002,7 +1116,7 @@ class AnimatedButton extends GameButton{
 	String hoverImgPath;
 	String pressedImgPath;
 	Optional<String>announcement;
-	Callable<Void>action;
+	Runnable action;
 	
 	
 	
@@ -1014,12 +1128,12 @@ class AnimatedButton extends GameButton{
   
   private Node normalImg = Helper.anySpriteFromImage(normalImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());   //Kuvat kolmeen eri tilanteeseen
   private Node hoverImg = Helper.anySpriteFromImage(hoverImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
-  private Node pressedImg = Helper.anySpriteFromImage(pressedImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue())
+  private Node pressedImg = Helper.anySpriteFromImage(pressedImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
   
   Node currentImage = normalImg;
   
   //Konstruktori
-  public AnimatedButton(String textForButton, Pair<Double, Double> locationOffsetFromCenter, Pair<Double, Double>dimensions, String normalImgPath, String hoverImgPath, String pressedImgPath, Optional<String>announcement, Callable<Void>action) {
+  public AnimatedButton(String textForButton, Pair<Double, Double> locationOffsetFromCenter, Pair<Double, Double>dimensions, String normalImgPath, String hoverImgPath, String pressedImgPath, Optional<String>announcement, Runnable action) {
 	  
 	  this.textForButton = textForButton;
 	  this.locationOffsetFromCenter = locationOffsetFromCenter;
@@ -1043,7 +1157,7 @@ class AnimatedButton extends GameButton{
 		  		     buttonAnnouncement = Optional.of("Locked");
 		  		   }else{
 		  		    currentImage = pressedImg;
-		  		    action.call();
+		  		    action.run();
 		  		    reset();
 		  		   }
 		  		 }catch(Exception e){
@@ -1090,6 +1204,7 @@ class AnimatedButton extends GameButton{
 	  Group done = new Group();
       done.getChildren().add(currentImage);
       done.getChildren().add(buttonText);
+      return done;
   }
   
   public void reset() { this.currentImage = normalImg; } //Nappi resetoidaan painalluksen jälkeen jotta se olisi valmis uudelleen käytettäväksi
