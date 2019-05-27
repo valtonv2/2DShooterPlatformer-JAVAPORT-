@@ -25,21 +25,21 @@ public void main() {
 		launch();
 	}
 	
-public Game currentGame = new Game();
-public GameCamera gameCamera;
+public static Game currentGame = new Game();
+public static  GameCamera gameCamera;
 public static Stage stage;
 
-public AnimationTimer clock = new AnimationTimer() {
+public static AnimationTimer clock = new AnimationTimer() {
 	@Override 
 	public void handle(long time) {changeThings();}
 };
 
-public AnimationTimer menuClock = new AnimationTimer() {
+public static AnimationTimer menuClock = new AnimationTimer() {
 	@Override 
 	public void handle(long time) {changeMenus();}
 };
 
-public AnimationTimer mapClock = new AnimationTimer() {
+public static AnimationTimer mapClock = new AnimationTimer() {
 	@Override 
 	public void handle(long time) {changeMap();}
 };
@@ -154,11 +154,11 @@ public void start(Stage primaryStage) {
   }
   
   //Näyttö joka näkyy jos peliä suoritettaessa tapahtuu poikkeus. Estää pelin jäätymisen.
-  public void exceptionScreen(String msg) {
+  public static void exceptionScreen(String msg) {
 
-    this.clock.stop();
-    this.menuClock.stop();
-    this.mapClock.stop();
+    GameWindow.clock.stop();
+    GameWindow.menuClock.stop();
+    GameWindow.mapClock.stop();
     
     Group windowContent = new Group();
     Scene scene = new Scene(windowContent, 800, 800);

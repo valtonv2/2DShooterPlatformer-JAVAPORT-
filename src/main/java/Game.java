@@ -70,8 +70,8 @@ public class Game {
      
   }
   
-  //Metodi joka vaihtaa kenttää
-  public void swapLevel(Int levelNo){
+  //Metodi joka vaihtaa kenttï¿½ï¿½
+  public void swapLevel(int levelNo){
      player.HP = player.maxHP;
      player.energy = player.maxEnergy;
      player.inventory.clear();
