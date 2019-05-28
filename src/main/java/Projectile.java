@@ -1,14 +1,7 @@
-
+package main.java;
 import javafx.scene.shape.Circle;
 import javafx.util.Pair;
-import javafx.scene.image.*;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Color.*;
-import javafx.scene.input.*;
 import javafx.scene.media.AudioClip;
-import javafx.animation.*;
-import javafx.event.*;
-import java.math.*;
 import java.util.Optional;
 import java.util.Random;
 
@@ -29,11 +22,8 @@ class Projectile extends UsesGameSprite {
   private int projectileRadius = 15;
   private DirectionVector setDir = direction.copy();
   private int range = 1500;
-  private Random randomizer = new Random(9001)
+  private Random randomizer = new Random(9001);
 
-  this.randomizer.shuffle(game.skyWalkSounds);
-  
-  
   Boolean hasCollided = false;
   
   public Double xCoordinate() { return shooter.location.locationInGame().getKey() + locationModifierX; };
@@ -66,17 +56,17 @@ class Projectile extends UsesGameSprite {
   //Huolehtii törmäyksistä
   public void coillisionDetection()  {
     //Ammus ja seinä
-    if(level.levelGeometryHitBox.exists(coordPair => axisDistance(coordPair, this.location.locationInGame()).getKey() <= projectileRadius + 25  && axisDistance(coordPair, this.location.locationInGame()).getValue() <= projectileRadius + 25)){
+    if(level.levelGeometryHitBox.stream().map(tile -> tile.locationForCollider).anyMatch(coordPair -> axisDistance(coordPair, this.location.locationInGame()).getKey() <= projectileRadius + 25  && axisDistance(coordPair, this.location.locationInGame()).getValue() <= projectileRadius + 25)){
       this.hasCollided = true;
       
      }
     
     //Ammus ja vihollinen
-    if (game.enemies.exists(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && !enemy.isShielding)){
+    if (game.enemies.stream().anyMatch(enemy -> axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && !enemy.isShielding)){
       this.hasCollided = true;
-      game.enemies.filter(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30).foreach(_.takeDamage(100))
+      game.enemies.stream().filter(enemy -> axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30).forEach(enemy -> enemy.takeDamage(100.0));
     
-    }else if(game.enemies.exists(enemy => axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && enemy.isShielding)){
+    }else if(game.enemies.stream().anyMatch(enemy -> axisDistance(enemy.location.locationInGame(), location.locationInGame()).getKey()<=30 && axisDistance(enemy.location.locationInGame(), location.locationInGame()).getValue()<=30 && this.shooter != enemy && enemy.isShielding)){
       
       this.setDir = this.setDir.opposite();
       this.shooter = this.game.enemies.get(0);
@@ -98,14 +88,14 @@ class Projectile extends UsesGameSprite {
     
    }
   
-   else if(player.southCollider.locations.exists(location =>axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player && player.isShielding){
+   else if(player.southCollider.locations().stream().anyMatch(location -> axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player && player.isShielding){
     //Kävely ammusten päällä kun suojakenttä on käytössä
      player.ySpeed = -3.0;
      this.setDir = this.setDir.opposite();
      this.shooter = player;
    }
   
-  else if(player.southCollider.locations.exists(location =>axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player){
+  else if(player.southCollider.locations().stream().anyMatch(location ->axisDistance(location, this.location.locationInGame()).getKey() < 15 && axisDistance(location, this.location.locationInGame()).getValue() < 15) && player.isSlowingTime && this.shooter != player){
     //Kävely ammusten päällä
      player.ySpeed = -3.0;
      

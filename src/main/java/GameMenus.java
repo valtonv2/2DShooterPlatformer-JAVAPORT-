@@ -30,7 +30,7 @@ class Menus{
   static GameMenu LevelSelectMenu = new LevelSelectMenu();
   static GameMenu LoadMenu = new LoadMenu();
   static GameMenu SaveMenu = new SaveMenu();
-  static GameMenu Deathmenu = new DeathMenu();
+  static GameMenu DeathMenu = new DeathMenu();
   static GameMenu PauseMenu = new PauseMenu();
 	
 	
@@ -240,7 +240,7 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	   }       
@@ -375,7 +375,7 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	   }       
@@ -496,7 +496,7 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	   }       
@@ -674,7 +674,7 @@ class Menus{
 	         
 	        }
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	   }       
@@ -764,7 +764,7 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	      
@@ -937,7 +937,7 @@ class Menus{
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
 	   }       
@@ -1097,7 +1097,7 @@ class Menus{
       
       buttons.stream().forEach(button -> button.refreshLocation());
       
-      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement().isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement().isPresent()).findAny().get().buttonAnnouncement().get());}
+      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
       else {this.annotationText.setText("");
     }
    }       
@@ -1393,6 +1393,6 @@ abstract class GameMenu{
 abstract class GameButton{
   public abstract void refreshLocation();
   public abstract Group fullImage();
-  public abstract Optional<String> buttonAnnouncement();
+  public  Optional<String> buttonAnnouncement;
 
 }

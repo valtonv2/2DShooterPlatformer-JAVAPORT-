@@ -9,9 +9,11 @@ import javafx.scene.input.*;
 import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
 import javafx.scene.media.*;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
 
@@ -63,37 +65,37 @@ class FollowingEnemy extends Enemy{
   
   public void update() {
     
-    if(!this.isActive && this.absDistToPlayer() <= (GameWindow.stage.width.toDouble/2)+200) {
+    if(!this.isActive && this.absDistToPlayer() <= (GameWindow.stage.getWidth()/2)+200) {
     	this.isActive = true; //Aktiivisuuden säätely
-    }else if(this.absDistToPlayer() > (GameWindow.stage.width.toDouble/2)+200) {
+    }else if(this.absDistToPlayer() > (GameWindow.stage.getWidth()/2)+200) {
     	this.isActive = false;
     }
     
      //Aina suoritettavat toiminnot
     
-    this.colliders.forEach(collider -> collider.update);
+    this.colliders.stream().forEach(collider -> collider.update);
     if(!this.southCollider.collides) { this.ySpeed += 1.0;}
-    this.arm.get().direction.update(this.location.locationInImage, this.game.player.location.locationInImage);
+    this.arm.get().direction.update(this.location.locationInImage(), this.game.player.location.locationInImage());
     if(this.isShielding) { this.energy = this.energy - 5.0;}
-    if(this.isShielding && !this.shieldSound.isPlaying) {this.shieldSound.play();}
+    if(this.isShielding && !this.shieldSound.isPlaying()) {this.shieldSound.play();}
     if(this.energy <= 0 ) { this.isShielding = false;}
-    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions.getValue()) { this.takeDamage(9999); }
+    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()) { this.takeDamage(9999.0); }
     
      //Esineiden pudottaminen
     try{
-    if(this.isDead) { this.drop(this.inventory.values.head);}
+    if(this.isDead()) { this.drop(this.inventory.values()[0]);}
     }catch(NoSuchElementException x){
       System.out.println("FollowingEnemy item drop is acting up.");
     }
     //Kun vihollinen on aktiivinen
     if(this.isActive){
       
-      if(this.playerLocator._1 == "left" && !this.isStuck) {this.xSpeed = -2.0;}
-      if(this.playerLocator._1 == "right" && !this.isStuck) {this.xSpeed = 2.0;}
+      if(this.playerLocator().getKey() == "left" && !this.isStuck()) {this.xSpeed = -2.0;}
+      if(this.playerLocator().getKey() == "right" && !this.isStuck()) {this.xSpeed = 2.0;}
       
       this.move();
       
-      if(this.energy >0 && game.projectiles.exists(bolt => Helper.absoluteDistance(this.location.locationInGame, bolt.location.locationInGame) < 300 && bolt.shooter != this)) {
+      if(this.energy >0 && game.projectiles.stream().anyMatch(bolt -> Helper.absoluteDistance(this.location.locationInGame(), bolt.location.locationInGame()) < 300 && bolt.shooter != this)) {
     	  this.shieldOn();
       }else {
     	  this.shieldOff();
@@ -116,8 +118,8 @@ class FollowingEnemy extends Enemy{
   
  private Pair<String, String> playerLocator() {
     
-    Double xDiff = this.distToPlayer.getKey();
-    Double yDiff = this.distToPlayer.getValue();
+    Double xDiff = this.distToPlayer().getKey();
+    Double yDiff = this.distToPlayer().getValue();
     
     String xStatus = "";
     String yStatus = "";
@@ -210,7 +212,14 @@ class FollowingEnemy extends Enemy{
     
 //#########################################################################################################################################################
 
-  def image:Vector[Node] = if(!this.isShielding) Vector(body.image, arm.get.completeImage) else Vector(body.image, arm.get.completeImage, shield.image)
+  public Group image() {
+	  
+	  Group done = new Group(); 
+	  if(!this.isShielding) done.getChildren().addAll(body.image(), arm.get().completeImage());
+	  else done.getChildren().addAll(body.image(), arm.get().completeImage(), shield.image());
+	  
+	  return done;
+  }
   
   public void takeDamage(Double amount) {
     

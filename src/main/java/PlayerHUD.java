@@ -31,7 +31,9 @@ class PlayerHUD{
   
   public static Group image() {
     
-	return new Group(notificationArea.image(), weaponHud.image(), equipmentBox.image, healthBar.image, energyBar.image);
+	  Group done = new Group();
+	  done.getChildren().addAll(notificationArea.image(), weaponHud.image(), equipmentBox.image, healthBar.image, energyBar.image);
+	  return done;
    
   }
   
@@ -139,18 +141,16 @@ class WeaponHud {
   
   public Player player() { return GameWindow.player();}
   
-  public List<String> itemsInBoxes = weaponBoxes.stream().map(box -> {
-	  if(box.item.isPresent()) { return box.item.get().name;} else {return "Nothing";};
-	  }).collect(Collectors.toList());
+  public List<String> itemsInBoxes = weaponBoxes.stream().map(box -> {if(box.item.isPresent()) { return box.item.get().name;} else {return "Nothing";}).collect(Collectors.toList());
   
   public void selectBox(int boxNumber) {
 	  
-	Optional<ItemBox> possibleBox = Optional.of(weaponBoxes[boxNumber]);
+	Optional<ItemBox> possibleBox = Optional.of(weaponBoxes.get(boxNumber));
 	
 	if(possibleBox.isPresent()) {
     
       weaponBoxes.get(boxNumber).select();
-      player.equipWeapon(Optional.of( (Weapon)possibleBox.get().item()); //Jos asevalikon laatikossa on jotain se sisältää varmasti aseen
+      player().equipWeapon(Optional.of( (Weapon)possibleBox.get().item().get())); //Jos asevalikon laatikossa on jotain se sisältää varmasti aseen
       
       if(selectedBoxNumber != boxNumber) {
     	  weaponBoxes.get(selectedBoxNumber).deselect();
@@ -160,7 +160,7 @@ class WeaponHud {
       weaponBoxes.get(selectedBoxNumber).deselect();
       selectedBoxNumber = 0;
       weaponBoxes.get(selectedBoxNumber).select();
-      player.equipWeapon(Optional.of( (Weapon)weaponBoxes.get(selectedBoxNumber).item().get());
+      player().equipWeapon(Optional.of( (Weapon)weaponBoxes.get(selectedBoxNumber).item().get()));
       }
      }
   
@@ -360,7 +360,7 @@ class NotificationArea {
   
   private String currentMessage = "";
 		  
-  private Pair<Double, Double> location() { return new Pair<Double, Double>(GameWindow.stage.width.toDouble - (GameWindow.stage.width.toDouble/2),0.1);}
+  private Pair<Double, Double> location() { return new Pair<Double, Double>(GameWindow.stage.getWidth() - (GameWindow.stage.getWidth()/2),0.1);}
   
   public void announce(String message)  {
     timer = 0;

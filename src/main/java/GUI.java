@@ -55,27 +55,27 @@ public void start(Stage primaryStage) {
 	primaryStage.setMinWidth(800.0);
 	primaryStage.setMinHeight(800.0);	
     primaryStage.setFullScreenExitHint("");
-    primaryStage.setFullScreenExitKeyCombination(KeyCombination("Jee"));
-    primaryStage.setScene(Menus.MainMenu.scene());
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    primaryStage.setScene(Menus.MainMenu.scene);
     
     GameWindow.stage = primaryStage;
     menuClock.start();
-    this.gameCamera = Optional.ofNullable(currentGame.camera);
+    gameCamera = Optional.ofNullable(currentGame.camera);
     
     primaryStage.show();
     
 	}
 
 
-  public Player player() { return currentGame.player;}
+  public static Player player() { return currentGame.player;}
 
  
   //Tänne laitetaan jutut jotka tehdään joka tick
-  public void changeThings() {
+  public static void changeThings() {
     
     try{
     
-  this.currentGame.fullImage.setCursor(Cursor.NONE);
+  GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
   
   if(!currentGame.isOver){
     
@@ -100,11 +100,11 @@ public void start(Stage primaryStage) {
     
     }else{
       
-    this.clock.stop();
-    this.menuClock.start();
+    clock.stop();
+    menuClock.start();
     Menus.currentMenu = Menus.DeathMenu;
-    if(!Menus.fullScreenStatus) GameWindow.stage.scene = Menus.DeathMenu.scene; 
-    else{GameWindow.stage.scene = Menus.DeathMenu.scene; GameWindow.stage.setFullScreen(true); }
+    if(!Menus.fullScreenStatus) GameWindow.stage.setScene(Menus.DeathMenu.scene); 
+    else{GameWindow.stage.setScene(Menus.DeathMenu.scene); GameWindow.stage.setFullScreen(true); }
      }
    
     }catch(Exception e){
@@ -116,15 +116,15 @@ public void start(Stage primaryStage) {
   }
   
   //Tämä metodi huolehtii menujen tilanpäivityksestä
-  public void changeMenus() {
+  public static void changeMenus() {
     
     try{
     
     Menus.currentMenu.scene.setCursor(Cursor.DEFAULT);
     Menus.currentMenu.refresh();
-    if(Menus.currentMenu.theme.isPresent() && !Menus.currentMenu.theme.get.isPlaying()) Menus.currentMenu.theme.get.play(Settings.musicVolume());
-    if(Menus.currentMenu.theme.isPresent() && Menus.currentMenu.theme.get.isPlaying()){
-      Menus.currentMenu.theme.get.setVolume(Settings.musicVolume());
+    if(Menus.currentMenu.theme.isPresent() && !Menus.currentMenu.theme.get().isPlaying()) Menus.currentMenu.theme.get().play(Settings.musicVolume());
+    if(Menus.currentMenu.theme.isPresent() && Menus.currentMenu.theme.get().isPlaying()){
+      Menus.currentMenu.theme.get().setVolume(Settings.musicVolume());
      
     }
    
@@ -136,11 +136,11 @@ public void start(Stage primaryStage) {
   }
   
   //Karttatilan päivitys
-  public void changeMap() {
+  public static void changeMap() {
     
     try{
     
-    GameCamera cam = this.currentGame.camera;
+    GameCamera cam = currentGame.camera;
     cam.location.move(cam.xSpeed, cam.ySpeed);
     cam.zoomIn(cam.zInSpeed);
     cam.zoomOut(cam.zOutSpeed);

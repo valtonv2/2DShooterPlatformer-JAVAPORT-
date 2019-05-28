@@ -1,10 +1,14 @@
-import scala.io.Source
-import java.io.File
-import java.io.PrintWriter
+package main.java;
+import java.io.Source;
 
-object SaveHandler{
+import javafx.util.Pair;
+
+import java.io.File;
+import java.io.PrintWriter;
+
+class SaveHandler{
   
-  def game = GameWindow.currentGame
+  public static Game game = GameWindow.currentGame;
   
   /*Metodi joka kerää tallennettavan tiedon nykyisestä pelistä ja kirjoittaa sen tallennustiedostoon
    *Kerättävät tiedot:
@@ -14,10 +18,10 @@ object SaveHandler{
    * Kenttien avoimuustilanne
    * Kenttä jossa pelaaja oli edellisen pelin loppuessa
    */
- def saveGame(filePath:String) = {
+ public static void saveGame(String filePath) {
     
     //Tallennettavan datan keräys
-    val playerLoc = game.player.location.locationInGame
+    Pair<Double, Double> playerLoc = game.player.location.locationInGame();
     val playerInv = game.player.inventory.values.toArray
     val playerHP = game.player.HP
     val playerEnergy = game.player.energy
@@ -83,7 +87,7 @@ object SaveHandler{
   
  //LoadGame lukee dataa tallennustiedostosta ja muokkaa pelioliota sen perusteella
  
- def loadGame(filePath:String):Boolean = {
+ public static Boolean loadGame(String filePath){
   
    //Luetaan data ensin String-muotoon seuraaviin muuttujiin
     var playerLoc:Option[Array[String]] = None    

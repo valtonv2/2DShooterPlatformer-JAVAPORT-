@@ -6,13 +6,9 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.*;
 import javafx.scene.media.*;
 
-import java.lang.reflect.Array;
-import java.math.*;
-import javafx.scene.paint.*;
 import javafx.scene.Node;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.util.converter.*;
 import javafx.util.*;
 import java.util.stream.*;
 
@@ -153,10 +149,7 @@ class GameSprite {
  public Double spriteHeight = imageDimensions.getValue();
   
  private ImagePattern texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
- private ArrayList<Transform> transforms = new ArrayList<Transform>();
-
-  
-  
+ 
  public Rectangle normalImage() {
   
   if(this.overrideLocation.isPresent()) {
@@ -353,16 +346,18 @@ DirectionVector direction;
     armRotate.setPivotX(pivotPoint().getKey());
     armRotate.setPivotY(pivotPoint().getValue());
    
-    Group group = switch(user.equippedWeapon) {
+    Group group = new Group(); 
     
-    case Weapon weapon:
-    	 return new Group(armImage.image(), weapon.sprites(2).image);
-    	 break;
-    case Optional.empty(): 
-    	return new Group(armImage.image());
-        break;
-    
-  }
+    if(user.equippedWeapon.isPresent()) {
+    	
+    	group.getChildren().addAll(armImage.image(), user.equippedWeapon.get().sprites[1].image());
+    	
+    }else {
+    	
+    	group.getChildren().add(armImage.image());
+    	
+    }
+  
     
     
    switch (user.lookDirectionForSprite) {
@@ -487,7 +482,7 @@ class GamePos{
  Pair<Double, Double> inGameCoordinates;
  Boolean isCenter;
  
- public Optional<GameCamera> center = GameWindow.gameCamera;
+ public Optional<GameCamera> center = Optional.ofNullable(GameWindow.gameCamera);
 
  private Double inGameX = inGameCoordinates.getKey();
  private Double inGameY = inGameCoordinates.getValue();
@@ -502,8 +497,8 @@ class GamePos{
 		 
 	if(center.isPresent()) {
 		
-		 if (!this.isCenter){return Pair(inGameX-center.location.locationInGame.getKey()+center.location.locationInImage.getKey(), inGameY - center.location.locationInGame.getValue() + center.location.locationInImage.getValue() + playerHeightOffset);}
-	     else { return Pair(GameWindow.stage.width.toDouble/2 ,GameWindow.stage.height.toDouble/2);}
+		 if (!this.isCenter){return new Pair<Double, Double>(inGameX-center.get().location.locationInGame().getKey()+center.get().location.locationInImage().getKey(), inGameY - center.get().location.locationInGame().getValue() + center.get().location.locationInImage().getValue() + playerHeightOffset);}
+	     else { return new Pair<Double, Double>(GameWindow.stage.getWidth()/2 ,GameWindow.stage.getHeight()/2);}
 		
 		
 	} else {
@@ -532,17 +527,17 @@ class GamePos{
    
  }
  
- public Boolean isNearOther(GamePos other, int limitDistance) {
+ public Boolean isNearOther(GamePos other, Double drawDistance) {
 	 
 	 Pair<Double, Double> help = Helper.axisDistance(other.locationInGame(), this.locationInGame());
 	 Double xDiff = help.getKey();
 	 Double yDiff = help.getValue();
 	 
-	 return (xDiff <= limitDistance && yDiff <= limitDistance);
+	 return (xDiff <= drawDistance && yDiff <= drawDistance);
 	 
  }
  
- public Boolean isNearCoordPair(Pair<Double, Double> coord, int limitDistance) {
+ public Boolean isNearCoordPair(Pair<Double, Double> coord, Double limitDistance) {
 	 
 	 Pair<Double, Double> help = Helper.axisDistance(coord, this.locationInGame());
 	 Double xDiff = help.getKey();

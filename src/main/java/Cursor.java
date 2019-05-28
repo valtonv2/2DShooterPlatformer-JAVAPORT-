@@ -70,7 +70,7 @@ class MouseCursor{
 		  
 	  };
 	  
-	  this.player.game.fullImage().addEventFilter(MouseEvent.MOUSE_MOVED, followCursor);
+	  this.player.game.fullImage.addEventFilter(MouseEvent.MOUSE_MOVED, followCursor);
 	  
   }
   

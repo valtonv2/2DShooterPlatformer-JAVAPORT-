@@ -2,6 +2,7 @@ package main.java;
 import java.math.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javafx.scene.shape.Circle;
@@ -42,10 +43,29 @@ class Collider{
  public void update() {
   
    List<GameTile> nearbyTiles = actor.game.currentLevel.allTiles.stream()
-		   .filter(tile -> tile.location.isNearCoord(actorLocationInGame(), 100));
+		   .filter(tile -> tile.location.isNearCoordPair(actorLocationInGame(), 100.0))
+		   .collect(Collectors.toList());
+   
+   List<GameTile> colliderTiles = nearbyTiles.stream()
+		   .filter(tile -> tile.hasCoillision)
+		   .collect(Collectors.toList());
+   
+   List<GameTile> ladderTiles = nearbyTiles.stream()
+		   .filter(tile -> tile.isLadder)
+		   .collect(Collectors.toList());
+   
+   List<GameTile> triggerTiles = nearbyTiles.stream()
+		   .filter(tile -> tile instanceof TriggerTile)
+		   .collect(Collectors.toList());
+   
+   List<Item> nearbyItems = actor.game.currentLevel.itemsInWorld.stream()
+		   .filter(item -> Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get().locationInGame()).getKey() <=60 && Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get().locationInGame()).getValue() <= 90 )
+		   .collect(Collectors.toList());
+   
+  
    
    //Seinät 
-  if (this.locations.stream().anyMatch(pos -> nearbyTiles.stream().anyMatch(tile -> tile.location.isNearCoord(pos, coillisionDistance)))){
+  if (this.locations().stream().anyMatch(pos -> tileIsInList(colliderTiles, pos, coillisionDistance))){
    
     if (this.collides == false){ 
       actor.stop();
@@ -56,18 +76,18 @@ class Collider{
     
     
     //Tikkaat
-  }else if(this.locations().stream().anyMatch(location -> nearbyTiles.filter(tile -> tile.isLadder()).stream().anyMatch(tile -> tile.location.isNearCoord(location, coillisionDistance + 10))){
+  }else if(this.locations().stream().anyMatch(pos -> tileIsInList(ladderTiles, pos, coillisionDistance + 10))){
   
     actor.isOnLadder = true;
     this.collides = false;
     
     
    //TriggerTiles
-  }else if(this.actor instanceof Player && this.locations().stream().anyMatch(location -> nearbyTiles.stream().filter(tile -> tile instanceof TriggerTile ).stream().anyMatch(tile -> tile.location.isNearCoord(location, coillisionDistance + 10))){
+  }else if(this.actor instanceof Player && this.locations().stream().anyMatch(pos -> tileIsInList(triggerTiles, pos, coillisionDistance + 10)) ){
   
-    Tile nearbyTrigger = nearbyTiles.find(tile -> tile instanceof TriggerTile);
+    Optional<GameTile> nearbyTrigger = triggerTiles.stream().findAny();
+    
     if (nearbyTrigger.isPresent()) {
-    	
     	TriggerTile near = (TriggerTile)nearbyTrigger.get();
     	near.trigger();
     }
@@ -75,9 +95,9 @@ class Collider{
     
     
     //Esineet
-    }else if (actor.game.currentLevel.itemsInWorld.stream().anyMatch(exists(item -> item.isInWorld() && Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get().locationInGame()).getKey() <=60 && Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get().locationInGame()).getValue() <= 90 ))){
+    }else if (!nearbyItems.isEmpty()){
     
-    Item nearbyItem = actor.game.currentLevel.itemsInWorld.find(item ->Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get.locationInGame()).getKey()<=60 && Helper.axisDistance(actor.location.locationInGame(), item.locationInWorld.get.locationInGame).getValue()<=90);      
+    Optional<Item> nearbyItem = nearbyItems.stream().findAny();      
     
     if(nearbyItem.isPresent()) {
     	actor.pickUp(nearbyItem.get(), false);
@@ -148,5 +168,11 @@ class Collider{
 	 done.stream().forEach(circle -> circle.setFill(Color.RED));
 	 
 	 return done;
+  }
+  
+  public Boolean tileIsInList(List<GameTile>list, Pair<Double, Double> location, Double distance) {
+	  
+	  return list.stream().anyMatch(tile -> tile.location.isNearCoordPair(location, distance));
+	  
   }
 }

@@ -107,7 +107,7 @@ public class Game {
     }else{
       this.isInmapMode = false;
      GameWindow.mapClock.stop();
-      camera.changeZoom(1);
+      camera.changeZoom(1.0);
       camera.toggleFreeCamera();
     }
     
@@ -121,7 +121,7 @@ public class Game {
   public Game() {
 	  this.levelCompletionStatus.add(false);
 	  this.levelCompletionStatus.add(false);
-	  this.imageContent.getChildren().addAll(camera.cameraImage);
+	  this.imageContent.getChildren().addAll(camera.cameraImage());
   }
   
   //T�ss� tehd��n kuva joka v�ltet��n GUI:lle

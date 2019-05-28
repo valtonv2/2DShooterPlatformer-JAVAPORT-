@@ -19,8 +19,6 @@ import javafx.util.Pair;
 import javafx.scene.input.*;
 import javafx.scene.text.Text;
 
-//2DGameCamera piirtää pelin kuvan ja liikuttaa piirrettävää ympäristöä
-
 class GameCamera {
 	
   public Player followee;
@@ -29,7 +27,7 @@ class GameCamera {
   private Double zoomCoefficient = 1.0;    // Zoomauskerroin
   private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2);
   private Boolean followPlayer = true;
-  public int drawDistance = (int) (GameWindow.stage.getWidth()/2+200);
+  public Double drawDistance = (GameWindow.stage.getWidth()/2+200);
   
   public Double xSpeed = 0.0;
   public Double ySpeed = 0.0;
@@ -90,16 +88,16 @@ class GameCamera {
     List<Node> worldObjects = tiles + items + moonMan +  enemies + projectiles;
     Group guiElements = new Group(PlayerHUD.image, cursor);
     
-    val zoomables = new Group();
+    Group zoomables = new Group();
     zoomables.children.addAll(worldObjects);
     zoomables.transforms_=(List(zoomTransform));
     
-    Group all = new Group(level.backGround, zoomables);
-    if (mapModeSkin.isPresent()) {
-    	all.children.addAll(mapOverLay, mapModeCross, mapModeHelpText);
+    Group all = new Group(level().backGround(), zoomables);
+    if (mapModeSkin().isPresent()) {
+    	all.getChildren().addAll(mapOverLay, mapModeCross, mapModeHelpText);
     }
     
-    all.children.addAll(guiElements);
+    all.getChildren().addAll(guiElements);
     return all;
   }
   
@@ -111,9 +109,9 @@ class GameCamera {
     level().moveBackGround(-0.1 * game.player.xSpeed, -0.1 * game.player.ySpeed);  //Taustan siirto
     if(followPlayer) { location.teleport(followee.location.locationInGame()); }       //Pelaajan seuraaminen
     if(zoomCoefficient < 1){
-    drawDistance = GameWindow.stage.width.toDouble/2+200 + (1/zoomCoefficient)*(GameWindow.stage.width.toDouble/2)+500;      //Piirtoetäisyyden päivitys
+    drawDistance = GameWindow.stage.getWidth()/2+200 + (1/zoomCoefficient)*(GameWindow.stage.getWidth()/2)+500;      //Piirtoetäisyyden päivitys
     }else{
-      drawDistance = GameWindow.stage.width.toDouble/2+200;
+      drawDistance = GameWindow.stage.getWidth()/2+200;
     }
     
     this.mapModeCross.setLayoutX(this.location.locationInImage().getKey()-350);           //Karttamoodin pitäminen koossa

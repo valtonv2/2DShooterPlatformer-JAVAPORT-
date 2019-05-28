@@ -1,21 +1,16 @@
 package main.java;
 
 import javafx.scene.shape.*;
-import javafx.scene.paint.Color.*;
-import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.transform.*;
 import javafx.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
-
-import javafx.scene.Group;
 
 class Level {
   
@@ -65,7 +60,7 @@ class Level {
   List<GameTile> levelGeometryHitBox = allTiles.stream().filter(tile -> tile.hasCoillision).collect(Collectors.toList());
   
   public List<Circle> levelGeomHitboxDebug() { 
-	  return levelGeometryHitBox.stream().map(tile -> new Circle(tile.location.locationInImage().getKey(), tile.location.locationInImage().getValue(), 2, Red)).collect(Collectors.toList());
+	  return levelGeometryHitBox.stream().map(tile -> new Circle(tile.location.locationInImage().getKey(), tile.location.locationInImage().getValue(), 2, Color.ORANGERED)).collect(Collectors.toList());
     }
   //Lista maailmassa vapaina olevista esineistä
   public ArrayList<Item> itemsInWorld = new ArrayList<Item>();
@@ -123,7 +118,7 @@ class Level {
         HealthPack healthPack = new HealthPack(game, 1);
         itemsInWorld.add(healthPack);
         healthPack.isInWorld = true;
-        healthPack.locationInWorld = Optional.ofNullable((new GamePos(new Pair<Double, Double>(xPoint, yPoint), false));
+        healthPack.locationInWorld = Optional.ofNullable((new GamePos(new Pair<Double, Double>(xPoint, yPoint), false)));
        
        
       }else if((pixelReader.getColor(x, y).getRed() * 255) == 12){                // Energy Pack
@@ -164,17 +159,18 @@ class Level {
        
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
-        allTiles.add(new TriggerTile(xPoint, yPoint, false, false, goalPattern, 50.0, 50.0,  new Callable<Void>() {
+        allTiles.add(new TriggerTile(xPoint, yPoint, false, false, goalPattern, 50.0, 50.0,  new Runnable() {
         	
-        	
-        	public Void call() {
+        	@Override
+        	public void run() {
           
-          GameWindow.currentGame.levelCompletionStatus.get(GameWindow.currentGame.currentLevel.levelNO-1) = true;
+          Boolean help = GameWindow.currentGame.levelCompletionStatus.get(GameWindow.currentGame.currentLevel.levelNO-1);
+          help = true;
        
           GameWindow.menuClock.start();
           GameWindow.clock.stop();
           PlayerHUD.clearAll();                                      //Pelaajan HUD on bugien välttämiseksi tyhjennettävä
-          GameWindow.stage.scene = Menus.LevelSelectMenu.scene;
+          GameWindow.stage.setScene(Menus.LevelSelectMenu.scene);
           Menus.currentMenu = Menus.LevelSelectMenu;
      
         	}
@@ -259,14 +255,14 @@ class Level {
   //Funktiokutsu tapahtuu colliderissa
   class TriggerTile extends GameTile{
     
-	public Callable<Void> function;  
+	public Runnable function;  
 	  
     public void trigger(){
     	
-    	function.call();
+    	function.run();
     }
     
-    public TriggerTile(Double startX, Double startY, Boolean hasCoillision, Boolean isLadder, ImagePattern pattern, Double width2, Double height2, Callable<Void> function) {
+    public TriggerTile(Double startX, Double startY, Boolean hasCoillision, Boolean isLadder, ImagePattern pattern, Double width2, Double height2, Runnable function) {
 		  
 		  this.startX = startX;
 		  this.startY = startY;
@@ -281,4 +277,4 @@ class Level {
 				  
 	  }  
 }
-  }
+  
