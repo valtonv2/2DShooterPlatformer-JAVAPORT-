@@ -65,8 +65,8 @@ class Level {
   //Lista maailmassa vapaina olevista esineistä
   public ArrayList<Item> itemsInWorld = new ArrayList<Item>();
     
-   private Image levelImage = new Image(layoutPath);
-   private PixelReader pixelReader = levelImage.getPixelReader();
+   private Image levelImage;
+   private PixelReader pixelReader;
     
 
     
@@ -207,6 +207,8 @@ class Level {
   this.game = game;
   backGroundSprite = new Image(backGroundPath);
   backGroundPattern = new ImagePattern(backGroundSprite, 0.5,0.9,1,1,true);
+  levelImage = new Image(layoutPath);
+  pixelReader = levelImage.getPixelReader();
   
   levelCreator(); //Luodaan taso
   this.levelGeometryHitBox = allTiles.stream().filter(tile -> tile.hasCoillision).collect(Collectors.toList()); 

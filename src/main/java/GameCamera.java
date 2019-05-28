@@ -26,9 +26,9 @@ class GameCamera {
   
   public GamePos location;
   private Double zoomCoefficient = 1.0;    // Zoomauskerroin
-  private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2);
+  private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, 400, 400);
   private Boolean followPlayer = true;
-  public Double drawDistance = (GameWindow.stage.getWidth()/2+200);
+  public Double drawDistance = 600.0;
   
   public Double xSpeed = 0.0;
   public Double ySpeed = 0.0;
@@ -78,7 +78,7 @@ class GameCamera {
   
   //Luo pelin kuvan joka välitetään gamelle ja sen jälkeen GUI:lle
   public Group cameraImage()  {
-   
+   System.out.println(" Kameran Metodia kutsutaan");
     Group moonMan = new Group(); 
     moonMan.getChildren().addAll(followee.image());
     Node arm = followee.arm.get().completeImage();
@@ -120,7 +120,10 @@ class GameCamera {
   
   //Kameran kuvan päivitys
   public void update() {
-                     
+    
+	zoomTransform.setPivotX(GameWindow.stage.getWidth()/2);
+	zoomTransform.setPivotY(GameWindow.stage.getHeight()/2);
+	this.drawDistance = GameWindow.stage.getWidth()/2+200;
     game.projectiles.forEach(projectile -> projectile.updateState());           //Ammusten tilanpäivitys
     game.enemies.forEach(enemy -> enemy.update());                              //Vihollisten tilan päivitys
     level().moveBackGround(-0.1 * game.player.xSpeed, -0.1 * game.player.ySpeed);  //Taustan siirto

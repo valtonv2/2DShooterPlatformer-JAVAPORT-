@@ -21,15 +21,16 @@ import javafx.scene.paint.Color.*;
 
 class GameWindow extends Application {
 	
-public static Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
   
 public static void main(String args[]) {
 		launch();
 	}
-	
-public static Game currentGame = new Game();
 
 public static Stage stage;
+
+public static Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
+public static Game currentGame = new Game();
+
 
 public static AnimationTimer clock = new AnimationTimer() {
 	@Override 

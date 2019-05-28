@@ -124,7 +124,7 @@ abstract class UsesAnimatedGameSprite extends UsesGameSprite{
 	 public Game game;
 	 public String lookDirectionForSprite;
  
-     public Boolean isMovingForSprite;
+     public Boolean isMovingForSprite = false;
   
 }
 //GameSprite-luokka yksinkertaistaa pelin olioiden kuvien laadintaa, muokkaamista ja liikuttamista
@@ -347,11 +347,38 @@ DirectionVector direction;
   
  private GameSprite armImage; 
  private Rotate armRotate; 
+ 
+ //Konstruktori luokalle
+ 
+ public RotatingArm(Actor user, DirectionVector direction) {
+	 
+	 this.user = user;
+	 this.direction = direction;
+	 
+	 this.armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
+	 this.armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
+ }
   
- private Pair<Double, Double> pivotPoint() {return user.location.locationInImage();}
+ private Pair<Double, Double> pivotPoint() {
+	 
+	/* if(Optional.ofNullable(user.location.locationInImage()).isPresent()) {
+	 
+		 return user.location.locationInImage();
+	 
+	 }else {
+		 
+		 return new Pair<Double, Double>(0.0, 0.0);
+		 
+	 }*/
+	 
+    return new Pair<Double, Double>(400.0,400.0);
+ }
   
  public Group completeImage() {
-   
+	 
+	 this.armRotate.setPivotX(pivotPoint().getKey());
+	 this.armRotate.setPivotY(pivotPoint().getValue());
+	 
     armRotate.setAngle( this.direction.angle() * 50);
     armRotate.setPivotX(pivotPoint().getKey());
     armRotate.setPivotY(pivotPoint().getValue());
@@ -387,16 +414,6 @@ DirectionVector direction;
     
   }
  
- //Konstruktori luokalle
- 
- public RotatingArm(Actor user, DirectionVector direction) {
-	 
-	 this.user = user;
-	 this.direction = direction;
-	 
-	 this.armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
-	 this.armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
- }
   
 }
 

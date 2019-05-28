@@ -40,20 +40,14 @@ class ShooterEnemy extends Enemy {
   private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -38.0), Optional.empty());
   private String currentAction = "idling";
   
-  public Optional<Object> itemDrop() { return Optional.ofNullable(this.inventory.values().toArray()[itemDropIndex]);}
-  
-  public ArrayList<Node> image(){
-	  ArrayList<Node> done = new ArrayList<Node>(); 
-	  done.add(this.newImage.image());
-	  return done;
-  }
+ 
   //Audio
    public AudioClip enemyHurtSound = new AudioClip("file:src/main/resources/sound/EnemyHurt.wav");
   //Seuraavat Colliderit huolehtivat vihollisen törmäyksistä
-  private Collider northCollider = new Collider("Enorth", this, 0.0,  -this.image.get(0).getBoundsInParent().getHeight()/2.0, "horizontal");
-  private Collider southCollider = new Collider("Esouth", this, 0.0,  this.image.get(0).getBoundsInParent().getHeight()/2.0, "horizontal");
-  private Collider eastCollider = new Collider("Eeast", this, this.image.get(0).getBoundsInParent().getHeight()/2.0, 0.0, "vertical");
-  private Collider westCollider = new Collider("Ewest", this, -this.image.get(0).getBoundsInParent().getHeight()/2.0, 0.0, "vertical");
+  private Collider northCollider;
+  private Collider southCollider;
+  private Collider eastCollider;
+  private Collider westCollider;
   
   public ArrayList<Collider> colliders = new ArrayList<Collider>();
 
@@ -71,11 +65,10 @@ class ShooterEnemy extends Enemy {
 	  locationForSprite = Optional.of(location.locationInImage());
 	  player = game.player;
 	  
-	  //Täytetään vihollisen tavaraluettelo esineillä
-	  this.inventory.put("Health Pack", new HealthPack(this.game, 1));
-	  this.inventory.put("Energy Pack", new EnergyPack(this.game, 1));
-	  this.inventory.put("Kitten 5000", new SlowFiringWeapon(this.game, Optional.empty()));
-	  this.inventory.put("Heat Bolter", new RapidFireWeapon(this.game, Optional.empty()));
+	  northCollider = new Collider("Enorth", this, 0.0,  -45.0, "horizontal");
+	  southCollider = new Collider("Esouth", this, 0.0,  45.0, "horizontal");
+	  eastCollider = new Collider("Eeast", this, 30.0, 0.0, "vertical");
+	  westCollider = new Collider("Ewest", this, -30.0, 0.0, "vertical");
 	  
 	  this.colliders.add(northCollider);
 	  this.colliders.add(eastCollider);
@@ -91,6 +84,18 @@ class ShooterEnemy extends Enemy {
   	}
   }
   
+  public Optional<Object> itemDrop() {
+	  System.out.println("Metodin osa suorittuu");
+	  return Optional.ofNullable(this.inventory.values().toArray()[itemDropIndex]);
+	  }
+  
+  public ArrayList<Node> image(){
+	  System.out.println("Metodin osa suorittuu");
+	  ArrayList<Node> done = new ArrayList<Node>(); 
+	  done.add(this.newImage.image());
+	  return done;
+  }
+  
   //Seuraava metodi hallitsee vihollisen ampumista laskemalla suunnan kohti pelaajaa ja luomala ammuksen
   public void shoot() {
     
@@ -101,6 +106,16 @@ class ShooterEnemy extends Enemy {
     
   //update-metodi muodostaa vihollisen "aivot" ja päivittää vihollisen tilaa
   public void update() {
+	  
+	  if(this.inventory.isEmpty()) {
+		  
+		  //Täytetään vihollisen tavaraluettelo esineillä
+		  this.inventory.put("Health Pack", new HealthPack(this.game, 1));
+		  this.inventory.put("Energy Pack", new EnergyPack(this.game, 1));
+		  this.inventory.put("Kitten 5000", new SlowFiringWeapon(this.game, Optional.empty()));
+		  this.inventory.put("Heat Bolter", new RapidFireWeapon(this.game, Optional.empty()));
+		  
+	  }
    
     //Säädellään aktiivisuutta tehokkuussyistä. Jos vihollinen ei ole aktiivinen se ei ammu
     if (Helper.absoluteDistance(this.location.locationInGame(), this.game.player.location.locationInGame()) <= (GameWindow.stage.getWidth()/2)+200) {

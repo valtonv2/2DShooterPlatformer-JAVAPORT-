@@ -74,14 +74,15 @@ class FollowingEnemy extends Enemy{
 	  this.colliders.add(southCollider);
 	  this.colliders.add(westCollider);
 	  
-	  //Lisätään esine vihollisen tavaraluetteloon
-	  this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
 
   }
   
   
   
   public void update() {
+	  
+	//Lisätään esine vihollisen tavaraluetteloon
+	if(this.inventory.isEmpty()) this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
     
     if(!this.isActive && this.absDistToPlayer() <= (GameWindow.stage.getWidth()/2)+200) {
     	this.isActive = true; //Aktiivisuuden säätely
