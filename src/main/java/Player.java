@@ -46,13 +46,15 @@ import javafx.scene.Cursor;
 	  
 	 private Integer jumpCounter = 0;
 	  
-	  GamePos location = new GamePos(new Pair<Double, Double>(startX, startY), false);
+	  GamePos location;
+	  
+	  Optional<Pair<Double, Double>>locationForSprite;
 	  
 	  
 	  //Pelaajan kuvat
 	  
 	  private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/MoonmanWalk", "MoonmanWalk", 4, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
-	  public Optional<RotatingArm> arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
+	  public Optional<RotatingArm> arm;
 	  private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
 
 	  
@@ -74,7 +76,7 @@ import javafx.scene.Cursor;
 	 private Collider eastCollider = new Collider("east", this, this.body.spriteWidth/2 - 20, -30.0, "vertical");
 	 private Collider westCollider = new Collider("west", this, -this.body.spriteWidth/2 + 20, -30.0, "vertical");
 	  
-	 public Collider colliders[] =  {northCollider, eastCollider, southCollider, westCollider};
+	 public ArrayList<Collider> colliders = new ArrayList<Collider>(); 
 	  
 	 
 	//Konstruktori luokalle
@@ -84,6 +86,9 @@ import javafx.scene.Cursor;
 		  this.startX = startX;
 		  this.startY = startY;
 		  this.game = game;
+		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
+		  locationForSprite = Optional.of(location.locationInImage());
+		  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
 		  
 	  EventHandler<KeyEvent> playerKeyPressedHandler = new EventHandler<KeyEvent>() {
 		  	public void handle(KeyEvent event) {
@@ -136,7 +141,7 @@ import javafx.scene.Cursor;
 		  	      if(event.getCode() == KeyCode.ESCAPE){
 		  	      GameWindow.clock.stop();
 		  	      GameWindow.menuClock.start();
-		  	      if(Menus.fullScreenStatus == false) { GameWindow.stage.setScene(Menus.PauseMenu.scene); }
+		  	      if(Menus.fullScreenStatus() == false) { GameWindow.stage.setScene(Menus.PauseMenu.scene); }
 		  	      else{GameWindow.stage.setScene(Menus.PauseMenu.scene); GameWindow.stage.setFullScreen(true); }
 		  	      Menus.currentMenu = Menus.PauseMenu;
 		  	    }
@@ -294,6 +299,11 @@ import javafx.scene.Cursor;
 		  this.game.fullImage.addEventFilter(KeyEvent.KEY_PRESSED, playerKeyPressedHandler);
 		  this.game.fullImage.addEventFilter(MouseEvent.MOUSE_CLICKED, playerMouseClickHandler);
 		  this.game.fullImage.addEventFilter(ScrollEvent.SCROLL, playerScrollHandler);
+		  
+		  this.colliders.add(northCollider);
+		  this.colliders.add(eastCollider);
+		  this.colliders.add(southCollider);
+		  this.colliders.add(westCollider);
 	  }
 	  
 	  
@@ -345,7 +355,7 @@ import javafx.scene.Cursor;
 	    
 	    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()){
 
-	      this.takeDamage(9999);
+	      this.takeDamage(9999.0);
 	    }
 	  }
 	   
@@ -386,7 +396,7 @@ import javafx.scene.Cursor;
 	 }
 	  
 	  //Pelaajan vahingoittaminen
-	  public void takeDamage(int amount) {
+	  public void takeDamage(Double amount) {
 	   
 		  if(Settings.muteSound == false) {playerHurtSound.play(Settings.musicVolume());}
 	    
@@ -463,5 +473,5 @@ import javafx.scene.Cursor;
 	  
 	 public Boolean isMovingForSprite() {return this.isWalking;}
 	  
-	 public String toString() {this.name + " now at (" + this.location.locationInGame().getKey() +" ; "+ this.location.locationInGame().getValue() + ")"}
+	 public String toString() {return this.name + " now at (" + this.location.locationInGame().getKey() +" ; "+ this.location.locationInGame().getValue() + ")";}
 	}

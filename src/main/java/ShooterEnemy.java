@@ -23,7 +23,8 @@ class ShooterEnemy extends Enemy {
 	Double locationX;
 	Double locationY;
 	
-  public GamePos location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+  public GamePos location;
+  public Optional<Pair<Double, Double>>locationForSprite;
  
   public Double HP = 200.0;
   private int actionCounter = 0;
@@ -33,13 +34,13 @@ class ShooterEnemy extends Enemy {
   private Boolean isReadyForNextAction = true;
   private Boolean moves = false;
   private Boolean idles = false;
-  public Player player = game.player;
+  public Player player;
   private int itemDropIndex = 0;
 
   private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -38.0), Optional.empty());
   private String currentAction = "idling";
   
-  public Optional<Item> itemDrop() { return Optional.of(this.inventory.values().toArray()[itemDropIndex]);}
+  public Optional<Object> itemDrop() { return Optional.ofNullable(this.inventory.values().toArray()[itemDropIndex]);}
   
   public ArrayList<Node> image(){
 	  ArrayList<Node> done = new ArrayList<Node>(); 
@@ -54,7 +55,8 @@ class ShooterEnemy extends Enemy {
   private Collider eastCollider = new Collider("Eeast", this, this.image.get(0).getBoundsInParent().getHeight()/2.0, 0.0, "vertical");
   private Collider westCollider = new Collider("Ewest", this, -this.image.get(0).getBoundsInParent().getHeight()/2.0, 0.0, "vertical");
   
-  public Collider colliders[] = {northCollider, eastCollider, southCollider, westCollider};
+  public ArrayList<Collider> colliders = new ArrayList<Collider>();
+
    
  
   //Konstruktori luokalle
@@ -64,6 +66,10 @@ class ShooterEnemy extends Enemy {
 	  this.game = game;
 	  this.locationX = locationX;
 	  this.locationY = locationY;	  
+	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+	  
+	  locationForSprite = Optional.of(location.locationInImage());
+	  player = game.player;
 	  
 	  //Täytetään vihollisen tavaraluettelo esineillä
 	  this.inventory.put("Health Pack", new HealthPack(this.game, 1));
@@ -71,7 +77,10 @@ class ShooterEnemy extends Enemy {
 	  this.inventory.put("Kitten 5000", new SlowFiringWeapon(this.game, Optional.empty()));
 	  this.inventory.put("Heat Bolter", new RapidFireWeapon(this.game, Optional.empty()));
 	  
-	  
+	  this.colliders.add(northCollider);
+	  this.colliders.add(eastCollider);
+	  this.colliders.add(southCollider);
+	  this.colliders.add(westCollider);
   }
   
   private Double projectileSpeed() { 
@@ -110,7 +119,7 @@ class ShooterEnemy extends Enemy {
     
     if(this.isDead()) {
     	
-    	if(this.itemDrop().isPresent()) {this.drop(this.itemDrop().get());}
+    	if(this.itemDrop().isPresent()) {this.drop((Item)this.itemDrop().get());}
     	else {System.out.println(this.name + " vanished but did not drop any items this time");}
     	
     }

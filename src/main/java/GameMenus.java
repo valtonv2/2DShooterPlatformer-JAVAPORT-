@@ -35,7 +35,7 @@ class Menus{
 	
 	
   static GameMenu currentMenu = MainMenu;  //Tämän perusteella GUI osaa kutsua oikean menun refresh-metodia
-  static Boolean  fullScreenStatus = GameWindow.stage.isFullScreen();
+  static Boolean fullScreenStatus() { return GameWindow.stage.isFullScreen();}
   
 }
   
@@ -64,7 +64,7 @@ class Menus{
 	    	   GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
 	           GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
-	           if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	           if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           GameWindow.stage.setFullScreen(true);
 	           }
@@ -87,7 +87,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	  
-	    	   if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.SettingsMenu.scene);}
+	    	   if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.SettingsMenu.scene);}
 	    	   else{GameWindow.stage.setScene(Menus.SettingsMenu.scene); 
 	    	        GameWindow.stage.setFullScreen(true); }
 	    		       
@@ -112,7 +112,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    	   if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.LevelSelectMenu.scene);}
+	    	   if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.LevelSelectMenu.scene);}
 	    	   else{
 	    	     GameWindow.stage.setScene(Menus.LevelSelectMenu.scene); 
 	    	     GameWindow.stage.setFullScreen(true);
@@ -139,7 +139,7 @@ class Menus{
 		    	  
 	    	      
 	    		
-	    		if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.LoadMenu.scene);}
+	    		if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.LoadMenu.scene);}
 		    	   else{
 		    	     GameWindow.stage.setScene(Menus.LoadMenu.scene); 
 		    	     GameWindow.stage.setFullScreen(true);
@@ -164,7 +164,7 @@ class Menus{
 		    	  
 	 	    	      
 	 	    		
-	 	   	if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.SaveMenu.scene);}
+	 	   	if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.SaveMenu.scene);}
 	 	    else{
 	 		     GameWindow.stage.setScene(Menus.SaveMenu.scene); 
 	 		     GameWindow.stage.setFullScreen(true);
@@ -273,7 +273,7 @@ class Menus{
 		    	  
 	    	   GameWindow.clock.start();
 	           GameWindow.menuClock.stop();
-	           if(!Menus.fullScreenStatus) {
+	           if(!Menus.fullScreenStatus()) {
 	        	   GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           }else{
 	        	   GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
@@ -298,7 +298,7 @@ class Menus{
 		    	  
 	    	   GameWindow.clock.stop();
 	           GameWindow.menuClock.start();
-	           if(!Menus.fullScreenStatus) {
+	           if(!Menus.fullScreenStatus()) {
 	        	   GameWindow.stage.setScene(Menus.SettingsMenu.scene);
 	           }else{
 	        	   GameWindow.stage.setScene(Menus.SettingsMenu.scene);
@@ -324,7 +324,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
 	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
@@ -417,7 +417,7 @@ class Menus{
 	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
 	           PlayerHUD.equipmentBox.box.removeItem();
 	           PlayerHUD.equipmentBox.updateItems();
-	           if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage); }
+	           if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage); }
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); 
 	                }
@@ -443,7 +443,7 @@ class Menus{
 	    		    GameWindow.clock.stop();
 	    	        GameWindow.menuClock.start();
 	    	        GameWindow.currentGame.reset();
-	    	        if(!Menus.fullScreenStatus) {
+	    	        if(!Menus.fullScreenStatus()) {
 	    	        	GameWindow.stage.setScene(Menus.MainMenu.scene);
 	    	        }else{
 	    	        	GameWindow.stage.setScene(Menus.MainMenu.scene); 
@@ -535,7 +535,7 @@ class Menus{
 	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
 	           PlayerHUD.equipmentBox.box.removeItem();
 	           PlayerHUD.equipmentBox.updateItems();
-	           if(!Menus.fullScreenStatus) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	           if(!Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); }
 	           }
@@ -562,7 +562,7 @@ class Menus{
 	  	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
 	  	           PlayerHUD.equipmentBox.box.removeItem();
 	  	           PlayerHUD.equipmentBox.updateItems();
-	  	           if(!Menus.fullScreenStatus) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	  	           if(!Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	  	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	  	                GameWindow.stage.setFullScreen(true); }
 	  	           }
@@ -585,7 +585,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
 	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
@@ -713,7 +713,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(arrivedFrom.scene); }
+	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(arrivedFrom.scene); }
 	    		  else{
 	    			  GameWindow.stage.setScene(arrivedFrom.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
@@ -884,7 +884,7 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
 	    		  else{
 	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
@@ -1044,7 +1044,7 @@ class Menus{
 	    	  public void run() {
 	    	  
     	   
-    		  if(!Menus.fullScreenStatus) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
     		  else{
     			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
     			  GameWindow.stage.setFullScreen(true);
@@ -1120,17 +1120,17 @@ class AnimatedButton extends GameButton{
 	
 	
 	
-  private Text buttonText = new Text(0,0, textForButton);
+  private Text buttonText;
   
   Optional<String>buttonAnnouncement = Optional.empty();  //Teksti joka näkyy valikossa kun hiiri viedään napin päälle
   
   public Boolean isLocked = false;         //Jos nappi on lukittu sitä ei voi painaa. Käytetään pelin tasojen yhteydessä
   
-  private Node normalImg = Helper.anySpriteFromImage(normalImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());   //Kuvat kolmeen eri tilanteeseen
-  private Node hoverImg = Helper.anySpriteFromImage(hoverImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
-  private Node pressedImg = Helper.anySpriteFromImage(pressedImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
+  private Node normalImg;
+  private Node hoverImg;
+  private Node pressedImg;
   
-  Node currentImage = normalImg;
+  Node currentImage;
   
   //Konstruktori
   public AnimatedButton(String textForButton, Pair<Double, Double> locationOffsetFromCenter, Pair<Double, Double>dimensions, String normalImgPath, String hoverImgPath, String pressedImgPath, Optional<String>announcement, Runnable action) {
@@ -1144,10 +1144,16 @@ class AnimatedButton extends GameButton{
 	  this.announcement = announcement;
 	  this.action = action;
 	  
+	  buttonText = new Text(0,0, textForButton);
 	  buttonText.setScaleX(2.0);
 	  buttonText.setScaleY(2.0);
 	  buttonText.setMouseTransparent(true);
 	  
+	  normalImg = Helper.anySpriteFromImage(normalImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());   //Kuvat kolmeen eri tilanteeseen
+	  hoverImg = Helper.anySpriteFromImage(hoverImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
+	  pressedImg = Helper.anySpriteFromImage(pressedImgPath, new Pair<Double, Double>(0.0,0.0), dimensions.getKey(), dimensions.getValue());
+	  
+	  currentImage = normalImg;
 	  
 	  EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {
 		  	public void handle(MouseEvent event) {
@@ -1248,11 +1254,11 @@ class GameSlider{
 	Pair<Double, Double> locationOffset;
 	
 	
- private Slider slider  = new Slider(min, max, value);
+ private Slider slider;
     
- private Text text = new Text(0,0,header);
+ private Text text;
   
- private Text percentage = new Text(0,0,slider.getValue() + "%");
+ private Text percentage;
  
  public Group image = new Group();
  
@@ -1266,9 +1272,13 @@ class GameSlider{
 	 this.dimensions = dimensions;
 	 this.locationOffset = locationOffset;
 	 
+	 slider = new Slider(min, max, value);
 	 slider.setPrefWidth(dimensions.getKey());
 	 slider.setPrefHeight(dimensions.getValue());
 	 slider.getStylesheets().addAll("file:src/main/resources/StyleSheets/SliderStyle.css");
+	 
+	 text = new Text(0,0,header);
+	 percentage = new Text(0,0,slider.getValue() + "%");
 	 
 	 image.getChildren().add(slider);
 	 image.getChildren().add(text);
@@ -1310,7 +1320,7 @@ class GameCheckBox extends GameButton{
   
  private Node buttonBase = Helper.anySpriteFromImage("file:src/main/resources/Pictures/CheckBoxBase.png", new Pair<Double, Double>(0.0,0.0), 50.0, 50.0);
  private Node buttonMark = Helper.anySpriteFromImage("file:src/main/resources/Pictures/CheckBoxmark.png", new Pair<Double, Double>(0.0,0.0), 30.0, 30.0);
- private Text labelText = new Text(0,0,text);
+ private Text labelText;
  
  
  //Konstruktori
@@ -1319,6 +1329,7 @@ class GameCheckBox extends GameButton{
 	 this.text = text;
 	 this.locationOffset = locationOffset;
 	 
+	 labelText = new Text(0,0,text);
 	 labelText.setFill(Color.WHITE);
 	 
 	  EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {

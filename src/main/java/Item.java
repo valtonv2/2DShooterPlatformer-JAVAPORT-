@@ -27,7 +27,7 @@ abstract class Item extends UsesGameSprite{
   //Sijainnille annetaan arvo kun esine on vapaana maailmassa
   public Optional<GamePos> locationInWorld = Optional.empty();
      
-  public GameSprite[] sprites; //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
+  public ArrayList<GameSprite> sprites; //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
   
   public Optional<Pair<Double, Double>> locationForSprite() {
     
@@ -60,7 +60,7 @@ abstract class UtilityItem extends Item {
  
   abstract public void use();
   
-  public GameSprite[] sprites;
+  public ArrayList<GameSprite> sprites;
   
   public String lookDirectionForSprite = "east";
   
@@ -84,7 +84,7 @@ abstract class Weapon extends Item{
   
   abstract public void fire();
   
-  public GameSprite[] sprites;
+  public ArrayList<GameSprite> sprites;
   
   protected Integer currentTime = game.time;
   
@@ -100,7 +100,7 @@ class HealthPack extends UtilityItem{
   public Integer useTimes;
   public String  name = "Health Pack";
   
-  public String ID = "HP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
+  public String ID;
   
   public Double strength = 500.0; //Parannuksen voimakkuus
   
@@ -113,20 +113,17 @@ class HealthPack extends UtilityItem{
     PlayerHUD.equipmentBox.updateItems();
   }
   
-  public GameSprite sprites[] = {
-		  
-		  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),
-		  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location))
-		  
-		  
-  };
-  
+  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
   //Konstruktori
   
   public HealthPack(Game game, Integer useTimes) {
 	  
 	  this.game = game;
 	  this.useTimes = useTimes;
+	  ID = "HP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
+	  
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()));
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location)));
 			  
   }
        
@@ -143,7 +140,7 @@ class EnergyPack extends UtilityItem{
 	  public Integer useTimes;
 	  public String  name = "Energy Pack";
 	  
-	  public String ID = "EP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
+	  public String ID; // Hyödynnetään tallentamisessa
 	  
 	  public Double strength = 500.0; //Parannuksen voimakkuus
 	  
@@ -156,12 +153,9 @@ class EnergyPack extends UtilityItem{
 		  PlayerHUD.equipmentBox.updateItems();
 	  }
 	  
-	  public GameSprite sprites[] = {
+	  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
 			  
-			  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),
-			  new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location))
-			   
-	  };
+			
 	  
 	  //Konstruktori
 	  
@@ -169,7 +163,10 @@ class EnergyPack extends UtilityItem{
 		  
 		  this.game = game;
 		  this.useTimes = useTimes;
-				  
+		  ID = "EP" + this.amountOfUseTimes();
+		  
+		  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()));
+		  this.sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location)));	  
 		
 	  }
 	       
@@ -195,7 +192,10 @@ class SlowFiringWeapon extends Weapon{
 	  
 	  this.game = game;
 	  this.actor = actor;
-	    
+	  
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty()));  //Equipped image 
   }
   
   private Double projectileSpeed() { 
@@ -219,16 +219,9 @@ class SlowFiringWeapon extends Weapon{
     
   }
   
-  public GameSprite sprites[] = {
+  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
 		  
-		new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()), //World image
-		new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty()), //Inventory image
-	    new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty())  //Equipped image
-		  
-		  
-  };
-      
-  
+	  
   public String lookDirectionForSprite = "east";
 }
 
@@ -254,6 +247,10 @@ class RapidFireWeapon extends Weapon{
 	  
 	  this.game = game;
 	  this.actor = actor;
+	  
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
+	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty()));  //Equipped image
 	  
 
   } 
@@ -281,14 +278,7 @@ class RapidFireWeapon extends Weapon{
     
   }
   
- public GameSprite[] sprites = {
-		 
-		new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()), //World image
-		new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty()), //Inventory image
-		new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty())  //Equipped image
-		  	 
- };
-      
-      
+  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
+	
   public String lookDirectionForSprite = "east";
 }

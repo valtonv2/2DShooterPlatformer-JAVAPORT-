@@ -33,8 +33,8 @@ class Level {
   private Image goalImage = new Image("file:src/main/resources/Pictures/FailTexture.png");
   private ImagePattern goalPattern = new ImagePattern(goalImage, 0,0,1,1,true);
   
-  private Image backGroundSprite = new Image(backGroundPath);
-  private ImagePattern backGroundPattern = new ImagePattern(backGroundSprite, 0.5,0.9,1,1,true);
+  private Image backGroundSprite;
+  private ImagePattern backGroundPattern;
   
   //Seuraavia muuttujia käytetään taustan liikuttamiseen
   private Double bgX = -2000.0;
@@ -205,6 +205,9 @@ class Level {
   this.layoutPath = layoutPath;
   this.backGroundPath = backGroundPath;
   this.game = game;
+  backGroundSprite = new Image(backGroundPath);
+  backGroundPattern = new ImagePattern(backGroundSprite, 0.5,0.9,1,1,true);
+  
   levelCreator(); //Luodaan taso
   this.levelGeometryHitBox = allTiles.stream().filter(tile -> tile.hasCoillision).collect(Collectors.toList()); 
   this.levelGeometryHitBox.stream().map(tile -> tile.locationForCollider).collect(Collectors.toList()); 

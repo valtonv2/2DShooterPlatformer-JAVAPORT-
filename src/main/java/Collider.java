@@ -110,26 +110,24 @@ class Collider{
   }
  }
   
-  public Double x = actor.location.locationInGame().getKey() + xOffset;
-  public Double y = actor.location.locationInGame().getValue() + yOffset;
-  public Double imgX  = actor.location.locationInImage().getKey() + xOffset;
-  public Double imgY = actor.location.locationInImage().getValue() + yOffset;
-  
   //Määrittää sijainnit pelaajan ympärillä
   public ArrayList<Pair<Double, Double>> locations() {
-    
+	  
+	  Double x = actor.location.locationInGame().getKey() + xOffset;
+	  Double y = actor.location.locationInGame().getValue() + yOffset;
+	 
 	Double pHeight = (double) this.actor.height;
     Double pWidth = (double) this.actor.width;
     ArrayList<Pair<Double, Double>> done = new ArrayList<Pair<Double, Double>>();
     
     if (orientation == "horizontal") {
-    	done.add(new Pair<Double, Double>(this.x-(pWidth/2) + 20 , this.y));
-    	done.add(new Pair<Double, Double>(this.x-(pWidth/2) + 20 , this.y));
-    	done.add(new Pair<Double, Double>(this.x-(pWidth/2) + 20 , this.y));
+    	done.add(new Pair<Double, Double>(x-(pWidth/2) + 20 , y));
+    	done.add(new Pair<Double, Double>(x-(pWidth/2) + 20 , y));
+    	done.add(new Pair<Double, Double>(x-(pWidth/2) + 20 , y));
     }else{
-    	done.add(new Pair<Double, Double>(this.x, this.y - (pHeight/2) + 36));
-    	done.add(new Pair<Double, Double>(this.x, this.y));
-    	done.add(new Pair<Double, Double>(this.x, this.y+(pHeight/2) -11));	
+    	done.add(new Pair<Double, Double>(x, y - (pHeight/2) + 36));
+    	done.add(new Pair<Double, Double>(x, y));
+    	done.add(new Pair<Double, Double>(x, y+(pHeight/2) -11));	
     }
     
     return done;
@@ -142,16 +140,19 @@ class Collider{
 	    
 		Double pHeight = (double) this.actor.height;
 	    Double pWidth = (double) this.actor.width;
+	    Double imgX  = actor.location.locationInImage().getKey() + xOffset;
+		Double imgY = actor.location.locationInImage().getValue() + yOffset;
+		
 	    ArrayList<Pair<Double, Double>> done = new ArrayList<Pair<Double, Double>>();
 	    
 	    if (orientation == "horizontal") {
-	    	done.add(new Pair<Double, Double>(this.imgX-(pWidth/2) + 20 , this.imgY));
-	    	done.add(new Pair<Double, Double>(this.imgX-(pWidth/2) + 20 , this.imgY));
-	    	done.add(new Pair<Double, Double>(this.imgX-(pWidth/2) + 20 , this.imgY));
+	    	done.add(new Pair<Double, Double>(imgX-(pWidth/2) + 20 , imgY));
+	    	done.add(new Pair<Double, Double>(imgX-(pWidth/2) + 20 , imgY));
+	    	done.add(new Pair<Double, Double>(imgX-(pWidth/2) + 20 ,imgY));
 	    }else{
-	    	done.add(new Pair<Double, Double>(this.imgX, this.imgY - (pHeight/2) + 36));
-	    	done.add(new Pair<Double, Double>(this.imgX, this.imgY));
-	    	done.add(new Pair<Double, Double>(this.imgX, this.imgY+(pHeight/2) -11));	
+	    	done.add(new Pair<Double, Double>(imgX, imgY - (pHeight/2) + 36));
+	    	done.add(new Pair<Double, Double>(imgX, imgY));
+	    	done.add(new Pair<Double, Double>(imgX, imgY+(pHeight/2) -11));	
 	    }
 	    
 	    return done;

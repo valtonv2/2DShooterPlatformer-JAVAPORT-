@@ -9,6 +9,7 @@ import javafx.scene.input.*;
 import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
@@ -23,7 +24,8 @@ class FollowingEnemy extends Enemy{
   Double locationX;
   Double locationY;
 
-  public GamePos location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+  public GamePos location;
+  public Optional<Pair<Double, Double>>locationForSprite;
   public Double HP = 500.0;
   public Double energy = 500.0;
   public Boolean isActive = false;
@@ -32,20 +34,20 @@ class FollowingEnemy extends Enemy{
   
   //Vihollisen kuva
   private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/CorruptedMoonmanWalk", "MoonmanWalk", 6, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
-  public Optional<RotatingArm> arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), this.game.player.location.locationInImage())));
+  public Optional<RotatingArm> arm;
   private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
   public String lookDirectionForSprite = "east";
   public Boolean isMovingForSprite = false;
   
   //Vihollisen Colliderit
-  private Collider northCollider = new Collider("Enorth", this, 0.0,  -this.body.spriteHeight/2.0 +15, "horizontal");
-  private Collider southCollider = new Collider("Esouth", this, 0.0,  this.body.spriteHeight/2.0 -12, "horizontal");
-  private Collider eastCollider = new Collider("Eeast", this, this.body.spriteWidth/2.0, -30.0, "vertical");
-  private Collider westCollider = new Collider("Ewest", this, -this.body.spriteWidth/2.0, -30.0, "vertical");
-  public Collider colliders[] = {northCollider, eastCollider, southCollider, westCollider};
+  private Collider northCollider;
+  private Collider southCollider;
+  private Collider eastCollider;
+  private Collider westCollider;
+  public ArrayList<Collider> colliders = new ArrayList<Collider>();
   
   //Audio
-  private AudioClip shieldSound = this.game.player.shieldSound;
+  private AudioClip shieldSound;
   private AudioClip hurtSound = new AudioClip("file:src/main/resources/sound/CorruptedHurt.wav");
   
   //Konstruktori
@@ -55,6 +57,22 @@ class FollowingEnemy extends Enemy{
 	  this.game = game;
 	  this.locationX = locationX;
 	  this.locationY = locationY;
+	  
+	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+	  locationForSprite = Optional.of(location.locationInImage());
+	  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), this.game.player.location.locationInImage())));
+	 
+	  northCollider = new Collider("Enorth", this, 0.0,  -this.body.spriteHeight/2.0 +15, "horizontal");
+	  southCollider = new Collider("Esouth", this, 0.0,  this.body.spriteHeight/2.0 -12, "horizontal");
+	  eastCollider = new Collider("Eeast", this, this.body.spriteWidth/2.0, -30.0, "vertical");
+	  westCollider = new Collider("Ewest", this, -this.body.spriteWidth/2.0, -30.0, "vertical");
+	  
+	  shieldSound = this.game.player.shieldSound;
+	  
+	  this.colliders.add(northCollider);
+	  this.colliders.add(eastCollider);
+	  this.colliders.add(southCollider);
+	  this.colliders.add(westCollider);
 	  
 	  //Lisätään esine vihollisen tavaraluetteloon
 	  this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
@@ -73,7 +91,7 @@ class FollowingEnemy extends Enemy{
     
      //Aina suoritettavat toiminnot
     
-    this.colliders.stream().forEach(collider -> collider.update);
+    this.colliders.stream().forEach(collider -> collider.update());
     if(!this.southCollider.collides) { this.ySpeed += 1.0;}
     this.arm.get().direction.update(this.location.locationInImage(), this.game.player.location.locationInImage());
     if(this.isShielding) { this.energy = this.energy - 5.0;}
@@ -83,7 +101,7 @@ class FollowingEnemy extends Enemy{
     
      //Esineiden pudottaminen
     try{
-    if(this.isDead()) { this.drop(this.inventory.values()[0]);}
+    if(this.isDead()) { this.drop((Item)this.inventory.values().toArray()[0]);}
     }catch(NoSuchElementException x){
       System.out.println("FollowingEnemy item drop is acting up.");
     }

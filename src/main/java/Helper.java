@@ -133,22 +133,40 @@ abstract class UsesAnimatedGameSprite extends UsesGameSprite{
 
 class GameSprite {
   
-  //Parametrit
+  //Parametrit  
 	String imagePath;
-	Optional<Pair<Double, Double>> imageStartLocation;
-	Pair<Double, Double> imageDimensions;
+    Optional<Pair<Double, Double>> imageStartLocation;
+	Pair<Double, Double> imageDimensions = new Pair<Double, Double>(0.0, 0.0);
 	UsesGameSprite user;
-    Pair<Double, Double> locationOffset;
-    Optional<Pair<Double, Double>> overrideLocation;
+	Pair<Double, Double> locationOffset;
+	Optional<Pair<Double, Double>> overrideLocation;
+	
+	 public Double spriteWidth;
+	 public Double spriteHeight;
+	 private ImagePattern texture;
+	
+    //Konstruktori luokalle
+    public GameSprite(String imagePath, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double >imageDimensions, UsesGameSprite user, Pair<Double, Double> locationOffset, Optional<Pair<Double, Double>> overrideLocation) {
+  		  
+  		  this.imagePath = imagePath;
+  		  this.imageStartLocation = imageStartLocation;
+  		  this.imageDimensions = imageDimensions;
+  		  this.user = user;
+  		  this.locationOffset = locationOffset;
+  		  this.overrideLocation = overrideLocation;
+  		  
+  		 spriteWidth = imageDimensions.getKey();
+  		 spriteHeight = imageDimensions.getValue();
+  		 
+  		 texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
+  		  
+    }
 	
 	
 	
-	
-	
- public Double spriteWidth = imageDimensions.getKey();
- public Double spriteHeight = imageDimensions.getValue();
+ 
   
- private ImagePattern texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
+ 
  
  public Rectangle normalImage() {
   
@@ -214,19 +232,6 @@ class GameSprite {
 	 return done;
   }
   
-  
-  
-  //Konstruktori luokalle
-  public GameSprite(String imagePath, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double >imageDimensions, UsesGameSprite user, Pair<Double, Double> locationOffset, Optional<Pair<Double, Double>> overrideLocation) {
-		  
-		  this.imagePath = imagePath;
-		  this.imageStartLocation = imageStartLocation;
-		  this.imageDimensions = imageDimensions;
-		  this.user = user;
-		  this.locationOffset = locationOffset;
-		  this.overrideLocation = overrideLocation;
-		  
-  }
 }
 
 //##########################################################################################################################################################################################################
@@ -235,26 +240,48 @@ class AnimatedGameSprite{
   
 	
 	
-	String imageFolderPath;
-	String fileNameStart;
-	int fileAmount;
-	String fileType;
-	Optional<Pair<Double, Double>> imageStartLocation;
-	Pair<Double, Double> imageDimensions;
+	String imageFolderPath = "";
+	String fileNameStart = "";
+	int fileAmount = 0;
+	String fileType = "";
+	Optional<Pair<Double, Double>> imageStartLocation = Optional.of(new Pair<Double, Double>(0.0, 0.0));
+	Pair<Double, Double> imageDimensions = new Pair<Double, Double>(0.0, 0.0);
 	UsesAnimatedGameSprite user;
 	Pair<Double, Double> locationOffset;
 	Boolean isAlwaysMoving;
 	
+	 private ArrayList<Image> images;
+	 private List<ImagePattern> textures;
+	 public Double spriteWidth;
+	 public Double spriteHeight;
+	 
+	 private int time = 0;
+	 private int spriteIndex = 0;
+	 
 	
-  private ArrayList<Image> images = Helper.getSpritesFromFolder(imageFolderPath, fileNameStart, fileAmount, fileType);
-  private List<ImagePattern> textures = images.stream().map( img -> new ImagePattern(img, 0,0,1,1,true)).collect(Collectors.toList());
- 
+	//Konstruktori luokalle
+	  
+	public AnimatedGameSprite(String imageFolderPath, String fileNameStart, int fileAmount, String fileType, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double> imageDimensions, UsesAnimatedGameSprite user, Pair<Double, Double> locationOffset, Boolean isAlwaysMoving) {
+		 
+		 this.imageFolderPath = imageFolderPath;
+		 this.fileNameStart = fileNameStart;
+		 this.fileAmount = fileAmount;
+		 this.fileType = fileType;
+		 this.imageStartLocation = imageStartLocation;
+		 this.imageDimensions = imageDimensions;
+		 this.user = user;
+		 this.locationOffset = locationOffset;
+		 this.isAlwaysMoving = isAlwaysMoving;
+				 
+		 images = Helper.getSpritesFromFolder(imageFolderPath, fileNameStart, fileAmount, fileType);
+		 textures = images.stream().map( img -> new ImagePattern(img, 0,0,1,1,true)).collect(Collectors.toList());
+		 
+		 spriteWidth = imageDimensions.getKey();
+		 spriteHeight = imageDimensions.getValue();
+		 
+	 }
+	
 
-  private int time = 0;
-  private int spriteIndex = 0;
-  public Double spriteWidth = imageDimensions.getKey();
-  public Double spriteHeight = imageDimensions.getValue();
-  
   private void updateCurrentSpriteNumber() {
     
     if (this.time % 5 == 0 && spriteIndex < textures.size()-1 && (this.user.isMovingForSprite || this.isAlwaysMoving)) {
@@ -298,7 +325,7 @@ class AnimatedGameSprite{
  
  public void changeSize(Pair<Double, Double> newDimensions) {
    this.spriteWidth = newDimensions.getKey();
-   this.spriteHeight= newDimensions.getValue();
+   this.spriteHeight = newDimensions.getValue();
    }
  
  private ArrayList<Rotate> mirrorRotate() {
@@ -307,23 +334,6 @@ class AnimatedGameSprite{
 	 return done;
   }
   
-//Konstruktori luokalle
-		  
-public AnimatedGameSprite(String imageFolderPath, String fileNameStart, int fileAmount, String fileType, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double> imageDimensions, UsesAnimatedGameSprite user, Pair<Double, Double> locationOffset, Boolean isAlwaysMoving) {
-	 
-	 this.imageFolderPath = imageFolderPath;
-	 this.fileNameStart = fileNameStart;
-	 this.fileAmount = fileAmount;
-	 this.fileType = fileType;
-	 this.imageStartLocation = imageStartLocation;
-	 this.imageDimensions = imageDimensions;
-	 this.user = user;
-	 this.locationOffset = locationOffset;
-	 this.isAlwaysMoving = isAlwaysMoving;
-			 
-	 
-	 
- }
   
 }
 
@@ -335,8 +345,8 @@ class RotatingArm{
 Actor user;
 DirectionVector direction;
   
- private GameSprite armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
- private Rotate armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
+ private GameSprite armImage; 
+ private Rotate armRotate; 
   
  private Pair<Double, Double> pivotPoint() {return user.location.locationInImage();}
   
@@ -350,7 +360,7 @@ DirectionVector direction;
     
     if(user.equippedWeapon.isPresent()) {
     	
-    	group.getChildren().addAll(armImage.image(), user.equippedWeapon.get().sprites[1].image());
+    	group.getChildren().addAll(armImage.image(), user.equippedWeapon.get().sprites.get(1).image());
     	
     }else {
     	
@@ -384,6 +394,8 @@ DirectionVector direction;
 	 this.user = user;
 	 this.direction = direction;
 	 
+	 this.armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
+	 this.armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
  }
   
 }
@@ -393,8 +405,8 @@ DirectionVector direction;
 //Luokka DirectionVector tarjoaa yksinkertaisemman tavan k�sitell� suuntia esim ammusten tapauksessa
 class DirectionVector {
   
- public Pair<Double, Double>originalStartPoint;
- public Pair<Double, Double>originalEndPoint;
+ public Pair<Double, Double>originalStartPoint = new Pair<Double, Double>(0.0, 0.0);
+ public Pair<Double, Double>originalEndPoint = new Pair<Double, Double>(0.0, 0.0);
 	
 	
   public Double x = originalEndPoint.getKey() - originalStartPoint.getKey();
@@ -479,14 +491,26 @@ class DirectionVector {
 class GamePos{
 
 //Parametrit
- Pair<Double, Double> inGameCoordinates;
+ Pair<Double, Double> inGameCoordinates; 
  Boolean isCenter;
  
- public Optional<GameCamera> center = Optional.ofNullable(GameWindow.gameCamera);
+ public Optional<GameCamera> center = GameWindow.gameCamera;
 
- private Double inGameX = inGameCoordinates.getKey();
- private Double inGameY = inGameCoordinates.getValue();
+ private Double inGameX;
+ private Double inGameY;
  private Double playerHeightOffset = (double) -10;
+ 
+//Konstruktori luokalle
+ 
+public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
+	this.inGameCoordinates = inGameCoord;
+    this.isCenter = isCenterOfAll;
+    
+    inGameX = inGameCoordinates.getKey();
+    inGameY = inGameCoordinates.getValue();
+    
+    
+}
   
  public Pair<Double, Double> locationInGame() { return new Pair<Double,Double>(inGameX, inGameY); } 
  
@@ -547,12 +571,6 @@ class GamePos{
 	 
  }
  
- //Konstruktori luokalle
- 
- public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
- 	this.inGameCoordinates = inGameCoord;
-    this.isCenter = isCenterOfAll;
- }
   
 }
   

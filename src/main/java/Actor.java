@@ -26,7 +26,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  Optional<Weapon> equippedWeapon = Optional.empty();
 	  GamePos location;
 	  
-	  Optional<Pair<Double, Double>> locationForSprite = Optional.ofNullable(location.locationInImage());
+	  Optional<Pair<Double, Double>> locationForSprite;
 	  String lookDirectionForSprite;
 	  abstract void stop();
 	  abstract void takeDamage(Double amount);
@@ -77,7 +77,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	     
 	     if(gun.isPresent()){
 	       gun.get().user = Optional.of(this);
-	       gun.get().sprites[2].user = this;
+	       gun.get().sprites.get(2).user = this;
 	     }  
 	   }
 	   

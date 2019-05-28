@@ -185,7 +185,7 @@ class WeaponHud {
   
   public void updateItems() {
     
-    List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes.contains(item)).map(item -> (Weapon)item).collect(Collectors.toList));
+    List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes.contains(item)).collect(Collectors.toList()));
     
     int currentBox = 0;
    
@@ -276,10 +276,10 @@ class ItemBox extends UsesGameSprite{
 			 Text counter = new Text(this.location.getKey() + 40, this.location.getValue() + 55, item.amountOfUseTimes().toString());
 			 
 			 counter.setFill(javafx.scene.paint.Color.WHITE);
-			 item.sprites[1].overrideLocation = Optional.of(this.location);
+			 item.sprites.get(1).overrideLocation = Optional.of(this.location);
 			 if(item.isSpent()) {this.removeItem();}
 			 
-			 Node done[] = {emptyImage(), item.sprites[1].image(), counter };
+			 Node done[] = {emptyImage(), item.sprites.get(1).image(), counter };
 			 return done;
 			 
 			 
@@ -288,8 +288,8 @@ class ItemBox extends UsesGameSprite{
 			 Item item = this.containedItem.get();
 
 			 
-			 item.sprites[1].overrideLocation = Optional.of(this.location);
-			 Node done[] = {emptyImage(), item.sprites[1].image()};
+			 item.sprites.get(1).overrideLocation = Optional.of(this.location);
+			 Node done[] = {emptyImage(), item.sprites.get(1).image()};
 			 return done;
 			 
 		 }else{

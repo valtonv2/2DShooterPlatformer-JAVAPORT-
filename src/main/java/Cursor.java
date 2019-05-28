@@ -14,8 +14,8 @@ class MouseCursor{
 	
   private Player player;
   
-  private Double xCoordinate = 0.0;
-  private Double yCoordinate = 0.0;
+  private Double xCoordinate;
+  private Double yCoordinate;
   public Boolean isOnLeft = false;
   public Boolean isOnRight = false;
   
@@ -33,16 +33,17 @@ class MouseCursor{
   
   
 
-  private Double playerXDiff = this.xCoordinate - player.location.locationInImage().getKey();
-  private Double playerYDiff = this.yCoordinate - player.location.locationInImage().getValue();
+  private Double playerXDiff;
+  private Double playerYDiff;
         
-  public Pair<Double, Double> location = new Pair<Double, Double>(this.xCoordinate, this.yCoordinate);
+  public Pair<Double, Double> location;
   
   //Konstruktori luokalle
   
   public MouseCursor(Player player) {
 	  
 	  this.player = player;
+	  
 	  
 	  //Tapahtumankäsittelijä joka huolehtii kursorin seurannasta
 	  
@@ -52,6 +53,9 @@ class MouseCursor{
 			  
 			  xCoordinate = event.getSceneX();
 			  yCoordinate = event.getSceneY();
+			  playerXDiff = xCoordinate - player.location.locationInImage().getKey();
+			  playerYDiff = yCoordinate - player.location.locationInImage().getValue();
+			  location = new Pair<Double, Double>(xCoordinate, yCoordinate);
 				      
 		      Double dX = playerXDiff;
 			  Double dY = playerYDiff;

@@ -22,8 +22,9 @@ import javafx.scene.text.Text;
 class GameCamera {
 	
   public Player followee;
+  public Game game;
   
-  public GamePos location = new GamePos(new Pair<Double, Double>(followee.location.locationInGame().getKey()+400.0,followee.location.locationInGame().getValue()+200), true);
+  public GamePos location;
   private Double zoomCoefficient = 1.0;    // Zoomauskerroin
   private Scale zoomTransform = new Scale(zoomCoefficient, zoomCoefficient, GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2);
   private Boolean followPlayer = true;
@@ -34,13 +35,14 @@ class GameCamera {
   public Double zInSpeed = 0.0;
   public Double zOutSpeed = 0.0;
   
-  Game game = this.followee.game;
-  
   //Konstruktori luokalle
   
   public GameCamera(Player followee) {
 	  
 	  this.followee = followee;
+	  
+	  location = new GamePos(new Pair<Double, Double>(followee.location.locationInGame().getKey()+400.0,followee.location.locationInGame().getValue()+200), true);
+	  game = this.followee.game;
 	  
 	  mapModeHelpText.setFill(Color.WHITE);
 	    
@@ -52,7 +54,7 @@ class GameCamera {
     return level().allTiles;
   }
   
-  public List<Node> colliderImages() { followee.colliders.stream().flatMap(collider -> collider.images()).collect(Collectors.toList());}
+ // public List<Node> colliderImages() { return followee.colliders.stream().flatMap(collider -> collider.images()).collect(Collectors.toList());}
  
   //Karttatilan kuvat
   
@@ -70,27 +72,42 @@ class GameCamera {
   }
  
   //Suodattaa koko kentän sisällöstä ne tiilet, jotka näkyvät kullakin hetkellä, ja jotka piirretään
-  private List<Enemy> activeEnemies = game.enemies.stream().filter(enemy -> enemy.isActive == true).collect(Collectors.toList());
-  private List<GameTile> drawnEnvironment = entireEnvironment().stream().filter(tile -> tile.location.isNearOther(this.location, drawDistance) || activeEnemies.stream().anyMatch(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), tile.location.locationInGame())<100 )).collect(Collectors.toList());
+  private List<Enemy> activeEnemies() {return game.enemies.stream().filter(enemy -> enemy.isActive == true).collect(Collectors.toList());}
+  private List<GameTile> drawnEnvironment() {return entireEnvironment().stream().filter(tile -> tile.location.isNearOther(this.location, drawDistance) || activeEnemies().stream().anyMatch(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), tile.location.locationInGame())<100 )).collect(Collectors.toList());}
+   
   
   //Luo pelin kuvan joka välitetään gamelle ja sen jälkeen GUI:lle
   public Group cameraImage()  {
    
-    Node moonMan = followee.image();
+    Group moonMan = new Group(); 
+    moonMan.getChildren().addAll(followee.image());
     Node arm = followee.arm.get().completeImage();
     List<Node> projectiles = game.projectiles.stream().map(projectile -> projectile.sprite.image()).collect(Collectors.toList());
-    List<Node> tiles = drawnEnvironment.stream().map(tile -> tile.tileImage).collect(Collectors.toList());
-    List<Node>items = level.itemsInWorld.map( item -> item.sprites(0).image()).collect(Collectors.toList());
-   
-    List<Node>enemies = game.enemies.stream().filter(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), this.location.locationInGame()) <= drawDistance ).flatMap(enemy -> enemy.image()).collect(Collectors.toList());
+    List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.tileImage).collect(Collectors.toList());
+    List<Node>items = GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites.get(0).image()).collect(Collectors.toList());
+    
+    
+    List<ArrayList<Node>>almostEnemies = game.enemies.stream().map(enemy -> enemy.image).collect(Collectors.toList());
+    ArrayList<Node>enemies = new ArrayList<Node>();
+    almostEnemies.forEach(list -> list.forEach(image -> enemies.add(image)));
+    		
+    		//.filter(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), this.location.locationInGame()) <= drawDistance ).flatMap(enemy -> enemy.image).collect(Collectors.toList());
     Node cursor = game.mouseCursor.image();
     
-    List<Node> worldObjects = tiles + items + moonMan +  enemies + projectiles;
-    Group guiElements = new Group(PlayerHUD.image, cursor);
+    ArrayList<Node> worldObjects = new ArrayList<Node>(); 
+    worldObjects.addAll(tiles);
+    worldObjects.addAll(items);
+    worldObjects.add(moonMan);
+    worldObjects.addAll(enemies);
+    worldObjects.addAll(projectiles);
+    		
+    Group guiElements = new Group(PlayerHUD.image(), cursor);
+    guiElements.getChildren().addAll(PlayerHUD.image(), cursor);
+    
     
     Group zoomables = new Group();
-    zoomables.children.addAll(worldObjects);
-    zoomables.transforms_=(List(zoomTransform));
+    zoomables.getChildren().addAll(worldObjects);
+    zoomables.getTransforms().add(zoomTransform);
     
     Group all = new Group(level().backGround(), zoomables);
     if (mapModeSkin().isPresent()) {
@@ -116,8 +133,8 @@ class GameCamera {
     
     this.mapModeCross.setLayoutX(this.location.locationInImage().getKey()-350);           //Karttamoodin pitäminen koossa
     this.mapModeCross.setLayoutY(this.location.locationInImage().getValue()-350);
-    this.mapModeHelpText.setLayoutX((GameWindow.stage.width.toDouble/2) -300);
-    this.mapModeHelpText.setLayoutY(GameWindow.stage.height.toDouble -50);
+    this.mapModeHelpText.setLayoutX((GameWindow.stage.getWidth()/2) -300);
+    this.mapModeHelpText.setLayoutY(GameWindow.stage.getHeight() -50);
   }
   
   //Kameran zoomaus

@@ -1,5 +1,5 @@
 package main.java;
-import java.io.Source;
+
 
 import javafx.util.Pair;
 
@@ -19,7 +19,7 @@ class SaveHandler{
    * Kenttä jossa pelaaja oli edellisen pelin loppuessa
    */
  public static void saveGame(String filePath) {
-    
+    /*
     //Tallennettavan datan keräys
     Pair<Double, Double> playerLoc = game.player.location.locationInGame();
     val playerInv = game.player.inventory.values.toArray
@@ -51,7 +51,7 @@ class SaveHandler{
      * FILEEND
      */
     
-    
+    /*
     var playerPart = "Player:\nLOC:" + playerLoc._1+"|"+playerLoc._2+ "\nSTAT:"+playerHP+"|"+playerEnergy+"\nINV:"
     if(!playerInv.isEmpty){
       playerInv.foreach(item=> playerPart += item.ID+"|")
@@ -82,13 +82,14 @@ class SaveHandler{
     val writer = new PrintWriter(new File(filePath))
     writer.write(fullString)
     writer.close()
+    */
     
   }
   
  //LoadGame lukee dataa tallennustiedostosta ja muokkaa pelioliota sen perusteella
  
  public static Boolean loadGame(String filePath){
-  
+  /*
    //Luetaan data ensin String-muotoon seuraaviin muuttujiin
     var playerLoc:Option[Array[String]] = None    
     var playerInv:Option[Array[String]] = None
@@ -275,3 +276,5 @@ class SaveHandler{
 }
 
 case class CorruptedSaveFile(description: String) extends java.lang.Exception(description)
+	 
+*/

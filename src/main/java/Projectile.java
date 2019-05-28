@@ -16,22 +16,46 @@ class Projectile extends UsesGameSprite {
   Double locationModifierY;
   Actor shooter;
   
-  private Player player = game.player;
-  private MouseCursor cursor = game.mouseCursor;
-  private Level level = game.currentLevel;
+  private Player player;
+  private MouseCursor cursor;
+  private Level level;
   private int projectileRadius = 15;
-  private DirectionVector setDir = direction.copy();
+  private DirectionVector setDir; 
   private int range = 1500;
   private Random randomizer = new Random(9001);
 
   Boolean hasCollided = false;
   
+  public GamePos location;
+  
+  public Optional<Pair<Double, Double>> locationForSprite;
+  
+  GameSprite sprite = new GameSprite("file:src/main/resources/Pictures/Projectile.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), this, new Pair<Double, Double>(0.0,7.0), Optional.empty());
+  //Konstruktori luokalle
+  public Projectile(Game game, DirectionVector direction, Double speed, Double locationModifierX, Double locationModifierY, Actor shooter) {
+	  
+	  this.game = game;
+	  this.direction = direction;
+	  this.speed = speed;
+	  this.locationModifierX = locationModifierX;
+	  this.locationModifierY = locationModifierY;
+	  this.shooter = shooter;
+	  
+	  player = game.player;
+	  cursor = game.mouseCursor;
+	  level = game.currentLevel;
+	  setDir = direction.copy();
+	  location = new GamePos(new Pair<Double, Double>(xCoordinate(), yCoordinate()), false);
+	  locationForSprite = Optional.ofNullable(location.locationInImage());
+	  
+	  //Lisätään ammus pelin ammusten listaan. Sen avulla kaikkia ammuksia on helppo hallita
+	  game.projectiles.add(this);
+	    
+ }
+  
   public Double xCoordinate() { return shooter.location.locationInGame().getKey() + locationModifierX; };
   public Double yCoordinate() { return shooter.location.locationInGame().getValue() + locationModifierY; };
   
-  public GamePos location = new GamePos(new Pair<Double, Double>(xCoordinate(), yCoordinate()), false);
-  
-  public Optional<Pair<Double, Double>> locationForSprite = Optional.ofNullable(location.locationInImage());
   
   public void move() {
     
@@ -40,9 +64,7 @@ class Projectile extends UsesGameSprite {
       this.location.move(dir.x, dir.y);
 
   }
-  
-  GameSprite sprite = new GameSprite("file:src/main/resources/Pictures/Projectile.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), this, new Pair<Double, Double>(0.0,7.0), Optional.empty());
-  
+   
   public Circle debugLoc() { return new Circle(10, location.locationInGame().getKey(), location.locationInGame().getValue());}
   
   
@@ -77,7 +99,7 @@ class Projectile extends UsesGameSprite {
   
   //Ammus ja pelaaja
   if (axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding == false && this.shooter != player && !player.isSlowingTime){
-    player.takeDamage(333);
+    player.takeDamage(333.0);
     this.hasCollided = true;
     
   }else if(axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding  && this.shooter != player && !player.isSlowingTime){
@@ -112,7 +134,7 @@ class Projectile extends UsesGameSprite {
    }
   
   else if (axisDistance(player.location.locationInGame(), this.location.locationInGame()).getKey() < 30 && axisDistance(player.location.locationInGame(), this.location.locationInGame()).getValue() < 45 && player.isShielding == false && this.shooter != player){
-    player.takeDamage(100);
+    player.takeDamage(100.0);
     this.hasCollided = true;
     
   }
@@ -136,26 +158,5 @@ class Projectile extends UsesGameSprite {
 
    
    public String lookDirectionForSprite() { return "east"; }
-   
-   //Konstruktori luokalle
-   public Projectile(Game game, DirectionVector direction, Double speed, Double locationModifierX, Double locationModifierY, Actor shooter) {
-	  
-	  this.game = game;
-	  this.direction = direction;
-	  this.speed = speed;
-	  this.locationModifierX = locationModifierX;
-	  this.locationModifierY = locationModifierY;
-	  this.shooter = shooter;
-	  
-	  //Lisätään ammus pelin ammusten listaan. Sen avulla kaikkia ammuksia on helppo hallita
-	  game.projectiles.add(this);
-	  
-	  
-	  
-  }
-   
-  
  
-  
-  
 }
