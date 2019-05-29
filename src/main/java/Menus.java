@@ -234,11 +234,11 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText, gameLogo); 
-	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
-	      }
-	     
+	      content.getChildren().addAll(backGround, header, annotationText, gameLogo); 
+	      buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+	      }   
+	      
+	    
 	      
 	      backGround.setHeight(GameWindow.stage.getHeight());
 	      backGround.setWidth(GameWindow.stage.getWidth());
@@ -261,7 +261,14 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    }
 	   } 
 	    
-	    public Scene getScene() {return this.scene;}
+	    public void refreshContent() {
+		 	   
+		  	  content.getChildren().clear();
+		   	  content.getChildren().addAll(backGround, header, annotationText, gameLogo); 
+		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+		         
+		  	   
+		     }
 	    
 	}
 
@@ -381,10 +388,10 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText); 
-	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
+	      content.getChildren().addAll(backGround, header, annotationText); 
+	      buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
 	      }
+	      
 	     
 	      
 	      backGround.setHeight(GameWindow.stage.getHeight());
@@ -406,7 +413,18 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
-	   }       
+	   }   
+	    
+	    public void refreshContent() {
+		 	   
+		  	  content.getChildren().clear();
+		   	  content.getChildren().addAll(backGround, header, annotationText); 
+		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+		         
+		  	   
+		     }
+	    
+	    
 	}
 
     
@@ -507,10 +525,10 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText); 
-	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
+	      content.getChildren().addAll(backGround, header, annotationText); 
+	      buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
 	      }
+	      
 	     
 	      
 	      backGround.setHeight(GameWindow.stage.getHeight());
@@ -533,6 +551,18 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      else {this.annotationText.setText("");
 	    }
 	   }       
+	    
+	    public void refreshContent() {
+		 	   
+		  	  content.getChildren().clear();
+		   	  content.getChildren().addAll(backGround, header, annotationText); 
+		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+		         
+		  	   
+		     }
+	    
+	    
+	    
 	}
 
   
@@ -677,10 +707,10 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText); 
-	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
+	      content.getChildren().addAll(backGround, header, scrollPart, annotationText); 
+	      buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
 	      }
+	      
 	      
 	      if(scrollPart.getChildren().isEmpty()) {
 	    	  scrollPart.getChildren().add(scrollPartImg);
@@ -719,6 +749,18 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      else {this.annotationText.setText("");
 	    }
 	   }       
+	    
+	    public void refreshContent() {
+		 	   
+		  	  content.getChildren().clear();
+		   	  content.getChildren().addAll(backGround, header, scrollPart, annotationText); 
+		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+		         
+		  	   
+		     }
+	    
+	    
+	    
 	}
 
    
@@ -787,10 +829,10 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	          buttons.add(devModeCheckBox); 
 	    	  } 
 	      
-	      	  content.getChildren().clear();
+	      if(content.getChildren().isEmpty()) {
 	    	  content.getChildren().addAll(backGround, header,checkBoxBackground, annotationText, volumeSlider.image); 
 	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
+	      } 
 	     
 	     
 	      
@@ -825,7 +867,20 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	      
 	      volumeSlider.refresh();
 	      
-	   }       
+	   }    
+	    
+	    public void refreshContent() {
+	 	   
+	  	  content.getChildren().clear();
+	      content.getChildren().addAll(backGround, header,checkBoxBackground, annotationText, volumeSlider.image); 
+	   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+	         
+	  	   
+	     }
+	    
+	    
+	    
+	    
 	}
 
    
@@ -972,8 +1027,8 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      if(content.getChildren().isEmpty()) {
 	    	  content.getChildren().addAll(backGround, header, annotationText); 
 	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	          
 	      }
+	    
 	     
 	      
 	      backGround.setHeight(GameWindow.stage.getHeight());
@@ -995,7 +1050,18 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
-	   }       
+	   }      
+	    
+	    public void refreshContent() {
+	 	   
+	  	  content.getChildren().clear();
+	   	  content.getChildren().addAll(backGround, header, annotationText); 
+	   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+	         
+	  	   
+	     }
+	    
+	    
 	}
 
     
@@ -1141,8 +1207,8 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
       if(content.getChildren().isEmpty()) {
     	  content.getChildren().addAll(backGround, header, annotationText); 
     	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-          
       }
+      
      
       
       backGround.setHeight(GameWindow.stage.getHeight());
@@ -1164,7 +1230,19 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
       if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
       else {this.annotationText.setText("");
     }
-   }       
+   }      
+    
+   public void refreshContent() {
+	   
+	  content.getChildren().clear();
+ 	  content.getChildren().addAll(backGround, header, annotationText); 
+ 	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+       
+	   
+   }
+   
+    
+    
 }
 
 //##########################################################################################################################################################################################
@@ -1222,6 +1300,8 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  	public void handle(MouseEvent event) {
 		  		
 		  		try{
+		  		
+		  
 		  		   if(isLocked){
 		  		     buttonAnnouncement = Optional.of("Locked");
 		  		   }else{
@@ -1239,6 +1319,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  	public void handle(MouseEvent event) {
 		  		
 		  		 try{
+		  			 menu.refreshContent();
 		  		    currentImage = hoverImg;
 		  		    buttonAnnouncement = announcement ;
 		  		 }catch(Exception e){
@@ -1251,6 +1332,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  	public void handle(MouseEvent event) {
 		  		 
 		  	    try{
+		  	    	menu.refreshContent();
 		  	     currentImage = normalImg;
 		  	     buttonAnnouncement = Optional.empty();
 		  	    }catch(Exception e){
@@ -1259,7 +1341,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  	}
 	  };
 	  
-	  hoverImg.setOnMouseClicked(mouseClickHandler);
+	  hoverImg.setOnMousePressed(mouseClickHandler);
 	  normalImg.setOnMouseEntered(mouseEnterHandler);
 	  hoverImg.setOnMouseExited(mouseExitHandler);
 	    
@@ -1387,6 +1469,8 @@ class GameCheckBox extends GameButton{
  
  EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {
 	  	public void handle(MouseEvent event) {
+	  	  
+	  	  menu.refreshContent();
 	  	  System.out.println("Game checkbox status: " + isSelected);
 	  		if(isSelected == false) {
 	  		   isSelected = true;
@@ -1470,6 +1554,8 @@ abstract class GameMenu{
   public abstract void refresh();
   public Optional<AudioClip> theme = Optional.empty();
   
+  public abstract void refreshContent();
+  
 }
 
 private abstract class GameButton{
@@ -1477,6 +1563,8 @@ private abstract class GameButton{
   public abstract void refreshLocation();
   public abstract Group fullImage();
   public  Optional<String> buttonAnnouncement = Optional.empty();
+  
+
 
 }
 
