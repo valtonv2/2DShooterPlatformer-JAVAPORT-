@@ -53,6 +53,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    private Rectangle gameLogo = Helper.anySpriteFromImage("file:src/main/resources/Pictures/GameLogo.png", new Pair<Double, Double>(0.0,0.0), 600.0, 250.0);
 	   
 	    private AnimatedButton playButton = new AnimatedButton(
+	    		this,
 	      "Play Game", //Button text
 	       new Pair<Double, Double>(0.0, -100.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -78,6 +79,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	   
 	    private AnimatedButton settingsButton = new AnimatedButton(
+	    		this,
 	       "Settings", //Button text
 	       new Pair<Double, Double>(0.0, -25.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -103,6 +105,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    private AnimatedButton levelSelectButton = new AnimatedButton(
+	    		this,
 	       "Select Level", //Button text
 	       new Pair<Double, Double>(0.0, 50.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -129,6 +132,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    private AnimatedButton loadButton = new AnimatedButton(
+	    		this,
 	       "Load Game", //Button text
 	        new Pair<Double, Double>(0.0, 125.0), //Offset from center
 	        new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -154,6 +158,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	    	   });
 	    
 	    private AnimatedButton saveButton = new AnimatedButton(
+	    		this,
 	 	    "Save Game", //Button text
 	 	     new Pair<Double, Double>(0.0, 200.0), //Offset from center
 	 	     new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -180,6 +185,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	    
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
+	    		this,
 		 	 "Exit Game", //Button text
 		 	 new Pair<Double, Double>(0.0, 275.0), //Offset from center
 		 	 new Pair<Double, Double>(200.0, 50.0),  //Dimensions
@@ -272,6 +278,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   
 	        
 	    private AnimatedButton resumeButton = new AnimatedButton(
+	    		this,
 	      "", //Button text
 	       new Pair<Double, Double>(-200.0, 0.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -297,6 +304,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	   
 	    private AnimatedButton settingsButton = new AnimatedButton(
+	    		this,
 	       "", //Button text
 	       new Pair<Double, Double>(0.0, 0.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -324,6 +332,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
+	    		this,
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(200.0, 0.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -415,6 +424,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   
 	        
 	    private AnimatedButton restartButton = new AnimatedButton(
+	    		this,
 	      "", //Button text
 	       new Pair<Double, Double>(-300.0, -150.0), //Offset from center
 	       new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -445,6 +455,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	        
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
+	    		this,
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -538,6 +549,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   
 	        
 	    private AnimatedButton level1Button = new AnimatedButton(
+	    		this,
 	      "Level 1", //Button text
 	       new Pair<Double, Double>(30.0, -245.0), //Offset from center
 	       new Pair<Double, Double>(140.0, 95.0),  //Dimensions
@@ -565,6 +577,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	        });
 	    
 	    private AnimatedButton level2Button = new AnimatedButton(
+	    		this,
 	  	      "Level 2", //Button text
 	  	       new Pair<Double, Double>(30.0, -100.0), //Offset from center
 	  	       new Pair<Double, Double>(140.0, 95.0),  //Dimensions
@@ -594,6 +607,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
+	    		this,
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -722,11 +736,11 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	  
 	    //Asetusmenun ohjainelementit
 	    public GameSlider volumeSlider = new GameSlider("Volume",0.0,100.0,100.0, new Pair<Double, Double>(700.0, 10.0), new Pair<Double, Double>(-350.0, -200.0));
-	    public GameCheckBox muteCheckBox = new GameCheckBox("Mute sound", new Pair<Double, Double>(-150.0, 50.0));
-	    public GameCheckBox devModeCheckBox = new GameCheckBox("Dev Mode", new Pair<Double, Double>(-150.0, 130.0));
+	    public GameCheckBox muteCheckBox = new GameCheckBox(this, "Mute sound", new Pair<Double, Double>(-150.0, 50.0));
+	    public GameCheckBox devModeCheckBox = new GameCheckBox(this, "Dev Mode", new Pair<Double, Double>(-150.0, 130.0));
 	    	    
 	    private Rectangle checkBoxBackground = Helper.anySpriteFromImage("file:src/main/resources/Pictures/CBbackground.png", new Pair<Double, Double>(0.0,0.0), 400.0 ,1000.0 );
-	    private AnimatedButton exitButton = new AnimatedButton(
+	    private AnimatedButton exitButton = new AnimatedButton(this,
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -766,18 +780,18 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    public void refresh() {
-	      
+
 	      if(buttons.isEmpty()) {
 	    	  buttons.add(exitButton); 
 	    	  buttons.add(muteCheckBox); 
 	          buttons.add(devModeCheckBox); 
 	    	  } 
 	      
-	      if(content.getChildren().isEmpty()) {
-	    	  content.getChildren().addAll(backGround, header, annotationText, volumeSlider.image); 
+	      	  content.getChildren().clear();
+	    	  content.getChildren().addAll(backGround, header,checkBoxBackground, annotationText, volumeSlider.image); 
 	    	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
 	          
-	      }
+	     
 	     
 	      
 	      backGround.setHeight(GameWindow.stage.getHeight());
@@ -826,6 +840,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   
 	        
 	    private AnimatedButton slot1Button = new AnimatedButton(
+	    		this,
 	      "Slot 1", //Button text
 	       new Pair<Double, Double>(-100.0, -150.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -845,6 +860,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	   
 	    private AnimatedButton slot2Button = new AnimatedButton(
+	    		this,
 	       "Slot 2", //Button text
 	       new Pair<Double, Double>(-100.0, -25.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -864,6 +880,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    private AnimatedButton slot3Button = new AnimatedButton(
+	    		this,
 	       "Slot 3", //Button text
 	       new Pair<Double, Double>(-100.0, -100.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -884,6 +901,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    
 	    private AnimatedButton slot4Button = new AnimatedButton(
+	    		this,
 	       "Slot 4", //Button text
 	        new Pair<Double, Double>(-100.0, 225.0), //Offset from center
 	        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -903,6 +921,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	    
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
+	    		this,
 	    	 "", //Button text
 	    	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
 	    	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -990,6 +1009,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
    
         
     private AnimatedButton slot1Button = new AnimatedButton(
+    		this,
       "Slot 1", //Button text
        new Pair<Double, Double>(-100.0, -150.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -1009,6 +1029,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
     
    
     private AnimatedButton slot2Button = new AnimatedButton(
+    		this,
        "Slot 2", //Button text
        new Pair<Double, Double>(-100.0, -25.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -1028,6 +1049,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
     
     
     private AnimatedButton slot3Button = new AnimatedButton(
+    		this,
        "Slot 3", //Button text
        new Pair<Double, Double>(-100.0, -100.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -1048,6 +1070,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
     
     
     private AnimatedButton slot4Button = new AnimatedButton(
+    	this,
        "Slot 4", //Button text
         new Pair<Double, Double>(-100.0, 225.0), //Offset from center
         new Pair<Double, Double>(200.0, 100.0),  //Dimensions
@@ -1067,6 +1090,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
     	    
     
     private AnimatedButton exitButton = new AnimatedButton(
+         this,
     	 "", //Button text
     	  new Pair<Double, Double>(300.0, 150.0), //Offset from center
     	  new Pair<Double, Double>(150.0, 150.0),  //Dimensions
@@ -1155,6 +1179,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	String normalImgPath;
 	String hoverImgPath;
 	String pressedImgPath;
+	
 	Runnable action;
 	
 	
@@ -1170,7 +1195,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
   Node currentImage;
   
   //Konstruktori
-  public AnimatedButton(String textForButton, Pair<Double, Double> locationOffsetFromCenter, Pair<Double, Double>dimensions, String normalImgPath, String hoverImgPath, String pressedImgPath, Optional<String>announcement, Runnable action) {
+  public AnimatedButton(GameMenu menu, String textForButton, Pair<Double, Double> locationOffsetFromCenter, Pair<Double, Double>dimensions, String normalImgPath, String hoverImgPath, String pressedImgPath, Optional<String>announcement, Runnable action) {
 	  
 	  this.textForButton = textForButton;
 	  this.locationOffsetFromCenter = locationOffsetFromCenter;
@@ -1180,6 +1205,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	  this.pressedImgPath = pressedImgPath;
 	  this.buttonAnnouncement = announcement;
 	  this.action = action;
+	  this.menu = menu;
 	  
 	  buttonText = new Text(0,0, textForButton);
 	  buttonText.setScaleX(2.0);
@@ -1233,9 +1259,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  	}
 	  };
 	  
-	  normalImg.setOnMouseClicked(mouseClickHandler);
+	  hoverImg.setOnMouseClicked(mouseClickHandler);
 	  normalImg.setOnMouseEntered(mouseEnterHandler);
-	  normalImg.setOnMouseExited(mouseExitHandler);
+	  hoverImg.setOnMouseExited(mouseExitHandler);
 	    
   }
   
@@ -1359,31 +1385,32 @@ class GameCheckBox extends GameButton{
  private Node buttonMark = Helper.anySpriteFromImage("file:src/main/resources/Pictures/CheckBoxmark.png", new Pair<Double, Double>(0.0,0.0), 30.0, 30.0);
  private Text labelText;
  
+ EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {
+	  	public void handle(MouseEvent event) {
+	  	  System.out.println("Game checkbox status: " + isSelected);
+	  		if(isSelected == false) {
+	  		   isSelected = true;
+	  		}
+	  	    else {
+	  	       isSelected = false;
+	  	    }
+};
+};
  
  //Konstruktori
- public GameCheckBox(String text, Pair<Double, Double> locationOffset) {
+ public GameCheckBox(GameMenu menu, String text, Pair<Double, Double> locationOffset) {
 	 
 	 this.text = text;
 	 this.locationOffset = locationOffset;
+	 this.menu = menu;
 	 
 	 labelText = new Text(0,0,text);
 	 labelText.setFill(Color.WHITE);
 	 
-	  EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {
-		  	public void handle(MouseEvent event) {
-		  		
-		  		if(isSelected == false) {
-		  		   isSelected = true;
-		  		}
-		  	    else {
-		  	       isSelected = false;
-		  	    }
-	  };
-	   
- };
 	  
-	  this.buttonBase.setOnMouseClicked(mouseClickHandler);
-	  this.buttonMark.setOnMouseClicked(mouseClickHandler);
+	  this.buttonBase.setOnMousePressed(mouseClickHandler);
+	  this.buttonMark.setOnMousePressed(mouseClickHandler);
+	
 	  
 	  
  }
@@ -1412,6 +1439,12 @@ class GameCheckBox extends GameButton{
  
     
   public void refreshLocation(){
+	  
+	 /* if(this.isSelected && !menu.content.getChildren().contains(buttonMark)) {
+		  menu.content.getChildren().add(buttonMark);
+	  }else if (!this.isSelected && menu.content.getChildren().contains(buttonMark)) {
+		  menu.content.getChildren().remove(buttonMark); 
+	  }*/
     
     buttonBase.setLayoutX(GameWindow.stage.getWidth()/2 + locationOffset.getKey());
     buttonBase.setLayoutY(GameWindow.stage.getHeight()/2 + locationOffset.getValue());
@@ -1440,6 +1473,7 @@ abstract class GameMenu{
 }
 
 private abstract class GameButton{
+  GameMenu menu;
   public abstract void refreshLocation();
   public abstract Group fullImage();
   public  Optional<String> buttonAnnouncement = Optional.empty();
