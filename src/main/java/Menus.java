@@ -582,7 +582,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	       "file:src/main/resources/Pictures/GrayRectButtonNormal.png", //Normal image path
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
-	       Optional.of("large City"), //Announcement
+	       Optional.of("Large City"), //Announcement
 	       new Runnable(){    //Action
 	 	      
 		    	  @Override
@@ -610,7 +610,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	  	       "file:src/main/resources/Pictures/GrayRectButtonNormal.png", //Normal image path
 	  	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
 	  	       "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
-	  	       Optional.of("large City"), //Announcement
+	  	       Optional.of("Floating Boxes"), //Announcement
 	  	     new Runnable(){    //Action
 	  		      
 	 	    	  @Override
@@ -640,7 +640,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Normal image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png", //Hover image path
 	    	  "file:src/main/resources/Pictures/SquareExitButton.png",//Pressed image path
-	    	  Optional.of("Return to Main Menu"), //Announcement
+	    	  Optional.empty(), //Announcement
 	    	  new Runnable(){    //Action
 	    	      
 		    	  @Override
@@ -682,7 +682,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/Lastembers.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
-	    private Rectangle scrollPartImg = Helper.anySpriteFromImage("file:src/main/resources/Pictures/LevelGameWindow.MenuscrollPart.png", new Pair<Double, Double>(0.0,0.0), 800.0, 2500.0);
+	    private Rectangle scrollPartImg = Helper.anySpriteFromImage("file:src/main/resources/Pictures/LevelMenuScrollPart.png", new Pair<Double, Double>(0.0,0.0), 800.0, 2500.0);
 	    public Optional<AudioClip> theme = Optional.empty();
 	   
 	    public LevelSelectMenu() {
@@ -703,8 +703,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {
-	      content.getChildren().addAll(backGround, header, scrollPart, annotationText); 
+	      content.getChildren().addAll(backGround, scrollPart); 
 	      buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
+	      content.getChildren().addAll(header, annotationText); 
 	      }
 	      
 	      
