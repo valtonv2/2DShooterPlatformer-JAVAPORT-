@@ -17,7 +17,7 @@ abstract class Item extends UsesGameSprite{
   Game game;
 	
 	
-  public Player player = game.player;
+  public Player player;
   
   public String ID;
     
@@ -78,15 +78,13 @@ abstract class Weapon extends Item{
   
   private MouseCursor cursor() {return this.game.mouseCursor;}
   
-  private Pair<Double, Double> equippedLocation = new Pair<Double, Double>(game.player.location.locationInGame().getKey(), game.player.location.locationInGame().getValue());
-  
   public Boolean isEquipped = false;
   
   abstract public void fire();
   
   public ArrayList<GameSprite> sprites;
   
-  protected Integer currentTime = game.time;
+  protected Integer currentTime() {return game.time;}
   
   }
  
@@ -121,6 +119,7 @@ class HealthPack extends UtilityItem{
 	  this.game = game;
 	  this.useTimes = useTimes;
 	  ID = "HP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
+	  player = game.player;
 	  
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()));
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location)));
@@ -148,7 +147,8 @@ class EnergyPack extends UtilityItem{
 	  public void use() { 
 	    
 		  player.energy += Math.min(strength, player.maxEnergy-player.energy);//Pelaajan energian ei anneta kasvaa yli maksimaalisen määrän
-		  this.useTimes = this.useTimes - 1; 		    
+		  this.useTimes = this.useTimes - 1; 	
+		  
 		  PlayerHUD.notificationArea.announce("Used energy pack. Current energy: " + player.energy); 
 		  PlayerHUD.equipmentBox.updateItems();
 	  }
@@ -164,6 +164,7 @@ class EnergyPack extends UtilityItem{
 		  this.game = game;
 		  this.useTimes = useTimes;
 		  ID = "EP" + this.amountOfUseTimes();
+		  player = game.player;
 		  
 		  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()));
 		  this.sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.ofNullable(PlayerHUD.equipmentBox.location)));	  
@@ -192,6 +193,7 @@ class SlowFiringWeapon extends Weapon{
 	  
 	  this.game = game;
 	  this.actor = actor;
+	  player = game.player;
 	  
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
@@ -205,7 +207,7 @@ class SlowFiringWeapon extends Weapon{
   //Hitaasti ampuva ase voi ampua vain tietyin aikavälein
   public void fire() {
     
-    Integer shotTime = currentTime;
+    Integer shotTime = currentTime();
     
     if( (shotTime - lastShotTime) >= cooloffTime){
       
@@ -247,6 +249,7 @@ class RapidFireWeapon extends Weapon{
 	  
 	  this.game = game;
 	  this.actor = actor;
+	  player = game.player;
 	  
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
@@ -263,15 +266,15 @@ class RapidFireWeapon extends Weapon{
   //Rapidfireweapon ampuu nopeasti, mutta ensimmäiset laukaukset ovat epätarkkoja
   public void fire() {
     
-    if(currentTime-lastShotTime >= resetTime) {modifierIndex = 0;}
+    if(currentTime()-lastShotTime >= resetTime) {modifierIndex = 0;}
     
-    if (currentTime-lastShotTime >= coolOffTime) {
+    if (currentTime()-lastShotTime >= coolOffTime) {
       
       if(this.actor.isPresent()) { new Projectile(this.game, this.actor.get().arm.get().direction, projectileSpeed(), 0.0, -20.0, this.actor.get() );}
       
       if(Settings.muteSound == false) { this.laserSound.play();}
       
-      lastShotTime = currentTime;
+      lastShotTime = currentTime();
       if(modifierIndex < accuracyModifiers.length) { modifierIndex += 1.0;}
       
        }

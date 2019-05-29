@@ -77,42 +77,42 @@ class Level {
     for(int y = 0; y<levelImage.getHeight(); y++){
      
      
-      if ((pixelReader.getColor(x, y).getRed() * 255) == 222){                // # = Koristetiili
+      if (Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 222.0){                // # = Koristetiili
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         allTiles.add(new tile(xPoint, yPoint, false, false, decorativeTilePattern, 50.0, 50.0));
         
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 174){           //Tiili jossa on törmäykset
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 174.0){           //Tiili jossa on törmäykset
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         
         allTiles.add(new tile(xPoint, yPoint, true, false, floorPattern, 50.0, 50.0));
       
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 255){        // Shooterenemy
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 255.0){        // Shooterenemy
         
          Double xPoint = (x*50.0);
          Double yPoint = (y*50.0);
          game.enemies.add(new ShooterEnemy("Mursunen", game, xPoint, yPoint));
          
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 235){      // Followingenemy
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 235.0){      // Followingenemy
         
          Double xPoint = (x*50.0);
          Double yPoint = (y*50.0);
          System.out.println("Spawning new enemy");
          game.enemies.add(new FollowingEnemy("Corrupted Moon Man", game, xPoint, yPoint));
         
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 66){                // Rakennuksen taustatiili
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 66.0){                // Rakennuksen taustatiili
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         allTiles.add(new tile(xPoint, yPoint, false, false, backWallPattern, 50.0, 50.0));
       
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 250.0){                // Tikkaat
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 250.0){                // Tikkaat
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         allTiles.add(new tile(xPoint, yPoint, false, true, ladderPattern, 50.0, 50.0));
         
       
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 100){                // Health Pack
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 100.0){                // Health Pack
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         HealthPack healthPack = new HealthPack(game, 1);
@@ -121,7 +121,7 @@ class Level {
         healthPack.locationInWorld = Optional.ofNullable((new GamePos(new Pair<Double, Double>(xPoint, yPoint), false)));
        
        
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 12){                // Energy Pack
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 12.0){                // Energy Pack
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         EnergyPack energyPack = new EnergyPack(game, 1);
@@ -130,7 +130,7 @@ class Level {
         energyPack.locationInWorld = Optional.ofNullable(new GamePos(new Pair<Double, Double>(xPoint, yPoint), false));
       
     
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 181){                // Slow Firing Weapon
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 181.0){                // Slow Firing Weapon
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         SlowFiringWeapon gun = new SlowFiringWeapon(game, Optional.empty());
@@ -140,7 +140,7 @@ class Level {
         
       
       
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 246){                //RapidFire Weapon
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 246.0){                //RapidFire Weapon
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         RapidFireWeapon gun = new RapidFireWeapon(game, Optional.empty());
@@ -148,14 +148,14 @@ class Level {
         gun.locationInWorld = Optional.ofNullable(new GamePos(new Pair<Double, Double>(xPoint, yPoint), false));
         gun.isInWorld = true;
         
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 3){                //Pelaajan spawnaus
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 3.0){                //Pelaajan spawnaus
        
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         game.player.location.move(xPoint, yPoint);
       
       
-      }else if((pixelReader.getColor(x, y).getRed() * 255) == 140){                //Tiili, jonka saavutettuaan pelaaja voittaa tason
+      }else if(Math.floor(pixelReader.getColor(x, y).getRed() * 255.0) == 140.0){                //Tiili, jonka saavutettuaan pelaaja voittaa tason
        
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
@@ -231,10 +231,10 @@ class Level {
 	protected Double width2;
 	protected Double height2;
     
-    public GamePos location = new GamePos(new Pair<Double, Double>(startX, startY), false);
-    public Pair<Double, Double>locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
+    public GamePos location;
+    public Pair<Double, Double>locationForCollider;
     
-    public Rectangle tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
+    public Rectangle tileImage;
    
  }
   
@@ -249,6 +249,9 @@ class Level {
 		  this.pattern = pattern;
 		  this.width2 = width2;
 		  this.height2 = height2;
+		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
+		  locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
+		  tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
 		  
 		  tileImage.setFill(pattern);
 				  
@@ -277,6 +280,10 @@ class Level {
 		  this.width2 = width2;
 		  this.height2 = height2;
 		  this.function = function;
+		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
+		  locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
+		  tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
+		  
 		  
 		  tileImage.setFill(pattern);
 				  
