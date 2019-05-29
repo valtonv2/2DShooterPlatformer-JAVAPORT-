@@ -262,13 +262,12 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	   } 
 	    
 	    public void refreshContent() {
-		 	   
+		 	  
+	    	
 		  	  content.getChildren().clear();
-		   	  content.getChildren().addAll(backGround, header, annotationText, gameLogo); 
-		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-		         
+	    	
 		  	   
-		     }
+	    }
 	    
 	}
 
@@ -418,10 +417,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    public void refreshContent() {
 		 	   
 		  	  content.getChildren().clear();
-		   	  content.getChildren().addAll(backGround, header, annotationText); 
-		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-		         
-		  	   
+		         	  	   
 		     }
 	    
 	    
@@ -753,10 +749,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    public void refreshContent() {
 		 	   
 		  	  content.getChildren().clear();
-		   	  content.getChildren().addAll(backGround, header, scrollPart, annotationText); 
-		   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-		         
-		  	   
+		   	   
 		     }
 	    
 	    
@@ -872,9 +865,6 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    public void refreshContent() {
 	 	   
 	  	  content.getChildren().clear();
-	      content.getChildren().addAll(backGround, header,checkBoxBackground, annotationText, volumeSlider.image); 
-	   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	         
 	  	   
 	     }
 	    
@@ -1055,10 +1045,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    public void refreshContent() {
 	 	   
 	  	  content.getChildren().clear();
-	   	  content.getChildren().addAll(backGround, header, annotationText); 
-	   	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-	         
-	  	   
+	   	   
 	     }
 	    
 	    
@@ -1235,9 +1222,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
    public void refreshContent() {
 	   
 	  content.getChildren().clear();
- 	  content.getChildren().addAll(backGround, header, annotationText); 
- 	  buttons.stream().forEach(button -> content.getChildren().add(button.fullImage()));
-       
+
 	   
    }
    
@@ -1301,7 +1286,6 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		  		
 		  		try{
 		  		
-		  
 		  		   if(isLocked){
 		  		     buttonAnnouncement = Optional.of("Locked");
 		  		   }else{
