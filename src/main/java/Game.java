@@ -121,10 +121,9 @@ public class Game {
   public Game() {
 	  this.levelCompletionStatus.add(false);
 	  this.levelCompletionStatus.add(false);
-	  this.imageContent.getChildren().addAll(camera.cameraImage());
   }
   
-  //T�ss� tehd��n kuva joka v�ltet��n GUI:lle
+
   
   
   

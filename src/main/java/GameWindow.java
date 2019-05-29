@@ -6,6 +6,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.application.Application;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -19,15 +21,16 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color.*;
 
 
-class GameWindow extends Application {
+public class GameWindow extends Application {
 	
   
 public static void main(String args[]) {
-		launch();
+		Application.launch(args);
 	}
 
 public static Stage stage;
 
+public static Menus Menus = new Menus();
 public static Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
 public static Game currentGame = new Game();
 
@@ -59,20 +62,19 @@ public void start(Stage primaryStage) {
 	primaryStage.setMinHeight(800.0);	
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    primaryStage.setScene(Menus.MainMenu.scene);
+    primaryStage.setScene(Menus.mainMenu.scene);
     
     GameWindow.stage = primaryStage;
     menuClock.start();
     gameCamera = Optional.ofNullable(currentGame.camera);
     
     primaryStage.show();
-    
+    System.out.println("Päästiin start-metodin loppuun");
 	}
 
 
   public static Player player() { return currentGame.player;}
 
- 
   //Tänne laitetaan jutut jotka tehdään joka tick
   public static void changeThings() {
     
@@ -112,7 +114,7 @@ public void start(Stage primaryStage) {
    
     }catch(Exception e){
  
-      exceptionScreen("Something is wrong. + \n" + e);
+      exceptionScreen(e);
       
     }
    
@@ -133,7 +135,7 @@ public void start(Stage primaryStage) {
    
     }catch(Exception e){
       
-     exceptionScreen("Something is wrong. + \n" + e);
+     exceptionScreen(e);
      
     }
   }
@@ -150,14 +152,14 @@ public void start(Stage primaryStage) {
     
     }catch(Exception e){
       
-     exceptionScreen("Something is wrong. + \n" + e);
+     exceptionScreen(e);
 
     }
        
   }
   
   //Näyttö joka näkyy jos peliä suoritettaessa tapahtuu poikkeus. Estää pelin jäätymisen.
-  public static void exceptionScreen(String msg) {
+  public static void exceptionScreen(Exception e) {
 
     GameWindow.clock.stop();
     GameWindow.menuClock.stop();
@@ -165,6 +167,13 @@ public void start(Stage primaryStage) {
     
     Group windowContent = new Group();
     Scene scene = new Scene(windowContent, 800, 800);
+    
+    StringWriter writer = new StringWriter();
+    PrintWriter pwriter = new PrintWriter(writer);
+    
+    e.printStackTrace(pwriter);
+    
+    String msg = "Something is wrong.  " + e + writer.toString();
     
     Text text = new Text(GameWindow.stage.getWidth()/2, GameWindow.stage.getHeight()/2, msg);
     Rectangle backGround =  new Rectangle(-2000, -2000, 8000, 8000);

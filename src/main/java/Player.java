@@ -141,9 +141,9 @@ import javafx.scene.Cursor;
 		  	      if(event.getCode() == KeyCode.ESCAPE){
 		  	      GameWindow.clock.stop();
 		  	      GameWindow.menuClock.start();
-		  	      if(Menus.fullScreenStatus() == false) { GameWindow.stage.setScene(Menus.PauseMenu.scene); }
-		  	      else{GameWindow.stage.setScene(Menus.PauseMenu.scene); GameWindow.stage.setFullScreen(true); }
-		  	      Menus.currentMenu = Menus.PauseMenu;
+		  	      if(GameWindow.Menus.fullScreenStatus() == false) { GameWindow.stage.setScene(GameWindow.Menus.PauseMenu.scene); }
+		  	      else{GameWindow.stage.setScene(GameWindow.Menus.PauseMenu.scene); GameWindow.stage.setFullScreen(true); }
+		  	      GameWindow.Menus.currentMenu = GameWindow.Menus.PauseMenu;
 		  	    }
 		  	     
 		  	      //Kamera

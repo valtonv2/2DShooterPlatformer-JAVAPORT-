@@ -23,31 +23,35 @@ import javafx.scene.Cursor;
 
 
 
-class Menus{
-	
-  static GameMenu MainMenu = new MainMenu();	
-  static SettingsMenu SettingsMenu = new SettingsMenu();
-  static GameMenu LevelSelectMenu = new LevelSelectMenu();
-  static GameMenu LoadMenu = new LoadMenu();
-  static GameMenu SaveMenu = new SaveMenu();
-  static GameMenu DeathMenu = new DeathMenu();
-  static GameMenu PauseMenu = new PauseMenu();
+public class Menus{
 	
 	
-  static GameMenu currentMenu = MainMenu;  //Tämän perusteella GUI osaa kutsua oikean menun refresh-metodia
-  static Boolean fullScreenStatus() { return GameWindow.stage.isFullScreen();}
+
+public MainMenu mainMenu = new MainMenu();	
+public SettingsMenu SettingsMenu = new SettingsMenu();
+public LevelSelectMenu LevelSelectMenu = new LevelSelectMenu();
+public LoadMenu LoadMenu = new LoadMenu();
+public SaveMenu SaveMenu = new SaveMenu();
+public DeathMenu DeathMenu = new DeathMenu();
+public PauseMenu PauseMenu = new PauseMenu();
+	
+	
+public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua oikean menun refresh-metodia
+
+	
   
-}
+  public Boolean fullScreenStatus() { return GameWindow.stage.isFullScreen();}
+  public void menuStatus() {System.out.println(this.mainMenu.name);}
   
 
-  class MainMenu extends GameMenu {
+  
+
+ public class MainMenu extends GameMenu {
 	    
-	    String name = "Main Menu";
 	    private Text header = new Text(0,0,"");
 	    private Text annotationText = new Text(0,0,"");
 	    private Rectangle gameLogo = Helper.anySpriteFromImage("file:src/main/resources/Pictures/GameLogo.png", new Pair<Double, Double>(0.0,0.0), 600.0, 250.0);
 	   
-	        
 	    private AnimatedButton playButton = new AnimatedButton(
 	      "Play Game", //Button text
 	       new Pair<Double, Double>(0.0, -100.0), //Offset from center
@@ -64,7 +68,7 @@ class Menus{
 	    	   GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
 	           GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
-	           if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	           if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           GameWindow.stage.setFullScreen(true);
 	           }
@@ -87,12 +91,12 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	  
-	    	   if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.SettingsMenu.scene);}
-	    	   else{GameWindow.stage.setScene(Menus.SettingsMenu.scene); 
+	    	   if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.SettingsMenu.scene);}
+	    	   else{GameWindow.stage.setScene(GameWindow.Menus.SettingsMenu.scene); 
 	    	        GameWindow.stage.setFullScreen(true); }
 	    		       
-	    	   Menus.currentMenu = Menus.SettingsMenu;
-	    	   Menus.SettingsMenu.arrivedFrom = Menus.MainMenu;
+	    	   GameWindow.Menus.currentMenu = GameWindow.Menus.SettingsMenu;
+	    	   GameWindow.Menus.SettingsMenu.arrivedFrom = GameWindow.Menus.mainMenu;
 		    	  }
 	    	   
 	    	        });
@@ -112,12 +116,12 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    	   if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.LevelSelectMenu.scene);}
+	    	   if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.LevelSelectMenu.scene);}
 	    	   else{
-	    	     GameWindow.stage.setScene(Menus.LevelSelectMenu.scene); 
+	    	     GameWindow.stage.setScene(GameWindow.Menus.LevelSelectMenu.scene); 
 	    	     GameWindow.stage.setFullScreen(true);
 	    	     }
-	    	   Menus.currentMenu = Menus.LevelSelectMenu;
+	    	   GameWindow.Menus.currentMenu = GameWindow.Menus.LevelSelectMenu;
 		    	  }
 	    	   
 	    	    	  });
@@ -139,12 +143,12 @@ class Menus{
 		    	  
 	    	      
 	    		
-	    		if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.LoadMenu.scene);}
+	    		if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.LoadMenu.scene);}
 		    	   else{
-		    	     GameWindow.stage.setScene(Menus.LoadMenu.scene); 
+		    	     GameWindow.stage.setScene(GameWindow.Menus.LoadMenu.scene); 
 		    	     GameWindow.stage.setFullScreen(true);
 		    	     }
-		    	   Menus.currentMenu = Menus.LoadMenu;
+		    	   GameWindow.Menus.currentMenu = GameWindow.Menus.LoadMenu;
 		    	  }
 	    		
 	    	    	   });
@@ -164,12 +168,12 @@ class Menus{
 		    	  
 	 	    	      
 	 	    		
-	 	   	if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.SaveMenu.scene);}
+	 	   	if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.SaveMenu.scene);}
 	 	    else{
-	 		     GameWindow.stage.setScene(Menus.SaveMenu.scene); 
+	 		     GameWindow.stage.setScene(GameWindow.Menus.SaveMenu.scene); 
 	 		     GameWindow.stage.setFullScreen(true);
 	 		    }
-	 		Menus.currentMenu = Menus.SaveMenu;
+	 		GameWindow.Menus.currentMenu = GameWindow.Menus.SaveMenu;
 		    	  }
 	 	    		
 	 	    	        });
@@ -201,8 +205,14 @@ class Menus{
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/MainMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 2783.0 ,2484.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
+	    
+	    
+	    public MainMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Main Menu";
+	    	
+	    }
 	    
 	    
 	    
@@ -243,16 +253,19 @@ class Menus{
 	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
 	    }
-	   }       
+	   } 
+	    
+	    public Scene getScene() {return this.scene;}
+	    
 	}
 
  
 
  //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
- class PauseMenu extends GameMenu {
+  class PauseMenu extends GameMenu {
 	    
-	    String name = "Pause Menu";
+	   
 	    private Text header = new Text(0,0,"Game Paused");
 	   
 	    private Text annotationText = new Text(0,0,"");
@@ -273,7 +286,7 @@ class Menus{
 		    	  
 	    	   GameWindow.clock.start();
 	           GameWindow.menuClock.stop();
-	           if(!Menus.fullScreenStatus()) {
+	           if(!GameWindow.Menus.fullScreenStatus()) {
 	        	   GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	           }else{
 	        	   GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
@@ -298,14 +311,14 @@ class Menus{
 		    	  
 	    	   GameWindow.clock.stop();
 	           GameWindow.menuClock.start();
-	           if(!Menus.fullScreenStatus()) {
-	        	   GameWindow.stage.setScene(Menus.SettingsMenu.scene);
+	           if(!GameWindow.Menus.fullScreenStatus()) {
+	        	   GameWindow.stage.setScene(GameWindow.Menus.SettingsMenu.scene);
 	           }else{
-	        	   GameWindow.stage.setScene(Menus.SettingsMenu.scene);
+	        	   GameWindow.stage.setScene(GameWindow.Menus.SettingsMenu.scene);
 	        	   GameWindow.stage.setFullScreen(true);
 	        	   }
-	           Menus.currentMenu = Menus.SettingsMenu;
-	           Menus.SettingsMenu.arrivedFrom = Menus.PauseMenu;
+	           GameWindow.Menus.currentMenu = GameWindow.Menus.SettingsMenu;
+	           GameWindow.Menus.SettingsMenu.arrivedFrom = GameWindow.Menus.PauseMenu;
 		    	  }
 	    	        });
 	    
@@ -324,13 +337,13 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); }
 	    		  else{
-	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
+	    			  GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
 	    			  }
 	    		
-	    		 Menus.currentMenu = Menus.MainMenu;
+	    		 GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 		    	  }
 	    		  
 	    	    	   });
@@ -339,10 +352,16 @@ class Menus{
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/MenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
+	   
 	    
 	    
+	    
+	    public PauseMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Pause Menu";
+	    	
+	    }
 	    
 	    public void refresh() {
 	      
@@ -390,7 +409,6 @@ class Menus{
   
   class DeathMenu extends GameMenu {
 	    
-	    String name = "Death Menu";
 	    private Text header = new Text(0,0,"You Died");
 	   
 	    private Text annotationText = new Text(0,0,"");
@@ -417,7 +435,7 @@ class Menus{
 	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
 	           PlayerHUD.equipmentBox.box.removeItem();
 	           PlayerHUD.equipmentBox.updateItems();
-	           if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage); }
+	           if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage); }
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); 
 	                }
@@ -443,16 +461,16 @@ class Menus{
 	    		    GameWindow.clock.stop();
 	    	        GameWindow.menuClock.start();
 	    	        GameWindow.currentGame.reset();
-	    	        if(!Menus.fullScreenStatus()) {
-	    	        	GameWindow.stage.setScene(Menus.MainMenu.scene);
+	    	        if(!GameWindow.Menus.fullScreenStatus()) {
+	    	        	GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene);
 	    	        }else{
-	    	        	GameWindow.stage.setScene(Menus.MainMenu.scene); 
+	    	        	GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
 	    	        	GameWindow.stage.setFullScreen(true);
 	    	        	}
 	    	        PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
 	    	        PlayerHUD.equipmentBox.box.removeItem();
 	    	        PlayerHUD.equipmentBox.updateItems();
-	    	        Menus.currentMenu = Menus.MainMenu;
+	    	        GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 	    		  
 		    	  }
 	    	    	   });
@@ -461,9 +479,13 @@ class Menus{
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.of(new AudioClip("file:src/main/resources/sound/DWADeathMenuTheme.wav"));
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
 	    
+	    public DeathMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Death Menu";
+	    	
+	    }
 	    
 	    
 	    public void refresh() {
@@ -507,9 +529,9 @@ class Menus{
   
  //==================================================================================================================================================================================================== 
    
-   class LevelSelectMenu extends GameMenu {
+  class LevelSelectMenu extends GameMenu {
 	    
-	    String name = "Level Selection";
+	    
 	    private Text header = new Text(0,0,"Level Selection");
 	   
 	    private Text annotationText = new Text(0,0,"");
@@ -535,7 +557,7 @@ class Menus{
 	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
 	           PlayerHUD.equipmentBox.box.removeItem();
 	           PlayerHUD.equipmentBox.updateItems();
-	           if(!Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	           if(!GameWindow.Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); }
 	           }
@@ -562,7 +584,7 @@ class Menus{
 	  	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
 	  	           PlayerHUD.equipmentBox.box.removeItem();
 	  	           PlayerHUD.equipmentBox.updateItems();
-	  	           if(!Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
+	  	           if(!GameWindow.Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	  	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	  	                GameWindow.stage.setFullScreen(true); }
 	  	           }
@@ -585,13 +607,13 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); }
 	    		  else{
-	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
+	    			  GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
 	    			  }
 	    		
-	    		 Menus.currentMenu = Menus.MainMenu;
+	    		 GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 		    	  }
 	    		  
 	    	    	   });
@@ -620,10 +642,15 @@ class Menus{
 	    
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/Lastembers.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
-	    private Rectangle scrollPartImg = Helper.anySpriteFromImage("file:src/main/resources/Pictures/LevelMenuScrollPart.png", new Pair<Double, Double>(0.0,0.0), 800.0, 2500.0);
+	    private Rectangle scrollPartImg = Helper.anySpriteFromImage("file:src/main/resources/Pictures/LevelGameWindow.MenuscrollPart.png", new Pair<Double, Double>(0.0,0.0), 800.0, 2500.0);
 	    public Optional<AudioClip> theme = Optional.empty();
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
+	   
+	    public LevelSelectMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Level Select Menu";
+	    	
+	    }
 	    
 	    
 	    
@@ -685,13 +712,13 @@ class Menus{
 
    
    
-   class SettingsMenu extends GameMenu {
+  class SettingsMenu extends GameMenu {
 	    
-	    String name = "Settings Menu";
+	    
 	    private Text header = new Text(0,0,"Game Settings");
 	    private Text annotationText = new Text(0,0,"");
 	   
-	    public GameMenu arrivedFrom = Menus.MainMenu;
+	    public GameMenu arrivedFrom;
 	  
 	    //Asetusmenun ohjainelementit
 	    public GameSlider volumeSlider = new GameSlider("Volume",0.0,100.0,100.0, new Pair<Double, Double>(700.0, 10.0), new Pair<Double, Double>(-350.0, -200.0));
@@ -713,13 +740,13 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(arrivedFrom.scene); }
+	    		  if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(arrivedFrom.scene); }
 	    		  else{
 	    			  GameWindow.stage.setScene(arrivedFrom.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
 	    			  }
 	    		
-	    		 Menus.currentMenu = arrivedFrom;
+	    		 GameWindow.Menus.currentMenu = arrivedFrom;
 	    		  
 		    	  }
 	    	    	   });
@@ -728,8 +755,13 @@ class Menus{
 	    private ArrayList<GameButton> buttons = new ArrayList<GameButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/SettingsMenuBG.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
+	    
+	    public SettingsMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Settings Menu";
+	    	
+	    }
 	    
 	    
 	    
@@ -785,9 +817,9 @@ class Menus{
    
 
    
-  class LoadMenu extends GameMenu {
+ class LoadMenu extends GameMenu {
 	    
-	    String name = "Load Menu";
+	  
 	    private Text header = new Text(0,0,"Load Game");
 	   
 	    private Text annotationText = new Text(0,0,"");
@@ -884,13 +916,13 @@ class Menus{
 		    	  public void run() {
 		    	  
 	    	   
-	    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+	    		  if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); }
 	    		  else{
-	    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
+	    			  GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
 	    			  GameWindow.stage.setFullScreen(true);
 	    			  }
 	    		
-	    		 Menus.currentMenu = Menus.MainMenu;
+	    		 GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 		    	  }
 	    		  
 	    	    	   });
@@ -899,9 +931,13 @@ class Menus{
 	    private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
 	    private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
 	    public Optional<AudioClip> theme = Optional.empty();
-	    private Group content = new Group();
-	    public Scene scene = new Scene(content, 800.0, 800.0);
 	    
+	    public LoadMenu() {
+	    	content = new Group();
+	    	scene = new Scene(content, 800.0, 800.0);
+	    	name = "Load Menu";
+	    	
+	    }
 	    
 	    
 	    public void refresh() {
@@ -945,9 +981,9 @@ class Menus{
 
     
    
-  class SaveMenu extends GameMenu {
+ class SaveMenu extends GameMenu {
     
-    String name = "Save Menu";
+    
     private Text header = new Text(0,0,"Save Game");
    
     private Text annotationText = new Text(0,0,"");
@@ -1044,13 +1080,13 @@ class Menus{
 	    	  public void run() {
 	    	  
     	   
-    		  if(!Menus.fullScreenStatus()) { GameWindow.stage.setScene(Menus.MainMenu.scene); }
+    		  if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); }
     		  else{
-    			  GameWindow.stage.setScene(Menus.MainMenu.scene); 
+    			  GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
     			  GameWindow.stage.setFullScreen(true);
     			  }
     		
-    		 Menus.currentMenu = Menus.MainMenu;
+    		 GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 	    	  }
     		  
     	    	   });
@@ -1059,9 +1095,13 @@ class Menus{
     private ArrayList<AnimatedButton> buttons = new ArrayList<AnimatedButton>(); 
     private Rectangle backGround = Helper.anySpriteFromImage("file:src/main/resources/Pictures/DeathMenuBackGround.png", new Pair<Double, Double>(0.0,0.0), 800.0 ,800.0 );
     public Optional<AudioClip> theme = Optional.empty();
-    private Group content = new Group();
-    public Scene scene = new Scene(content, 800.0, 800.0);
     
+    public SaveMenu() {
+    	content = new Group();
+    	scene = new Scene(content, 800.0, 800.0);
+    	name = "Save Menu";
+    	
+    }
     
     
     public void refresh() {
@@ -1107,7 +1147,7 @@ class Menus{
 
 //Luokka animatedButton tarjoaa helpon tavan luoda nappeja valikoihin. Action-parametri sisältää nappia painettaessas suoritettavan koodin.
 
-class AnimatedButton extends GameButton{
+ class AnimatedButton extends GameButton{
   
 	String textForButton;
 	Pair<Double, Double> locationOffsetFromCenter;
@@ -1115,15 +1155,12 @@ class AnimatedButton extends GameButton{
 	String normalImgPath;
 	String hoverImgPath;
 	String pressedImgPath;
-	Optional<String>announcement;
 	Runnable action;
 	
 	
 	
   private Text buttonText;
-  
-  Optional<String>buttonAnnouncement = Optional.empty();  //Teksti joka näkyy valikossa kun hiiri viedään napin päälle
-  
+   
   public Boolean isLocked = false;         //Jos nappi on lukittu sitä ei voi painaa. Käytetään pelin tasojen yhteydessä
   
   private Node normalImg;
@@ -1141,7 +1178,7 @@ class AnimatedButton extends GameButton{
 	  this.normalImgPath = normalImgPath;
 	  this.hoverImgPath = hoverImgPath;
 	  this.pressedImgPath = pressedImgPath;
-	  this.announcement = announcement;
+	  this.buttonAnnouncement = announcement;
 	  this.action = action;
 	  
 	  buttonText = new Text(0,0, textForButton);
@@ -1167,7 +1204,7 @@ class AnimatedButton extends GameButton{
 		  		    reset();
 		  		   }
 		  		 }catch(Exception e){
-		  		     GameWindow.exceptionScreen("Something is wrong. + \n" + e);
+		  		     GameWindow.exceptionScreen(e);
 		  		   }
 		  	}
 	  };
@@ -1179,7 +1216,7 @@ class AnimatedButton extends GameButton{
 		  		    currentImage = hoverImg;
 		  		    buttonAnnouncement = announcement ;
 		  		 }catch(Exception e){
-		  		      GameWindow.exceptionScreen("Something is wrong. + \n" + e);
+		  		      GameWindow.exceptionScreen(e);
 		  		    }
 		  	}
 	  };
@@ -1191,7 +1228,7 @@ class AnimatedButton extends GameButton{
 		  	     currentImage = normalImg;
 		  	     buttonAnnouncement = Optional.empty();
 		  	    }catch(Exception e){
-		  	      GameWindow.exceptionScreen("Something is wrong. + \n" + e);
+		  	      GameWindow.exceptionScreen(e);
 		  	    }	
 		  	}
 	  };
@@ -1244,7 +1281,7 @@ class AnimatedButton extends GameButton{
 
 //################################################################################################################################################################################################
 
-class GameSlider{
+ class GameSlider{
   
 	String header;
 	Double min;
@@ -1394,16 +1431,19 @@ class GameCheckBox extends GameButton{
 
 abstract class GameMenu{
   
-  String name;
+  public String name;
   Scene scene;
+  protected Group content;
   public abstract void refresh();
-  public Optional<AudioClip> theme;
+  public Optional<AudioClip> theme = Optional.empty();
   
 }
 
-abstract class GameButton{
+private abstract class GameButton{
   public abstract void refreshLocation();
   public abstract Group fullImage();
-  public  Optional<String> buttonAnnouncement;
+  public  Optional<String> buttonAnnouncement = Optional.empty();
+
+}
 
 }

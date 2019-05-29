@@ -12,7 +12,7 @@ class Settings{
   public static Double musicVolume() { 
 	 
 	  if(!muteSound) {
-		 return Menus.SettingsMenu.volumeSlider.currentValue()/100.0;
+		 return GameWindow.Menus.SettingsMenu.volumeSlider.currentValue()/100.0;
 	  }else {
 		  
 		return 0.0;
