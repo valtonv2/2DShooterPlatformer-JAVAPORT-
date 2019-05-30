@@ -84,6 +84,8 @@ class GameCamera {
     Node arm = followee.arm.get().completeImage();
     List<Node> projectiles = game.projectiles.stream().map(projectile -> projectile.sprite.image()).collect(Collectors.toList());
     List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.tileImage).collect(Collectors.toList());
+    
+    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld);
     List<Node>items = GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites.get(0).image()).collect(Collectors.toList());
     
     
@@ -101,8 +103,8 @@ class GameCamera {
     worldObjects.addAll(enemies);
     worldObjects.addAll(projectiles);
     		
-    Group guiElements = new Group(PlayerHUD.image(), cursor);
-    guiElements.getChildren().addAll(PlayerHUD.image(), cursor);
+    Group guiElements = new Group(GameWindow.PlayerHUD.image(), cursor);
+    guiElements.getChildren().addAll(GameWindow.PlayerHUD.image(), cursor);
     
     
     Group zoomables = new Group();

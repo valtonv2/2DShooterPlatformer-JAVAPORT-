@@ -19,18 +19,17 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  int height = 90;
 	  int width = 60;
 	  
-	  Optional<RotatingArm> arm;
+	 
 	  //Tavaraluettelo
 	  Map<String, Item> inventory;
 	  Optional<UtilityItem> equippedUtilityItem = Optional.empty();
 	  Optional<Weapon> equippedWeapon = Optional.empty();
 	  GamePos location;
-	  
-	  Optional<Pair<Double, Double>> locationForSprite;
-	  String lookDirectionForSprite;
+
 	  abstract void stop();
 	  abstract void takeDamage(Double amount);
 	  ArrayList<Node> image;
+	  public Optional<RotatingArm> arm = Optional.empty();
 	  
 	  //Esineen poimiminen maailmasta
 	  
@@ -47,7 +46,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	      this.inventory.put(item.name, item);
 	      item.isInWorld = false;
 	      game.currentLevel.itemsInWorld.remove(item);
-	      PlayerHUD.notificationArea.announce(this.name + " picked up " + item);
+	      GameWindow.PlayerHUD.notificationArea.announce(this.name + " picked up " + item);
 	   
 	   }
 	    
@@ -60,14 +59,14 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	        pickUpItem.isInWorld = false;
 	        game.currentLevel.itemsInWorld.remove(pickUpItem);
 	      
-	      PlayerHUD.notificationArea.announce(this.name + " picked up " + item);
+	        GameWindow.PlayerHUD.notificationArea.announce(this.name + " picked up " + item);
 	      
 	      
 	    }
 	    
 	    
-	    if(item instanceof Weapon) PlayerHUD.weaponHud.updateItems();
-	    else PlayerHUD.equipmentBox.updateItems();
+	    if(item instanceof Weapon) GameWindow.PlayerHUD.weaponHud.updateItems();
+	    else GameWindow.PlayerHUD.equipmentBox.updateItems();
 	    
 	  }
 	  
@@ -88,7 +87,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	   public void useUtilItem() {
 		   
 		   if(this.equippedUtilityItem.isPresent()) this.equippedUtilityItem.get().use();
-		   else PlayerHUD.notificationArea.announce("You don't have a utility item equipped");
+		   else GameWindow.PlayerHUD.notificationArea.announce("You don't have a utility item equipped");
 		  
 	   }
 	     
@@ -100,6 +99,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	      
 	      this.hasDroppedItem = true;
 	      item.isInWorld = true;
+	      item.locationForSprite = item.locationForSprite();
 	      this.inventory.remove(item.name);
 	      item.locationInWorld = Optional.of(this.location);
 	      game.currentLevel.itemsInWorld.add(item);

@@ -456,9 +456,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	           GameWindow.clock.start();
 	           GameWindow.currentGame.reset();
 	    
-	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
-	           PlayerHUD.equipmentBox.box.removeItem();
-	           PlayerHUD.equipmentBox.updateItems();
+	           GameWindow.PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
+	           GameWindow.PlayerHUD.equipmentBox.box.removeItem();
+	           GameWindow.PlayerHUD.equipmentBox.updateItems();
 	           if(!GameWindow.Menus.fullScreenStatus()) { GameWindow.stage.setScene(GameWindow.currentGame.fullImage); }
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); 
@@ -492,9 +492,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	        	GameWindow.stage.setScene(GameWindow.Menus.mainMenu.scene); 
 	    	        	GameWindow.stage.setFullScreen(true);
 	    	        	}
-	    	        PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
-	    	        PlayerHUD.equipmentBox.box.removeItem();
-	    	        PlayerHUD.equipmentBox.updateItems();
+	    	        GameWindow.PlayerHUD.weaponHud.weaponBoxes.stream().forEach(box -> box.removeItem());
+	    	        GameWindow.PlayerHUD.equipmentBox.box.removeItem();
+	    	        GameWindow.PlayerHUD.equipmentBox.updateItems();
 	    	        GameWindow.Menus.currentMenu = GameWindow.Menus.mainMenu;
 	    		  
 		    	  }
@@ -592,9 +592,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	   GameWindow.menuClock.stop();
 	           GameWindow.clock.start();
 	           GameWindow.currentGame.swapLevel(1);
-	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
-	           PlayerHUD.equipmentBox.box.removeItem();
-	           PlayerHUD.equipmentBox.updateItems();
+	           GameWindow.PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
+	           GameWindow.PlayerHUD.equipmentBox.box.removeItem();
+	           GameWindow.PlayerHUD.equipmentBox.updateItems();
 	           if(!GameWindow.Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	                GameWindow.stage.setFullScreen(true); }
@@ -620,9 +620,9 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	  	    	   GameWindow.menuClock.stop();
 	  	           GameWindow.clock.start();
 	  	           GameWindow.currentGame.swapLevel(2);
-	  	           PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
-	  	           PlayerHUD.equipmentBox.box.removeItem();
-	  	           PlayerHUD.equipmentBox.updateItems();
+	  	           GameWindow.PlayerHUD.weaponHud.weaponBoxes.stream().forEach(item -> item.removeItem());
+	  	           GameWindow.PlayerHUD.equipmentBox.box.removeItem();
+	  	           GameWindow.PlayerHUD.equipmentBox.updateItems();
 	  	           if(!GameWindow.Menus.fullScreenStatus()) {GameWindow.stage.setScene(GameWindow.currentGame.fullImage);}
 	  	           else{GameWindow.stage.setScene(GameWindow.currentGame.fullImage); 
 	  	                GameWindow.stage.setFullScreen(true); }

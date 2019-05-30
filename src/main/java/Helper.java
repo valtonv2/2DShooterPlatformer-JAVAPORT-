@@ -118,13 +118,9 @@ abstract class UsesGameSprite{
   
 }
 
-abstract class UsesAnimatedGameSprite extends UsesGameSprite{
-	
-	 public Optional<Pair<Double, Double>> locationForSprite;
-	 public Game game;
-	 public String lookDirectionForSprite;
- 
-     public Boolean isMovingForSprite = false;
+abstract class UsesAnimatedGameSprite extends UsesGameSprite{ 
+    
+	public Boolean isMovingForSprite = false;
   
 }
 //GameSprite-luokka yksinkertaistaa pelin olioiden kuvien laadintaa, muokkaamista ja liikuttamista
@@ -178,7 +174,7 @@ class GameSprite {
   
   
  }else { 
-   
+   System.out.println("LFS" + user.locationForSprite);
   Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(), user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
   rect.setFill(texture);
   return rect;
@@ -298,7 +294,7 @@ class AnimatedGameSprite{
     }
   
  private Rectangle normalImage() { 
-		  
+
    Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(),user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
    rect.setFill(textures.get(spriteIndex));
    return rect;
@@ -361,7 +357,7 @@ DirectionVector direction;
   
  private Pair<Double, Double> pivotPoint() {
 	 
-	/* if(Optional.ofNullable(user.location.locationInImage()).isPresent()) {
+	if(Optional.ofNullable(user.location.locationInImage()).isPresent()) {
 	 
 		 return user.location.locationInImage();
 	 
@@ -369,9 +365,9 @@ DirectionVector direction;
 		 
 		 return new Pair<Double, Double>(0.0, 0.0);
 		 
-	 }*/
+	 }
 	 
-    return new Pair<Double, Double>(400.0,400.0);
+ 
  }
   
  public Group completeImage() {
@@ -395,8 +391,7 @@ DirectionVector direction;
     	
     }
   
-    
-    
+
    switch (user.lookDirectionForSprite) {
       
       case "east":

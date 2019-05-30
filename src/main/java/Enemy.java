@@ -5,7 +5,7 @@ import java.util.Optional;
 
 abstract class Enemy extends Actor{
   
-GamePos location;
+
 Double HP;
 Double energy = 0.0;
 String currentAction;

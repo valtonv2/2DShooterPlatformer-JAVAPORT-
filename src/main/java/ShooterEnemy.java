@@ -11,6 +11,7 @@ import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
 import javafx.scene.media.*;
@@ -18,19 +19,13 @@ import javafx.scene.media.*;
 
 class ShooterEnemy extends Enemy {
 	  
-	String name;
-	Game game;
+
 	Double locationX;
 	Double locationY;
 	
-  public GamePos location;
-  public Optional<Pair<Double, Double>>locationForSprite;
- 
-  public Double HP = 200.0;
   private int actionCounter = 0;
   private int actionNumber = 0;
   private String lookDirection = "east";
-  public Boolean isActive = false; //Monet raskaat toiminnot suoritetaan vain kun tämä on true. Vaikutus suorituskykyyn on huima
   private Boolean isReadyForNextAction = true;
   private Boolean moves = false;
   private Boolean idles = false;
@@ -61,9 +56,14 @@ class ShooterEnemy extends Enemy {
 	  this.locationX = locationX;
 	  this.locationY = locationY;	  
 	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
+	  HP = 200.0;
+	  
+	  this.inventory = new HashMap<String, Item>();
 	  
 	  locationForSprite = Optional.of(location.locationInImage());
 	  player = game.player;
+	  
+	  isActive = false; //Monet raskaat toiminnot suoritetaan vain kun tämä on true. Vaikutus suorituskykyyn on huima
 	  
 	  northCollider = new Collider("Enorth", this, 0.0,  -45.0, "horizontal");
 	  southCollider = new Collider("Esouth", this, 0.0,  45.0, "horizontal");

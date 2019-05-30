@@ -10,6 +10,8 @@ import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
@@ -19,25 +21,18 @@ import javafx.scene.Node;
 import javafx.scene.media.AudioClip;
 
 class FollowingEnemy extends Enemy{
-  String name; 
-  Game game;
+  
+  
   Double locationX;
   Double locationY;
 
-  public GamePos location;
-  public Optional<Pair<Double, Double>>locationForSprite;
-  public Double HP = 500.0;
-  public Double energy = 500.0;
-  public Boolean isActive = false;
-  private String currentAction = "";
   private int jumpCount = 0;
   
   //Vihollisen kuva
   private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/CorruptedMoonmanWalk", "MoonmanWalk", 6, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
-  public Optional<RotatingArm> arm;
+
   private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
-  public String lookDirectionForSprite = "east";
-  public Boolean isMovingForSprite = false;
+
   
   //Vihollisen Colliderit
   private Collider northCollider;
@@ -58,9 +53,19 @@ class FollowingEnemy extends Enemy{
 	  this.locationX = locationX;
 	  this.locationY = locationY;
 	  
+	  HP = 500.0;
+	  energy = 500.0;
+	  isActive = false;
+	  currentAction = "";
+	  
+	  lookDirectionForSprite = "east";
+	  
+	  this.inventory = new HashMap<String, Item>();
+	  
 	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
 	  locationForSprite = Optional.of(location.locationInImage());
-	  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), this.game.player.location.locationInImage())));
+	  isMovingForSprite = false;
+	  
 	 
 	  northCollider = new Collider("Enorth", this, 0.0,  -this.body.spriteHeight/2.0 +15, "horizontal");
 	  southCollider = new Collider("Esouth", this, 0.0,  this.body.spriteHeight/2.0 -12, "horizontal");
@@ -80,7 +85,9 @@ class FollowingEnemy extends Enemy{
   
   
   public void update() {
+
 	  
+	  if(!this.arm.isPresent()) this.arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), GameWindow.currentGame.player.location.locationInImage())));
 	//Lisätään esine vihollisen tavaraluetteloon
 	if(this.inventory.isEmpty()) this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
     
@@ -99,6 +106,11 @@ class FollowingEnemy extends Enemy{
     if(this.isShielding && !this.shieldSound.isPlaying()) {this.shieldSound.play();}
     if(this.energy <= 0 ) { this.isShielding = false;}
     if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()) { this.takeDamage(9999.0); }
+    
+    locationForSprite = Optional.of(location.locationInImage());
+	
+    if(this.xSpeed > 0) isMovingForSprite = true;
+    else isMovingForSprite = false;
     
      //Esineiden pudottaminen
     try{

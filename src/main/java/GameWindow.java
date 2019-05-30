@@ -30,10 +30,10 @@ public static void main(String args[]) {
 
 public static Stage stage;
 
-public static Menus Menus = new Menus();
+public static Menus Menus;
 public static Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
-public static Game currentGame = new Game();
-
+public static Game currentGame;
+public static PlayerHUD PlayerHUD;
 
 public static AnimationTimer clock = new AnimationTimer() {
 	@Override 
@@ -62,11 +62,20 @@ public void start(Stage primaryStage) {
 	primaryStage.setMinHeight(800.0);	
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    primaryStage.setScene(Menus.mainMenu.scene);
+  
     
     GameWindow.stage = primaryStage;
-    menuClock.start();
+    
+    Menus = new Menus();
+    
+    currentGame = new Game();
     gameCamera = Optional.ofNullable(currentGame.camera);
+    
+    PlayerHUD = new PlayerHUD();
+    
+    primaryStage.setScene(Menus.mainMenu.scene);
+    
+    menuClock.start();
     
     primaryStage.show();
     System.out.println("Päästiin start-metodin loppuun");

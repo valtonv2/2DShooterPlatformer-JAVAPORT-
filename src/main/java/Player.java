@@ -13,6 +13,7 @@ import javafx.animation.*;
 import javafx.event.*;
 import java.math.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,15 +25,12 @@ import javafx.scene.Group;
 import javafx.scene.Cursor;
 
   
-  class Player extends Actor {
+ public class Player extends Actor {
 	  
 	  
 	  Double startX;
 	  Double startY;
-	  Game game;
 	  
-	  
-	  String name = "Moon Man";
 	  Double maxHP = 1000.0;
 	  Double maxEnergy = 1000.0;
 	  Double ySpeed = 0.0;
@@ -45,16 +43,11 @@ import javafx.scene.Cursor;
 	  String lookDirection = "east";
 	  
 	 private Integer jumpCounter = 0;
-	  
-	  GamePos location;
-	  
-	  Optional<Pair<Double, Double>>locationForSprite;
-	  
-	  
+	  	  
 	  //Pelaajan kuvat
 	  
 	  private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/MoonmanWalk", "MoonmanWalk", 4, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
-	  public Optional<RotatingArm> arm;
+	
 	  private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
 
 	  
@@ -82,13 +75,15 @@ import javafx.scene.Cursor;
 	//Konstruktori luokalle
 	  
 	  public Player(Double startX, Double startY, Game game) {
-		  
+		 
+		  name = "Moon Man";
 		  this.startX = startX;
 		  this.startY = startY;
 		  this.game = game;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
 		  locationForSprite = Optional.of(location.locationInImage());
 		  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
+		  this.inventory = new HashMap<String, Item>();
 		  
 	  EventHandler<KeyEvent> playerKeyPressedHandler = new EventHandler<KeyEvent>() {
 		  	public void handle(KeyEvent event) {
@@ -211,35 +206,35 @@ import javafx.scene.Cursor;
 			  	     }
 			  	     
 			  	     if(event.getCode() == KeyCode.X){
-			  	     PlayerHUD.equipmentBox.moveLeft();
+			  	     GameWindow.PlayerHUD.equipmentBox.moveLeft();
 			  	     }
 			  	     
 			  	     if(event.getCode() == KeyCode.C){
-			  	     PlayerHUD.equipmentBox.moveRight();
+			  	     GameWindow.PlayerHUD.equipmentBox.moveRight();
 			  	     }
 			  	     
 			  	     if(event.getCode() == KeyCode.DIGIT1){
-			  	     PlayerHUD.weaponHud.selectBox(0);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(0);
 			  	     }
 			  	    
 			  	     if(event.getCode() == KeyCode.DIGIT2){
-			  	     PlayerHUD.weaponHud.selectBox(1);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(1);
 			  	     }
 			  	       
 			  	     if(event.getCode() == KeyCode.DIGIT3){
-			  	     PlayerHUD.weaponHud.selectBox(2);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(2);
 			  	     }
 			  	        
 			  	     if(event.getCode() == KeyCode.DIGIT4){
-			  	     PlayerHUD.weaponHud.selectBox(3);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(3);
 			  	     }
 			  	         
 			  	     if(event.getCode() == KeyCode.DIGIT5){
-			  	     PlayerHUD.weaponHud.selectBox(4);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(4);
 			  	     }
 			  	          
 			  	     if(event.getCode() == KeyCode.DIGIT6){
-			  	     PlayerHUD.weaponHud.selectBox(5);
+			  	     GameWindow.PlayerHUD.weaponHud.selectBox(5);
 			  	     }
 			  	     
 			  	     if(event.getCode() == KeyCode.H){
@@ -287,8 +282,8 @@ import javafx.scene.Cursor;
 		  
 		  EventHandler<ScrollEvent> playerScrollHandler = new EventHandler<ScrollEvent>() {
 			  	public void handle(ScrollEvent event) {
-			  		if(event.getDeltaY() > 0) { PlayerHUD.weaponHud.selectNext();}
-			 	    else {PlayerHUD.weaponHud.selectPrevious();}
+			  		if(event.getDeltaY() > 0) { GameWindow.PlayerHUD.weaponHud.selectNext();}
+			 	    else {GameWindow.PlayerHUD.weaponHud.selectPrevious();}
 			  		
 			  	}
 		  };
@@ -317,8 +312,13 @@ import javafx.scene.Cursor;
 	  
 	 public void updateState() {
 	     
+		lookDirectionForSprite = this.lookDirection;
+		
+		isMovingForSprite = this.isWalking;
+		 
 	    this.expMove();
 	    
+	    if(!this.arm.isPresent()) this.arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), GameWindow.currentGame.mouseCursor.location)));
 	    
 	    if (this.game.mouseCursor.isOnLeft) {this.lookDirection = "west";}
 	    else {this.lookDirection = "east";}
@@ -346,12 +346,12 @@ import javafx.scene.Cursor;
 	    if(this.isShielding && this.energy == 0) {this.isShielding = false;}
 	    
 	    if (this.isDead) { game.isOver = true;}
-	    
+	   
 	    this.arm.get().direction.update(this.location.locationInImage(), this.game.mouseCursor.location);
 	      
-	    PlayerHUD.healthBar.setValue(this.HP / this.maxHP);
+	    GameWindow.PlayerHUD.healthBar.setValue(this.HP / this.maxHP);
 	    
-	    PlayerHUD.energyBar.setValue(this.energy / this.maxEnergy);
+	    GameWindow.PlayerHUD.energyBar.setValue(this.energy / this.maxEnergy);
 	    
 	    if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()){
 
@@ -389,7 +389,7 @@ import javafx.scene.Cursor;
 			  
 		  }else {
 			  
-			  PlayerHUD.notificationArea.announce("You have not equipped a weapon");
+			  GameWindow.PlayerHUD.notificationArea.announce("You have not equipped a weapon");
 			  
 		  }
 		  
@@ -415,7 +415,7 @@ import javafx.scene.Cursor;
 	  //Pelaajan parantaminen
 	  public void heal(double d) {
 	    this.HP += d;
-	    PlayerHUD.notificationArea.announce("Healed. Current HP: " + this.HP);
+	    GameWindow.PlayerHUD.notificationArea.announce("Healed. Current HP: " + this.HP);
 	  }
 	  
 	  
@@ -466,12 +466,7 @@ import javafx.scene.Cursor;
 	    } 
 	  }
 	 
-	  public String lookDirectionForSprite() { 
-		  return this.lookDirection;
-		  }
 
-	  
-	 public Boolean isMovingForSprite() {return this.isWalking;}
 	  
 	 public String toString() {return this.name + " now at (" + this.location.locationInGame().getKey() +" ; "+ this.location.locationInGame().getValue() + ")";}
 	}

@@ -20,30 +20,30 @@ import javafx.scene.paint.Color;
 
 //PlayerHUD - olio kokoaa pelaajan HUDin osaset yhteen
 
-class PlayerHUD{
+public class PlayerHUD{
 
   
-  public static WeaponHud weaponHud = new WeaponHud();            //Asevalikko
-  public static EquipmentBox equipmentBox = new EquipmentBox();   //Hyötytavaralaatikko
-  public static GameBar healthBar = new GameBar("file:src/main/resources/StyleSheets/HealthBarStyle.css",new Pair<Double, Double>(1.0, 200.0), GameWindow.currentGame);
-  public static GameBar energyBar = new GameBar("file:src/main/resources/StyleSheets/EnergyBarStyle.css",new Pair<Double, Double>(1.0, 240.0), GameWindow.currentGame);
-  public static NotificationArea notificationArea = new NotificationArea(); //Ilmoitusalue
+  public WeaponHud weaponHud = new WeaponHud();            //Asevalikko
+  public EquipmentBox equipmentBox = new EquipmentBox();   //Hyötytavaralaatikko
+  public GameBar healthBar = new GameBar("file:src/main/resources/StyleSheets/HealthBarStyle.css",new Pair<Double, Double>(1.0, 200.0), GameWindow.currentGame);
+  public GameBar energyBar = new GameBar("file:src/main/resources/StyleSheets/EnergyBarStyle.css",new Pair<Double, Double>(1.0, 240.0), GameWindow.currentGame);
+  public  NotificationArea notificationArea = new NotificationArea(); //Ilmoitusalue
   
-  public static Group image() {
+  public Group image() {
     
 	  Group done = new Group();
-	  done.getChildren().addAll(notificationArea.image(), weaponHud.image(), equipmentBox.image, healthBar.image(), energyBar.image());
+	  done.getChildren().addAll(notificationArea.image(), weaponHud.image(), equipmentBox.image(), healthBar.image(), energyBar.image());
 	  return done;
    
   }
   
-  public static void clearAll() {
+  public void clearAll() {
     weaponHud.empty();
     equipmentBox.empty();
     notificationArea.clear();
   }
 
-}
+
 
 //###########################################################################################################################################################
 
@@ -122,7 +122,7 @@ class EquipmentBox {
      
    }
    
-  public Group image = box.fullImage();
+  public Group image() { return box.fullImage();}
      
 }
 
@@ -259,6 +259,7 @@ class ItemBox extends UsesGameSprite{
   
   private Optional<Item> containedItem = Optional.empty();
   private Boolean isSelected = false;
+  public Optional<Pair<Double, Double>> locationForSprite;
   
   public GameSprite sprites[] = {
    new GameSprite("file:src/main/resources/Pictures/ItemBoxNotSelected.png", Optional.empty(), new Pair<Double, Double>(60.0, 60.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),  //Tyhjä
@@ -271,6 +272,7 @@ class ItemBox extends UsesGameSprite{
 	
 	  this.location = location;
 	  this.game = game;
+	  locationForSprite = Optional.of(this.location);
 	
 }
   
@@ -294,7 +296,6 @@ class ItemBox extends UsesGameSprite{
 	 }
  }
   
- public Optional<Pair<Double, Double>> locationForSprite = Optional.of(this.location);
  
  public Group fullImage() {
 	 
@@ -424,5 +425,5 @@ class NotificationArea {
   
   
 }
-
+}
 

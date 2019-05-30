@@ -71,7 +71,7 @@ class Level {
 
     
   //Metodi, joka luo kentän kuvan pikselien punaisten väriarvojen perusteella
-    public void  levelCreator() {
+    public void levelCreator() {
     
     for(int  x = 0; x<levelImage.getWidth(); x++){
     for(int y = 0; y<levelImage.getHeight(); y++){
@@ -125,6 +125,7 @@ class Level {
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         EnergyPack energyPack = new EnergyPack(game, 1);
+        System.out.println("Levelcreator: " + energyPack.sprites.get(0).image());
         itemsInWorld.add(energyPack);
         energyPack.isInWorld = true;
         energyPack.locationInWorld = Optional.ofNullable(new GamePos(new Pair<Double, Double>(xPoint, yPoint), false));
@@ -169,7 +170,7 @@ class Level {
        
           GameWindow.menuClock.start();
           GameWindow.clock.stop();
-          PlayerHUD.clearAll();                                      //Pelaajan HUD on bugien välttämiseksi tyhjennettävä
+          GameWindow.PlayerHUD.clearAll();                                      //Pelaajan HUD on bugien välttämiseksi tyhjennettävä
           GameWindow.stage.setScene(GameWindow.Menus.LevelSelectMenu.scene);
           GameWindow.Menus.currentMenu = GameWindow.Menus.LevelSelectMenu;
      
@@ -178,7 +179,8 @@ class Level {
       }
      }
     }
-    System.out.println("Luotu " + allTiles.size() + " tiiltä");
+    System.out.println("Luotu " + allTiles.size() + " tiiltä" + ": :" + itemsInWorld.size() + " esinettä" );
+    
     }
        
   public void gravity(Double strength) {

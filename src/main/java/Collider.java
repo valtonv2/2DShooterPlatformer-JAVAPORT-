@@ -41,7 +41,7 @@ class Collider{
  
 // Update-metodi tarkkailee colliderin tilaa
  public void update() {
-  
+
    List<GameTile> nearbyTiles = actor.game.currentLevel.allTiles.stream()
 		   .filter(tile -> tile.location.isNearCoordPair(actorLocationInGame(), 100.0))
 		   .collect(Collectors.toList());

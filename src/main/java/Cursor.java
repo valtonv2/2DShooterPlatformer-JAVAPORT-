@@ -36,7 +36,7 @@ class MouseCursor{
   private Double playerXDiff;
   private Double playerYDiff;
         
-  public Pair<Double, Double> location;
+  public Pair<Double, Double> location = new Pair<Double, Double>(0.0, 0.0);
   
   //Konstruktori luokalle
   
