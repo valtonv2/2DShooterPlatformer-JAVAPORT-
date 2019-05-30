@@ -32,7 +32,7 @@ class PlayerHUD{
   public static Group image() {
     
 	  Group done = new Group();
-	  done.getChildren().addAll(notificationArea.image(), weaponHud.image(), equipmentBox.image, healthBar.image, energyBar.image);
+	  done.getChildren().addAll(notificationArea.image(), weaponHud.image(), equipmentBox.image, healthBar.image(), energyBar.image());
 	  return done;
    
   }
@@ -122,7 +122,7 @@ class EquipmentBox {
      
    }
    
-  public Node[] image = box.fullImage();
+  public Group image = box.fullImage();
      
 }
 
@@ -133,15 +133,32 @@ class EquipmentBox {
 class WeaponHud {
   
   private Pair<Double, Double> location = new Pair<Double, Double>(10.0, 0.1);
-  public List<ItemBox> weaponBoxes = IntStream.range(0, 5).map(num -> new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * num, location.getValue() ), GameWindow.currentGame)).collect(Collectors.toList());
+  public ArrayList<ItemBox> weaponBoxes = new ArrayList<ItemBox>(); 
  
   private int selectedBoxNumber = 0;
   
   
+  //Konstruktori
+  public WeaponHud() {
+	
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 0, location.getValue() ), GameWindow.currentGame));
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 1, location.getValue() ), GameWindow.currentGame));
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 2, location.getValue() ), GameWindow.currentGame));
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 3, location.getValue() ), GameWindow.currentGame));
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 4, location.getValue() ), GameWindow.currentGame));
+	  this.weaponBoxes.add(new ItemBox(new Pair<Double, Double>(location.getKey() + 70.0 * 5, location.getValue() ), GameWindow.currentGame));
+  
+  
+  
+  }
+  
   
   public Player player() { return GameWindow.player();}
   
-  public List<String> itemsInBoxes = weaponBoxes.stream().map(box -> {if(box.item.isPresent()) { return box.item.get().name;} else {return "Nothing";}).collect(Collectors.toList());
+  public List<String> itemsInBoxes() { 
+
+	  return weaponBoxes.stream().map(box -> getBoxItemName(box)).collect(Collectors.toList());
+  }
   
   public void selectBox(int boxNumber) {
 	  
@@ -185,7 +202,8 @@ class WeaponHud {
   
   public void updateItems() {
     
-    List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes.contains(item)).collect(Collectors.toList()));
+	List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes().contains(item)).map(item -> (Weapon)item ).collect(Collectors.toList());
+   // List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes.contains(item))).collect(Collectors.toList()));
     
     int currentBox = 0;
    
@@ -193,12 +211,12 @@ class WeaponHud {
    
       for (Weapon weapon:possibleContents){
         
-       while(!weaponBoxes[currentBox].isFree() && currentBox < weaponBoxes.length()) {
+       while(!weaponBoxes.get(currentBox).isFree() && currentBox < weaponBoxes.size()) {
          currentBox += 1;
        }
       
-      if(currentBox <= weaponBoxes.size-1 && weaponBoxes[currentBox].isFree()){
-      weaponBoxes[currentBox].insertItem((Weapon)weapon);
+      if(currentBox <= weaponBoxes.size()-1 && weaponBoxes.get(currentBox).isFree()){
+      weaponBoxes.get(currentBox).insertItem((Weapon)weapon);
       }
       
      }
@@ -214,8 +232,18 @@ class WeaponHud {
 	  this.weaponBoxes.forEach(box -> box.removeItem());
   }
   
-  public List<Node> image() {
-	  weaponBoxes.stream().flatMap(box -> box.fullImage()).collect(Collectors.toList());
+  public Group image() {
+	  
+      Group done = new Group();
+      List<Node> images = weaponBoxes.stream().map(box -> box.fullImage()).collect(Collectors.toList());
+	  images.forEach(img -> done.getChildren().add(img));
+	  return done;
+  }
+  
+  private String getBoxItemName(ItemBox possibleBox) {
+	  
+	  if(possibleBox.item().isPresent()) return possibleBox.item().get().name;
+	  else return "Nothing";
   }
   
 }
@@ -268,7 +296,9 @@ class ItemBox extends UsesGameSprite{
   
  public Optional<Pair<Double, Double>> locationForSprite = Optional.of(this.location);
  
- public Node[] fullImage() {
+ public Group fullImage() {
+	 
+	     Group done = new Group();
 		 
 		 if(this.containedItem.isPresent() && this.containedItem.get() instanceof UtilityItem) {
 			 
@@ -279,7 +309,9 @@ class ItemBox extends UsesGameSprite{
 			 item.sprites.get(1).overrideLocation = Optional.of(this.location);
 			 if(item.isSpent()) {this.removeItem();}
 			 
-			 Node done[] = {emptyImage(), item.sprites.get(1).image(), counter };
+			 
+			 
+			 done.getChildren().addAll(emptyImage(), item.sprites.get(1).image(), counter);
 			 return done;
 			 
 			 
@@ -289,12 +321,12 @@ class ItemBox extends UsesGameSprite{
 
 			 
 			 item.sprites.get(1).overrideLocation = Optional.of(this.location);
-			 Node done[] = {emptyImage(), item.sprites.get(1).image()};
+			 done.getChildren().addAll(emptyImage(), item.sprites.get(1).image());
 			 return done;
 			 
 		 }else{
 			 
-			 Node done[] = {emptyImage()};
+			 done.getChildren().addAll(emptyImage());
 			 return done;
 			 }
 		 }
@@ -346,7 +378,11 @@ class GameBar{
 	  bar1.setProgress(value);
   }
   
-  public Node image[] = {bar1};
+  public Group image() {
+	  Group done = new Group();
+	  done.getChildren().add(bar1);
+	  return done;
+  }
    
   }
 
@@ -370,14 +406,15 @@ class NotificationArea {
   
   public void clear() {currentMessage = "";}
   
-  public Node[] image() {
+  public Group image() {
 	  
 	 backGround.setFill(Color.DARKGREY);
    
     timer += 1;
     if(timer > 150) {clear();}
     
-    Node done[] = {backGround, new Text(location().getKey() + 20, location().getValue() +15, currentMessage)};
+    Group done = new Group();
+    done.getChildren().addAll(backGround, new Text(location().getKey() + 20, location().getValue() +15, currentMessage));
    
     return done;
    
