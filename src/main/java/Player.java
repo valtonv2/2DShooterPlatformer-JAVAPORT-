@@ -40,7 +40,7 @@ import javafx.scene.Cursor;
 	  Boolean isDead = false;
 	  Boolean isSlowingTime = false;
 	  Double timeSlowCoefficient = 0.1;
-	  String lookDirection = "east";
+	 
 	  
 	 private Integer jumpCounter = 0;
 	  	  

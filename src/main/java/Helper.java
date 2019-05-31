@@ -345,7 +345,7 @@ class AnimatedGameSprite{
 //###########################################################################################################################################################################
 
 //Actoreille saatavilla oleva k��ntyv� k�si. Huolehtii k�den ja aseen k��nn�st�. Toistaiseksi vain pelaajan k�yt�ss�
-class RotatingArm{
+class RotatingArm {
 	
 Actor user;
 DirectionVector direction;
@@ -355,13 +355,16 @@ DirectionVector direction;
  
  //Konstruktori luokalle
  
- public RotatingArm(Actor user, DirectionVector direction) {
+ public RotatingArm(Actor user, DirectionVector direction){
 	 
 	 this.user = user;
 	 this.direction = direction;
 	 
+	 
 	 this.armImage = new GameSprite("file:src/main/resources/Pictures/MoonmanHand.png", Optional.empty(), new Pair<Double, Double>(40.0, 25.0), user, new Pair<Double, Double>(-5.0, -13.0), Optional.empty());
 	 this.armRotate = new Rotate(0.0, pivotPoint().getKey(), pivotPoint().getValue(), 400);
+	 
+	 
  }
   
  private Pair<Double, Double> pivotPoint() {
@@ -380,10 +383,7 @@ DirectionVector direction;
  }
   
  public Group completeImage() {
-	 
-	 this.armRotate.setPivotX(pivotPoint().getKey());
-	 this.armRotate.setPivotY(pivotPoint().getValue());
-	 
+	 	 
     armRotate.setAngle( this.direction.angle() * 50);
     armRotate.setPivotX(pivotPoint().getKey());
     armRotate.setPivotY(pivotPoint().getValue());
@@ -392,7 +392,7 @@ DirectionVector direction;
     
     if(user.equippedWeapon.isPresent()) {
     	
-    	group.getChildren().addAll(armImage.image(), user.equippedWeapon.get().sprites.get(1).image());
+    	group.getChildren().addAll(armImage.image(), user.equippedWeapon.get().sprites.get(2).image());
     	
     }else {
     	
@@ -401,16 +401,8 @@ DirectionVector direction;
     }
   
 
-   switch (user.lookDirectionForSprite) {
-      
-      case "east":
-    	   group.getTransforms().addAll(armRotate);
-    	   break;
-      default: 
-    	  group.getTransforms().addAll(armRotate);
-    	  break;
-      
-      } 
+    	group.getTransforms().addAll(armRotate);
+  
       
       
 

@@ -57,7 +57,7 @@ class EquipmentBox {
   public ItemBox box = new ItemBox(location, GameWindow.currentGame);
   private int selectedIndex = 0;
  
-  private List<UtilityItem> possibleContents = player().inventory.values().stream().filter(item -> item instanceof UtilityItem ).map(item -> (UtilityItem)item).collect(Collectors.toList());
+  private List<UtilityItem> possibleContents() {return player().inventory.values().stream().filter(item -> item instanceof UtilityItem ).map(item -> (UtilityItem)item).collect(Collectors.toList());}
   
   
   public Player player() {return GameWindow.currentGame.player;}
@@ -65,7 +65,7 @@ class EquipmentBox {
   
   public void moveRight() {
     
-    if(this.selectedIndex < this.possibleContents.size() - 1) {
+    if(this.selectedIndex < this.possibleContents().size() - 1) {
     	
     	selectedIndex += 1;
     	this.updateItems();
@@ -88,7 +88,7 @@ class EquipmentBox {
 		    	
 	   }else{
 		    	
-		    this.selectedIndex = this.possibleContents.size() - 1;
+		    this.selectedIndex = this.possibleContents().size() - 1;
 		    this.updateItems();
 		    	
 		    }
@@ -104,11 +104,11 @@ class EquipmentBox {
        player().equippedUtilityItem = Optional.empty();
      }
      
-     if (IntStream.range(0, possibleContents.size()-1).anyMatch(num -> num == selectedIndex)) selectedIndex = Math.max(this.possibleContents.size()-1,0);
+     if (IntStream.range(0, possibleContents().size()-1).anyMatch(num -> num == selectedIndex)) selectedIndex = Math.max(this.possibleContents().size()-1,0);
        
-     if(this.possibleContents.size() == 0) {System.out.println("Tried to update utilityitems but there were none in player inventory");} 
+     if(this.possibleContents().size() == 0) {System.out.println("Tried to update utilityitems but there were none in player inventory");} 
      else {
-    	 UtilityItem item = possibleContents.get(selectedIndex);
+    	 UtilityItem item = possibleContents().get(selectedIndex);
          box.insertItem(item);
     	 player().equipUtilItem(item);
     	 
@@ -161,12 +161,14 @@ class WeaponHud {
   }
   
   public void selectBox(int boxNumber) {
-	  
+	
+	 
 	Optional<ItemBox> possibleBox = Optional.of(weaponBoxes.get(boxNumber));
 	
 	if(possibleBox.isPresent()) {
-    
+      weaponBoxes.stream().forEach(box -> box.deselect());
       weaponBoxes.get(boxNumber).select();
+      player().equippedWeapon = Optional.empty();
       player().equipWeapon(Optional.of( (Weapon)possibleBox.get().item().get())); //Jos asevalikon laatikossa on jotain se sisältää varmasti aseen
       
       if(selectedBoxNumber != boxNumber) {
@@ -177,20 +179,26 @@ class WeaponHud {
       weaponBoxes.get(selectedBoxNumber).deselect();
       selectedBoxNumber = 0;
       weaponBoxes.get(selectedBoxNumber).select();
+      player().equippedWeapon = Optional.empty();
       player().equipWeapon(Optional.of( (Weapon)weaponBoxes.get(selectedBoxNumber).item().get()));
       }
      }
   
   public void selectNext() {
     
+	  weaponBoxes.stream().forEach(box -> box.deselect());
+	  
     if (selectedBoxNumber == weaponBoxes.size() - 1){
        selectBox(0);
+       selectedBoxNumber = 0;
        }else{
        selectBox(selectedBoxNumber + 1);
     }
    }
   
   public void selectPrevious() {
+	  
+	  weaponBoxes.stream().forEach(box -> box.deselect());
     
     if (selectedBoxNumber == 0){
        selectBox(weaponBoxes.size() - 1);
@@ -204,22 +212,26 @@ class WeaponHud {
     
 	List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes().contains(item)).map(item -> (Weapon)item ).collect(Collectors.toList());
    // List<Weapon> possibleContents = player().inventory.values().stream().filter(item -> item instanceof Weapon && !itemsInBoxes.contains(item))).collect(Collectors.toList()));
-    
+   
     int currentBox = 0;
    
     if(!possibleContents.isEmpty()){
    
       for (Weapon weapon:possibleContents){
         
-       while(!weaponBoxes.get(currentBox).isFree() && currentBox < weaponBoxes.size()) {
+       while(!weaponBoxes.get(currentBox).isFree() && currentBox < weaponBoxes.size()-1) {
          currentBox += 1;
        }
       
-      if(currentBox <= weaponBoxes.size()-1 && weaponBoxes.get(currentBox).isFree()){
+      if(weaponBoxes.get(currentBox).isFree()){
       weaponBoxes.get(currentBox).insertItem((Weapon)weapon);
+      System.out.println("Weapon inserted to box " + currentBox);
       }
       
      }
+    System.out.println("Player inventory: " + GameWindow.currentGame.player.inventory);
+    System.out.println("Possible Contents: " + possibleContents);
+    System.out.println("WeaponBoxes: " + this.itemsInBoxes());
     
     }else {
    
@@ -277,7 +289,7 @@ class ItemBox extends UsesGameSprite{
 }
   
   
- public Boolean isFree() {return this.containedItem.isPresent();}
+ public Boolean isFree() {return !this.containedItem.isPresent();}
  
  public void select()  {this.isSelected = true;}
 

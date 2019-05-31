@@ -80,8 +80,7 @@ class GameCamera {
   public Group cameraImage()  {
   
     Group moonMan = new Group(); 
-    moonMan.getChildren().addAll(followee.image());
-    Node arm = followee.arm.get().completeImage();
+    moonMan.getChildren().add(followee.image());
     List<Node> projectiles = game.projectiles.stream().map(projectile -> projectile.sprite.image()).collect(Collectors.toList());
     List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.image()).collect(Collectors.toList());
     

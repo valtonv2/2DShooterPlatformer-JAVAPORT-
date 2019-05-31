@@ -92,7 +92,7 @@ class ShooterEnemy extends Enemy {
 	  }
   
   public Group image(){
-	  System.out.println("Metodin osa suorittuu");
+
 	  Group done = new Group(); 
 	  done.getChildren().add(this.newImage.image());
 	  return done;
