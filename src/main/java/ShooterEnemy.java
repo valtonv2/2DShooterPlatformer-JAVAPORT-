@@ -2,6 +2,7 @@ package main.java;
 
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.*;
 import javafx.scene.paint.ImagePattern;
@@ -60,7 +61,6 @@ class ShooterEnemy extends Enemy {
 	  
 	  this.inventory = new HashMap<String, Item>();
 	  
-	  locationForSprite = Optional.of(location.locationInImage());
 	  player = game.player;
 	  
 	  isActive = false; //Monet raskaat toiminnot suoritetaan vain kun tämä on true. Vaikutus suorituskykyyn on huima
@@ -89,10 +89,10 @@ class ShooterEnemy extends Enemy {
 	  return Optional.ofNullable(this.inventory.values().toArray()[itemDropIndex]);
 	  }
   
-  public ArrayList<Node> image(){
+  public Group image(){
 	  System.out.println("Metodin osa suorittuu");
-	  ArrayList<Node> done = new ArrayList<Node>(); 
-	  done.add(this.newImage.image());
+	  Group done = new Group(); 
+	  done.getChildren().add(this.newImage.image());
 	  return done;
   }
   
@@ -240,6 +240,7 @@ class ShooterEnemy extends Enemy {
     this.ySpeed = 0.0;
   } 
   
+  public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
   
   public String lookDirectionForSprite() {return "east";}
   

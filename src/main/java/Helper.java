@@ -112,9 +112,9 @@ public class Helper{
 abstract class UsesGameSprite{
   
   Boolean useMirror = false;
-  public Optional<Pair<Double, Double>> locationForSprite;
   public Game game;
   public String lookDirectionForSprite;
+  public abstract Optional<Pair<Double, Double>> locationForSprite();
   
 }
 
@@ -174,8 +174,8 @@ class GameSprite {
   
   
  }else { 
-   System.out.println("LFS" + user.locationForSprite);
-  Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(), user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+   System.out.println("LFS" + user.locationForSprite());
+  Rectangle rect = new Rectangle(user.locationForSprite().get().getKey() + locationOffset.getKey(), user.locationForSprite().get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
   rect.setFill(texture);
   return rect;
   }
@@ -212,8 +212,8 @@ class GameSprite {
  
  private Pair<Double, Double> userSpriteLocation() {
 	 
-	 if(user.locationForSprite.isPresent()) {
-		 return user.locationForSprite.get();
+	 if(user.locationForSprite().isPresent()) {
+		 return user.locationForSprite().get();
 	 }else {
 		 Pair<Double, Double> done = new Pair<Double, Double>(0.0, 0.0);
 		 return done;
@@ -295,7 +295,7 @@ class AnimatedGameSprite{
   
  private Rectangle normalImage() { 
 
-   Rectangle rect = new Rectangle(user.locationForSprite.get().getKey() + locationOffset.getKey(),user.locationForSprite.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+   Rectangle rect = new Rectangle(user.locationForSprite().get().getKey() + locationOffset.getKey(),user.locationForSprite().get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
    rect.setFill(textures.get(spriteIndex));
    return rect;
   }
@@ -326,7 +326,7 @@ class AnimatedGameSprite{
  
  private ArrayList<Rotate> mirrorRotate() {
 	 ArrayList<Rotate> done = new ArrayList<Rotate>();
-	 done.add(new Rotate(180.0, this.user.locationForSprite.orElse(new Pair<Double, Double>(0.0, 0.0)).getKey(), this.user.locationForSprite.orElse(new Pair<Double, Double>(0.0, 0.0)).getValue() , 0, Rotate.Y_AXIS));
+	 done.add(new Rotate(180.0, this.user.locationForSprite().orElse(new Pair<Double, Double>(0.0, 0.0)).getKey(), this.user.locationForSprite().orElse(new Pair<Double, Double>(0.0, 0.0)).getValue() , 0, Rotate.Y_AXIS));
 	 return done;
   }
   

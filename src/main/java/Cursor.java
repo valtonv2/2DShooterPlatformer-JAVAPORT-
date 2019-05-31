@@ -14,8 +14,8 @@ class MouseCursor{
 	
   private Player player;
   
-  private Double xCoordinate;
-  private Double yCoordinate;
+  private Double xCoordinate = 0.0;
+  private Double yCoordinate = 0.0;
   public Boolean isOnLeft = false;
   public Boolean isOnRight = false;
   

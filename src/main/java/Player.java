@@ -81,7 +81,6 @@ import javafx.scene.Cursor;
 		  this.startY = startY;
 		  this.game = game;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
-		  locationForSprite = Optional.of(location.locationInImage());
 		  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
 		  this.inventory = new HashMap<String, Item>();
 		  
@@ -360,20 +359,20 @@ import javafx.scene.Cursor;
 	  }
 	   
 	  //Luodaan scalafx:n mukainen kuva
-	 public ArrayList<Node> image() { 
+	 public Group image() { 
 	  
-		 ArrayList<Node> done = new ArrayList<Node>();
+		 Group done = new Group();
 		 
 	      if (!this.isShielding) {
 	    	  
-	    	  done.add(body.image());
-	    	  done.add(arm.get().completeImage());
+	    	  done.getChildren().add(body.image());
+	    	  done.getChildren().add(arm.get().completeImage());
 	    	  return done;
 	      }
 	      else {
-	    	  done.add(body.image());
-	    	  done.add(arm.get().completeImage());
-	    	  done.add(shield.image());
+	    	  done.getChildren().add(body.image());
+	    	  done.getChildren().add(arm.get().completeImage());
+	    	  done.getChildren().add(shield.image());
 	    	  return done;
 	      }
 	      
@@ -466,7 +465,7 @@ import javafx.scene.Cursor;
 	    } 
 	  }
 	 
-
+	 public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
 	  
 	 public String toString() {return this.name + " now at (" + this.location.locationInGame().getKey() +" ; "+ this.location.locationInGame().getValue() + ")";}
 	}

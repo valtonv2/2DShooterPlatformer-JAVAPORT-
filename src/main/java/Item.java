@@ -27,15 +27,7 @@ abstract class Item extends UsesGameSprite{
   //Sijainnille annetaan arvo kun esine on vapaana maailmassa
   public Optional<GamePos> locationInWorld = Optional.empty();
      
-  public ArrayList<GameSprite> sprites; //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
-  
-  public Optional<Pair<Double, Double>> locationForSprite() {
-    
-     GamePos pos = this.locationInWorld.orElse(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
-     Pair <Double, Double >value = pos.locationInImage();
-     return Optional.of(value);
-    
-  }
+  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>(); //Sisältää esineen kuvat. 0 = World image 1 = Inventory image
   
   
 }
@@ -97,7 +89,7 @@ class HealthPack extends UtilityItem{
     GameWindow.PlayerHUD.equipmentBox.updateItems();
   }
   
-  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
+
   //Konstruktori
   
   public HealthPack(Game game, Integer useTimes) {
@@ -108,12 +100,20 @@ class HealthPack extends UtilityItem{
 	  ID = "HP" + this.amountOfUseTimes(); // Hyödynnetään tallentamisessa
 	  player = game.player;
 	  strength = 500.0; //Parannuksen voimakkuus
-	  this.locationForSprite = locationForSprite();
+	
 	  
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()));
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty()));
 			  
   }
+  
+  public Optional<Pair<Double, Double>> locationForSprite() {
+	    
+	     GamePos pos = this.locationInWorld.orElse(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
+	     Pair <Double, Double >value = pos.locationInImage();
+	     return Optional.of(value);
+	    
+	  }
   
   public String toString() { return this.name;}
        
@@ -134,11 +134,7 @@ class EnergyPack extends UtilityItem{
 		  GameWindow.PlayerHUD.notificationArea.announce("Used energy pack. Current energy: " + player.energy); 
 		  GameWindow.PlayerHUD.equipmentBox.updateItems();
 	  }
-	  
-	  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
-			  
-			
-	  
+	    
 	  //Konstruktori
 	  
 	  public EnergyPack(Game game, Integer useTimes) {
@@ -153,6 +149,14 @@ class EnergyPack extends UtilityItem{
 		  this.sprites.add( new GameSprite("file:src/main/resources/Pictures/HealthPack.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty()));	  
 		
 	  }
+	  
+	  public Optional<Pair<Double, Double>> locationForSprite() {
+		    
+		     GamePos pos = this.locationInWorld.orElse(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
+		     Pair <Double, Double >value = pos.locationInImage();
+		     return Optional.of(value);
+		    
+		  }
 	  
 	  public String toString() { return this.name;}
 	       
@@ -179,7 +183,16 @@ class SlowFiringWeapon extends Weapon{
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(45.0,45.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty())); //World image
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty()));  //Equipped image 
+	  lookDirectionForSprite = "east";
   }
+  
+  public Optional<Pair<Double, Double>> locationForSprite() {
+	    
+	     GamePos pos = this.locationInWorld.orElse(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
+	     Pair <Double, Double >value = pos.locationInImage();
+	     return Optional.of(value);
+	    
+	  }
   
   private Double projectileSpeed() { 
 	  if(player.isSlowingTime) { return player.timeSlowCoefficient * 15.0;} else {return 15.0;} 
@@ -202,11 +215,8 @@ class SlowFiringWeapon extends Weapon{
     
   }
   
-  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
+
 		  
-	  
-  public String lookDirectionForSprite = "east";
-  
   public String toString() { return this.name;}
 }
 
@@ -221,6 +231,7 @@ class RapidFireWeapon extends Weapon{
   private int lastShotTime = 0;
   private AudioClip laserSound = new AudioClip("file:src/main/resources/sound/RFWsound.wav");
   
+  
  
  public RapidFireWeapon(Game game, Optional<Actor> actor) {
 	  
@@ -234,8 +245,17 @@ class RapidFireWeapon extends Weapon{
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(25.0,25.0), this, new Pair<Double, Double>(15.0,15.0), Optional.empty())); //Inventory image
 	  this.sprites.add(new GameSprite("file:src/main/resources/Pictures/SlowFIreWeapon.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), game.player, new Pair<Double, Double>(18.0,-18.0), Optional.empty()));  //Equipped image
 	  
+	  lookDirectionForSprite = "east";
 
   } 
+ 
+ public Optional<Pair<Double, Double>> locationForSprite() {
+	    
+     GamePos pos = this.locationInWorld.orElse(new GamePos(new Pair<Double, Double>(0.0,0.0),false));
+     Pair <Double, Double >value = pos.locationInImage();
+     return Optional.of(value);
+    
+  }
   
   private Double projectileSpeed() {
 		  if(player.isSlowingTime) {return player.timeSlowCoefficient * 15.0;}
@@ -259,10 +279,6 @@ class RapidFireWeapon extends Weapon{
        }
     
   }
-  
-  public ArrayList<GameSprite> sprites = new ArrayList<GameSprite>();
-	
-  public String lookDirectionForSprite = "east";
   
   public String toString() { return this.name;}
 }

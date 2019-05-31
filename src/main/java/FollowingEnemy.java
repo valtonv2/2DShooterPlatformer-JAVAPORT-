@@ -63,7 +63,7 @@ class FollowingEnemy extends Enemy{
 	  this.inventory = new HashMap<String, Item>();
 	  
 	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
-	  locationForSprite = Optional.of(location.locationInImage());
+	 
 	  isMovingForSprite = false;
 	  
 	 
@@ -107,7 +107,7 @@ class FollowingEnemy extends Enemy{
     if(this.energy <= 0 ) { this.isShielding = false;}
     if(this.location.locationInGame().getValue() > this.game.currentLevel.dimensions().getValue()) { this.takeDamage(9999.0); }
     
-    locationForSprite = Optional.of(location.locationInImage());
+   
 	
     if(this.xSpeed > 0) isMovingForSprite = true;
     else isMovingForSprite = false;
@@ -276,5 +276,5 @@ class FollowingEnemy extends Enemy{
   
  private Double absDistToPlayer() {return Helper.absoluteDistance(this.game.player.location.locationInGame(), this.location.locationInGame());}
 
- 
+ public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
 }

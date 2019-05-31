@@ -340,6 +340,8 @@ class ItemBox extends UsesGameSprite{
  
  public String lookDirectionForSprite = "east";
  
+ public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location);}
+ 
  
  
    } 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.util.Pair;
 
@@ -28,7 +29,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 
 	  abstract void stop();
 	  abstract void takeDamage(Double amount);
-	  ArrayList<Node> image;
+	  abstract Group image();
 	  public Optional<RotatingArm> arm = Optional.empty();
 	  
 	  //Esineen poimiminen maailmasta
@@ -99,7 +100,6 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	      
 	      this.hasDroppedItem = true;
 	      item.isInWorld = true;
-	      item.locationForSprite = item.locationForSprite();
 	      this.inventory.remove(item.name);
 	      item.locationInWorld = Optional.of(this.location);
 	      game.currentLevel.itemsInWorld.add(item);

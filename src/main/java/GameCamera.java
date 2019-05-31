@@ -85,13 +85,15 @@ class GameCamera {
     List<Node> projectiles = game.projectiles.stream().map(projectile -> projectile.sprite.image()).collect(Collectors.toList());
     List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.tileImage).collect(Collectors.toList());
     
-    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld);
+    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.name).collect(Collectors.toList()));
+    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites).collect(Collectors.toList()));
     List<Node>items = GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites.get(0).image()).collect(Collectors.toList());
     
     
-    List<ArrayList<Node>>almostEnemies = game.enemies.stream().map(enemy -> enemy.image).collect(Collectors.toList());
-    ArrayList<Node>enemies = new ArrayList<Node>();
-    almostEnemies.forEach(list -> list.forEach(image -> enemies.add(image)));
+    List<Group>enemies = game.enemies.stream().map(enemy -> enemy.image()).collect(Collectors.toList());
+    
+    System.out.println(enemies);
+  
     		
     		//.filter(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), this.location.locationInGame()) <= drawDistance ).flatMap(enemy -> enemy.image).collect(Collectors.toList());
     Node cursor = game.mouseCursor.image();
@@ -104,7 +106,7 @@ class GameCamera {
     worldObjects.addAll(projectiles);
     		
     Group guiElements = new Group(GameWindow.PlayerHUD.image(), cursor);
-    guiElements.getChildren().addAll(GameWindow.PlayerHUD.image(), cursor);
+
     
     
     Group zoomables = new Group();

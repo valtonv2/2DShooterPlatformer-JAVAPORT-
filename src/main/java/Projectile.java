@@ -158,5 +158,7 @@ class Projectile extends UsesGameSprite {
 
    
    public String lookDirectionForSprite() { return "east"; }
+   
+   public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
  
 }
