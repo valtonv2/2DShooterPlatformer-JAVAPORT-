@@ -58,6 +58,8 @@ class ShooterEnemy extends Enemy {
 	  this.locationY = locationY;	  
 	  location = new GamePos(new Pair<Double, Double>(locationX, locationY), false);
 	  HP = 200.0;
+	  this.lookDirectionForSprite = "east";
+	  
 	  
 	  this.inventory = new HashMap<String, Item>();
 	  
@@ -187,6 +189,9 @@ class ShooterEnemy extends Enemy {
      }else if(this.actionNumber == 1){
        this.move();
      }
+    
+    
+    this.lookDirectionForSprite = this.lookDirection;
   }
   
  // Idle-toiminto pitää vihollisen paikoillaan 15 tickin ajan
@@ -242,7 +247,7 @@ class ShooterEnemy extends Enemy {
   
   public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
   
-  public String lookDirectionForSprite() {return "east";}
+
   
  
   
