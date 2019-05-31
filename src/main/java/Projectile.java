@@ -149,7 +149,7 @@ class Projectile extends UsesGameSprite {
     }
     this.coillisionDetection();
     this.move();
-    
+  
   }
   
   

@@ -81,7 +81,7 @@ import javafx.scene.Cursor;
 		  this.startY = startY;
 		  this.game = game;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
-		  arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
+		  arm = Optional.of(new RotatingArm(this, new DirectionVector(location.locationInImage(), new Pair<Double, Double>(0.0,0.0))));
 		  this.inventory = new HashMap<String, Item>();
 		  
 	  EventHandler<KeyEvent> playerKeyPressedHandler = new EventHandler<KeyEvent>() {
@@ -317,7 +317,7 @@ import javafx.scene.Cursor;
 		 
 	    this.expMove();
 	    
-	    if(!this.arm.isPresent()) this.arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), GameWindow.currentGame.mouseCursor.location)));
+	    if(!this.arm.isPresent()) this.arm.get().direction.update(this.location.locationInImage(), GameWindow.currentGame.mouseCursor.location);
 	    
 	    if (this.game.mouseCursor.isOnLeft) {this.lookDirection = "west";}
 	    else {this.lookDirection = "east";}

@@ -487,8 +487,11 @@ class DirectionVector {
   //Konstruktori luokalle
   public DirectionVector(Pair<Double, Double> originalStartPoint, Pair<Double, Double> originalEndPoint) {
 	  
-	  this.originalStartPoint = originalStartPoint;
-	  this.originalEndPoint = originalEndPoint;
+    this.originalStartPoint = originalStartPoint;
+	this.originalEndPoint = originalEndPoint;
+	  
+	x = originalEndPoint.getKey() - originalStartPoint.getKey();
+	y = originalEndPoint.getValue() - originalStartPoint.getValue();
 	  
 	  
   }
@@ -583,6 +586,8 @@ public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
 	 return (xDiff <= limitDistance && yDiff <= limitDistance);
 	 
  }
+ 
+ public String toString() {return "GP: (" + this.locationInGame() + ")";}
  
   
 }

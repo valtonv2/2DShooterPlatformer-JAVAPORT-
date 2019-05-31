@@ -12,7 +12,6 @@ String currentAction;
 Boolean isActive;
 Double ySpeed = 0.0;
 Double xSpeed = 0.0;
-Optional<RotatingArm> arm = Optional.empty();
 Boolean isDead() { return this.HP<=0;}
 public abstract void update();
 

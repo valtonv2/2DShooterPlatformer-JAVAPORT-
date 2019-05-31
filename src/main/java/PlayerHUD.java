@@ -97,7 +97,7 @@ class EquipmentBox {
    
    public void updateItems(){
 	   
-	 Optional<Item> possibleItem = box.item();
+	 Optional<Item> possibleItem = box.containedItem;
      
      if(possibleItem.isPresent() && possibleItem.get() instanceof UtilityItem && ((UtilityItem) possibleItem.get()).isSpent()){
        this.box.removeItem();
@@ -169,7 +169,8 @@ class WeaponHud {
       weaponBoxes.stream().forEach(box -> box.deselect());
       weaponBoxes.get(boxNumber).select();
       player().equippedWeapon = Optional.empty();
-      player().equipWeapon(Optional.of( (Weapon)possibleBox.get().item().get())); //Jos asevalikon laatikossa on jotain se sisältää varmasti aseen
+      
+      if(possibleBox.get().containedItem.isPresent()) player().equipWeapon(Optional.of( (Weapon)possibleBox.get().item().get())); //Jos asevalikon laatikossa on jotain se sisältää varmasti aseen
       
       if(selectedBoxNumber != boxNumber) {
     	  weaponBoxes.get(selectedBoxNumber).deselect();
@@ -180,7 +181,7 @@ class WeaponHud {
       selectedBoxNumber = 0;
       weaponBoxes.get(selectedBoxNumber).select();
       player().equippedWeapon = Optional.empty();
-      player().equipWeapon(Optional.of( (Weapon)weaponBoxes.get(selectedBoxNumber).item().get()));
+      if(possibleBox.get().containedItem.isPresent()) player().equipWeapon(Optional.of( (Weapon)weaponBoxes.get(selectedBoxNumber).item().get()));
       }
      }
   

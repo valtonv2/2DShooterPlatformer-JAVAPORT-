@@ -87,7 +87,7 @@ class FollowingEnemy extends Enemy{
   public void update() {
 
 	  
-	  if(!this.arm.isPresent()) this.arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), GameWindow.currentGame.player.location.locationInImage())));
+	if(!this.arm.isPresent()) this.arm = Optional.of(new RotatingArm(this, new DirectionVector(this.location.locationInImage(), GameWindow.currentGame.player.location.locationInImage())));
 	//Lisätään esine vihollisen tavaraluetteloon
 	if(this.inventory.isEmpty()) this.inventory.put ("Health Pack", new HealthPack(this.game, 5));
     
@@ -171,6 +171,7 @@ class FollowingEnemy extends Enemy{
 	 
 	 if(this.equippedWeapon.isPresent()) {
 		 
+
 		 if(this.game.time % 50 == 0) {this.equippedWeapon.get().fire();} 
 	
 	 }else{
