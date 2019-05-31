@@ -40,7 +40,15 @@ class Level {
   private Double bgX = -2000.0;
   private Double bgY = -4000.0;
   
-  public Rectangle backGround() { return new Rectangle(8000, 8000, bgX, bgY);}
+  private Rectangle bgRect = new Rectangle(bgX, bgY, 8000, 8000);
+  
+  public Rectangle backGround() { 
+	  bgRect.setX(bgX);
+	  bgRect.setY(bgY);
+	  bgRect.setFill(backGroundPattern);
+	  
+	  return bgRect;
+	  }
   
   //Metodi joka siirtää taustaa
   public void moveBackGround(Double dX, Double dY){
@@ -125,7 +133,7 @@ class Level {
         Double xPoint = (x*50.0);
         Double yPoint = (y*50.0);
         EnergyPack energyPack = new EnergyPack(game, 1);
-        System.out.println("Levelcreator: " + energyPack.sprites.get(0).image());
+       
         itemsInWorld.add(energyPack);
         energyPack.isInWorld = true;
         energyPack.locationInWorld = Optional.ofNullable(new GamePos(new Pair<Double, Double>(xPoint, yPoint), false));
@@ -237,6 +245,9 @@ class Level {
     public Pair<Double, Double>locationForCollider;
     
     public Rectangle tileImage;
+    abstract Rectangle image(); 
+    	
+
    
  }
   
@@ -253,11 +264,19 @@ class Level {
 		  this.height2 = height2;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
 		  locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
-		  tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
+		  tileImage = new Rectangle(location.locationInImage().getKey(), location.locationInImage().getValue(), width2, height2);
 		  
 		  tileImage.setFill(pattern);
 				  
 	  }  
+	  
+	  public Rectangle image() {
+		  
+		  this.tileImage.setX(location.locationInImage().getKey());
+		  this.tileImage.setY(location.locationInImage().getValue());
+		  return this.tileImage;
+		  
+	  }
   }
  
   
@@ -290,5 +309,13 @@ class Level {
 		  tileImage.setFill(pattern);
 				  
 	  }  
+    
+    public Rectangle image() {
+		  
+		  this.tileImage.setX(location.locationInImage().getKey());
+		  this.tileImage.setY(location.locationInImage().getValue());
+		  return this.tileImage;
+		  
+	  }
 }
   

@@ -140,6 +140,8 @@ class GameSprite {
 	 public Double spriteWidth;
 	 public Double spriteHeight;
 	 private ImagePattern texture;
+	 
+	 private Rectangle rect; 
 	
     //Konstruktori luokalle
     public GameSprite(String imagePath, Optional<Pair<Double, Double>> imageStartLocation, Pair<Double, Double >imageDimensions, UsesGameSprite user, Pair<Double, Double> locationOffset, Optional<Pair<Double, Double>> overrideLocation) {
@@ -150,16 +152,19 @@ class GameSprite {
   		  this.user = user;
   		  this.locationOffset = locationOffset;
   		  this.overrideLocation = overrideLocation;
+  		  spriteWidth = imageDimensions.getKey();
+  		  spriteHeight = imageDimensions.getValue();
+  		 
+  		  rect = new Rectangle(0.0, 0.0, spriteWidth, spriteHeight);
   		  
-  		 spriteWidth = imageDimensions.getKey();
-  		 spriteHeight = imageDimensions.getValue();
+  		
   		 
   		 texture = new ImagePattern(new javafx.scene.image.Image(imagePath), 0,0,1,1,true);
   		  
     }
 	
 	
-	
+   
  
   
  
@@ -167,15 +172,19 @@ class GameSprite {
  public Rectangle normalImage() {
   
   if(this.overrideLocation.isPresent()) {
-    
-  Rectangle rect = new Rectangle(this.overrideLocation.get().getKey() + locationOffset.getKey(), this.overrideLocation.get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+   
+  rect.setX(overrideLocation.get().getKey()+ locationOffset.getKey());
+  rect.setY(overrideLocation.get().getValue()+ locationOffset.getValue());
+  
   rect.setFill(texture);
   return rect;
   
   
  }else { 
-   System.out.println("LFS" + user.locationForSprite());
-  Rectangle rect = new Rectangle(user.locationForSprite().get().getKey() + locationOffset.getKey(), user.locationForSprite().get().getValue() + locationOffset.getValue(), spriteWidth, spriteHeight);
+	 
+   rect.setX(user.locationForSprite().get().getKey());
+   rect.setY(user.locationForSprite().get().getValue());	 
+
   rect.setFill(texture);
   return rect;
   }
@@ -506,7 +515,7 @@ class GamePos{
  Pair<Double, Double> inGameCoordinates; 
  Boolean isCenter;
  
- public Optional<GameCamera> center = GameWindow.gameCamera;
+ public Optional<GameCamera> center() { return GameWindow.gameCamera;}
 
  private Double inGameX;
  private Double inGameY;
@@ -531,15 +540,15 @@ public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
  
  public Pair<Double, Double> locationInImage() {
 		 
-	if(center.isPresent()) {
+	if(center().isPresent()) {
 		
-		 if (!this.isCenter){return new Pair<Double, Double>(inGameX-center.get().location.locationInGame().getKey()+center.get().location.locationInImage().getKey(), inGameY - center.get().location.locationInGame().getValue() + center.get().location.locationInImage().getValue() + playerHeightOffset);}
+		 if (!this.isCenter){return new Pair<Double, Double>(inGameX-center().get().location.locationInGame().getKey()+center().get().location.locationInImage().getKey(), inGameY - center().get().location.locationInGame().getValue() + center().get().location.locationInImage().getValue() + playerHeightOffset);}
 	     else { return new Pair<Double, Double>(GameWindow.stage.getWidth()/2 ,GameWindow.stage.getHeight()/2);}
 		
 		
 	} else {
 		
-		return new Pair<Double, Double>(0.0, 0.0);
+		return new Pair<Double, Double>(400.0, 400.0);
 	
 	}	 		 
  }

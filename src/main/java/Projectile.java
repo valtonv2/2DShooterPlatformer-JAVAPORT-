@@ -28,8 +28,6 @@ class Projectile extends UsesGameSprite {
   
   public GamePos location;
   
-  public Optional<Pair<Double, Double>> locationForSprite;
-  
   GameSprite sprite = new GameSprite("file:src/main/resources/Pictures/Projectile.png", Optional.empty(), new Pair<Double, Double>(30.0, 30.0), this, new Pair<Double, Double>(0.0,7.0), Optional.empty());
   //Konstruktori luokalle
   public Projectile(Game game, DirectionVector direction, Double speed, Double locationModifierX, Double locationModifierY, Actor shooter) {
@@ -46,7 +44,8 @@ class Projectile extends UsesGameSprite {
 	  level = game.currentLevel;
 	  setDir = direction.copy();
 	  location = new GamePos(new Pair<Double, Double>(xCoordinate(), yCoordinate()), false);
-	  locationForSprite = Optional.ofNullable(location.locationInImage());
+	  
+	  lookDirectionForSprite = "east"; 
 	  
 	  //Lisätään ammus pelin ammusten listaan. Sen avulla kaikkia ammuksia on helppo hallita
 	  game.projectiles.add(this);
@@ -155,9 +154,6 @@ class Projectile extends UsesGameSprite {
   
   
    private Pair<Double, Double> axisDistance(Pair<Double, Double> a, Pair<Double, Double> b) {return Helper.axisDistance(a, b); }
-
-   
-   public String lookDirectionForSprite() { return "east"; }
    
    public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location.locationInImage());}
  

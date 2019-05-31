@@ -259,7 +259,7 @@ class ItemBox extends UsesGameSprite{
   
   private Optional<Item> containedItem = Optional.empty();
   private Boolean isSelected = false;
-  public Optional<Pair<Double, Double>> locationForSprite;
+
   
   public GameSprite sprites[] = {
    new GameSprite("file:src/main/resources/Pictures/ItemBoxNotSelected.png", Optional.empty(), new Pair<Double, Double>(60.0, 60.0), this, new Pair<Double, Double>(0.0,0.0), Optional.empty()),  //Tyhjä
@@ -272,7 +272,7 @@ class ItemBox extends UsesGameSprite{
 	
 	  this.location = location;
 	  this.game = game;
-	  locationForSprite = Optional.of(this.location);
+	  lookDirectionForSprite = "east";
 	
 }
   
@@ -338,7 +338,6 @@ class ItemBox extends UsesGameSprite{
  
  public Optional<Item> item() { return this.containedItem;}
  
- public String lookDirectionForSprite = "east";
  
  public Optional<Pair<Double, Double>> locationForSprite(){return Optional.ofNullable(this.location);}
  

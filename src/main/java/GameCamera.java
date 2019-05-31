@@ -78,27 +78,27 @@ class GameCamera {
   
   //Luo pelin kuvan joka välitetään gamelle ja sen jälkeen GUI:lle
   public Group cameraImage()  {
-   System.out.println(" Kameran Metodia kutsutaan");
+  
     Group moonMan = new Group(); 
     moonMan.getChildren().addAll(followee.image());
     Node arm = followee.arm.get().completeImage();
     List<Node> projectiles = game.projectiles.stream().map(projectile -> projectile.sprite.image()).collect(Collectors.toList());
-    List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.tileImage).collect(Collectors.toList());
+    List<Node> tiles = drawnEnvironment().stream().map(tile -> tile.image()).collect(Collectors.toList());
     
-    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.name).collect(Collectors.toList()));
-    System.out.println("GC: " + GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites).collect(Collectors.toList()));
+   
     List<Node>items = GameWindow.currentGame.currentLevel.itemsInWorld.stream().map( item -> item.sprites.get(0).image()).collect(Collectors.toList());
     
     
     List<Group>enemies = game.enemies.stream().map(enemy -> enemy.image()).collect(Collectors.toList());
     
-    System.out.println(enemies);
+
   
     		
     		//.filter(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), this.location.locationInGame()) <= drawDistance ).flatMap(enemy -> enemy.image).collect(Collectors.toList());
     Node cursor = game.mouseCursor.image();
     
     ArrayList<Node> worldObjects = new ArrayList<Node>(); 
+    worldObjects.add(GameWindow.currentGame.currentLevel.backGround());
     worldObjects.addAll(tiles);
     worldObjects.addAll(items);
     worldObjects.add(moonMan);
