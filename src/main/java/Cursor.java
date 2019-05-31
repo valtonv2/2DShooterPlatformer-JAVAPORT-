@@ -25,7 +25,7 @@ class MouseCursor{
   
   //Luodaan kuva
   public Rectangle image() {
-	  Rectangle rect = new Rectangle(30, 30, xCoordinate-15, yCoordinate -15);
+	  Rectangle rect = new Rectangle(xCoordinate-15, yCoordinate -15, 30, 30);
 	  rect.setFill(pattern);
 	  return rect;  
 	  

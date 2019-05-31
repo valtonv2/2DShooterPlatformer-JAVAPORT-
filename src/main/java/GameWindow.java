@@ -92,7 +92,7 @@ public void start(Stage primaryStage) {
   GameWindow.currentGame.fullImage.setCursor(Cursor.NONE);
   
   if(!currentGame.isOver){
-    
+    currentGame.imageContent.getChildren().clear();
     currentGame.camera.update();
     player().updateState();
     currentGame.imageContent.getChildren().addAll(currentGame.camera.cameraImage()); // Muuttaa fullimagen sisältöä ja näin animoi asiat
