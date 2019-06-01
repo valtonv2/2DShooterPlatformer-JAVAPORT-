@@ -46,9 +46,9 @@ import javafx.scene.Cursor;
 	  	  
 	  //Pelaajan kuvat
 	  
-	  private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/MoonmanWalk", "MoonmanWalk", 4, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), false);
+	  private AnimatedGameSprite body = new AnimatedGameSprite("file:src/main/resources/Pictures/MoonmanWalk", "MoonmanWalk", 4, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-10.0,-45.0), false);
 	
-	  private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-30.0,-45.0), true);
+	  private AnimatedGameSprite shield = new AnimatedGameSprite("file:src/main/resources/Pictures/ShieldAnimated", "Shield", 5, ".png", Optional.empty(), new Pair<Double, Double>(60.0,90.0), this, new Pair<Double, Double>(-10.0,-45.0), true);
 
 	  
 	  //Audio
@@ -64,8 +64,8 @@ import javafx.scene.Cursor;
 	   * Kolmea sijaintia käytetään, jotta pelaaja ei tietyin välimatkoin pääsisi "putoamaan" maan sisään.
 	  */
 	   
-	 private Collider northCollider = new Collider("north", this, 0.0,  -this.body.spriteHeight/2+15, "horizontal");
-	 Collider southCollider = new Collider("south", this, 0.0,  this.body.spriteHeight/2-12, "horizontal");
+	 private Collider northCollider = new Collider("north", this, 0.0,  -this.body.spriteHeight/2, "horizontal");
+	 Collider southCollider = new Collider("south", this, 0.0,  this.body.spriteHeight/2-25, "horizontal");
 	 private Collider eastCollider = new Collider("east", this, this.body.spriteWidth/2 - 20, -30.0, "vertical");
 	 private Collider westCollider = new Collider("west", this, -this.body.spriteWidth/2 + 20, -30.0, "vertical");
 	  

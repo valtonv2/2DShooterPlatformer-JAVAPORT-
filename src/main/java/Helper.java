@@ -371,8 +371,8 @@ DirectionVector direction;
  private Pair<Double, Double> pivotPoint() {
 	 
 	if(Optional.ofNullable(user.location.locationInImage()).isPresent()) {
-	 
-		 return user.location.locationInImage();
+	     GamePos x = user.location; 
+		 return new Pair<Double, Double>(x.locationInImage().getKey(), x.locationInImage().getValue());
 	 
 	 }else {
 		 
