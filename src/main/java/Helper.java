@@ -171,6 +171,7 @@ class GameSprite {
  
  public Rectangle normalImage() {
   
+  rect.getTransforms().clear();	 
   if(this.overrideLocation.isPresent()) {
    
   rect.setX(overrideLocation.get().getKey()+ locationOffset.getKey());
@@ -193,7 +194,10 @@ class GameSprite {
  
  private Rectangle mirrorImage() {
    Rectangle img = normalImage();
-   Helper.transformToNode(img, this.mirrorRotate());
+   mirrorRotate.setPivotX(userSpriteLocation().getKey());
+   mirrorRotate.setPivotY(userSpriteLocation().getValue());
+   img.getTransforms().clear();
+   img.getTransforms().add(mirrorRotate);
    return img;
  }
  
@@ -231,11 +235,8 @@ class GameSprite {
  
 
  
-  private ArrayList<Rotate> mirrorRotate() {
-	 ArrayList<Rotate> done = new ArrayList<Rotate>();
-	 done.add(new Rotate(180.0, userSpriteLocation().getKey(), userSpriteLocation().getValue() , 0, Rotate.Y_AXIS));
-	 return done;
-  }
+  private Rotate mirrorRotate = new Rotate(180.0, 0.0, 0.0 , 0.0, Rotate.Y_AXIS); 
+	
   
 }
 
