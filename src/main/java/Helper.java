@@ -183,8 +183,8 @@ class GameSprite {
   
  }else { 
 	 
-   rect.setX(user.locationForSprite().get().getKey());
-   rect.setY(user.locationForSprite().get().getValue());	 
+   rect.setX(user.locationForSprite().get().getKey()+ locationOffset.getKey());
+   rect.setY(user.locationForSprite().get().getValue()+ locationOffset.getValue());	 
 
   rect.setFill(texture);
   return rect;

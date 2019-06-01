@@ -173,7 +173,7 @@ class Collider{
   
   public Boolean tileIsInList(List<GameTile>list, Pair<Double, Double> location, Double distance) {
 	  
-	  return list.stream().anyMatch(tile -> tile.location.isNearCoordPair(location, distance));
+	  return list.stream().anyMatch(tile -> tile.locationForCollider.isNearCoordPair(location, distance));
 	  
   }
 }

@@ -33,7 +33,7 @@ class ShooterEnemy extends Enemy {
   public Player player;
   private int itemDropIndex = 0;
 
-  private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -90.0), Optional.empty());
+  private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -45.0), Optional.empty());
   private String currentAction = "idling";
   
  

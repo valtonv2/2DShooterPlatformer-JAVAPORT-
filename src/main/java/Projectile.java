@@ -77,7 +77,7 @@ class Projectile extends UsesGameSprite {
   //Huolehtii törmäyksistä
   public void coillisionDetection()  {
     //Ammus ja seinä
-    if(level.levelGeometryHitBox.stream().map(tile -> tile.locationForCollider).anyMatch(coordPair -> axisDistance(coordPair, this.location.locationInGame()).getKey() <= projectileRadius + 25  && axisDistance(coordPair, this.location.locationInGame()).getValue() <= projectileRadius + 25)){
+    if(level.levelGeometryHitBox.stream().map(tile -> tile.locationForCollider).anyMatch(pos -> pos.isNearOther(this.location, projectileRadius + 25.0))){
       this.hasCollided = true;
       
      }

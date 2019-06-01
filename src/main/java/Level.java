@@ -242,7 +242,7 @@ class Level {
 	protected Double height2;
     
     public GamePos location;
-    public Pair<Double, Double>locationForCollider;
+    public GamePos locationForCollider;
     
     public Rectangle tileImage;
     abstract Rectangle image(); 
@@ -263,7 +263,7 @@ class Level {
 		  this.width2 = width2;
 		  this.height2 = height2;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
-		  locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
+		  locationForCollider = new GamePos(new Pair<Double, Double>(startX + 25.0, startY + 25.0), false);
 		  tileImage = new Rectangle(location.locationInImage().getKey(), location.locationInImage().getValue(), width2, height2);
 		  
 		  tileImage.setFill(pattern);
@@ -302,7 +302,7 @@ class Level {
 		  this.height2 = height2;
 		  this.function = function;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
-		  locationForCollider = new Pair<Double, Double>(startX + 25.0, startY + 25.0);
+		  locationForCollider = new GamePos( new Pair<Double, Double>(startX + 25.0, startY + 25.0), false);
 		  tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
 		  
 		  
