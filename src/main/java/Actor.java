@@ -19,7 +19,7 @@ abstract class Actor extends UsesAnimatedGameSprite {
 	  Boolean hasDroppedItem = false;
 	  int height = 90;
 	  int width = 60;
-	  String lookDirection = "east";
+	  String lookDirection = "";
 	  
 	 
 	  //Tavaraluettelo

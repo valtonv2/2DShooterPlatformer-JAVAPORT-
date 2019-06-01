@@ -383,10 +383,11 @@ DirectionVector direction;
  }
   
  public Group completeImage() {
-	 	 
+	 
+	armRotate.setPivotX(pivotPoint().getKey());
+	armRotate.setPivotY(pivotPoint().getValue()); 
     armRotate.setAngle( this.direction.angle() * 50);
-    armRotate.setPivotX(pivotPoint().getKey());
-    armRotate.setPivotY(pivotPoint().getValue());
+   
    
     Group group = new Group(); 
     

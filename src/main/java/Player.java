@@ -322,6 +322,7 @@ import javafx.scene.Cursor;
 	    if (this.game.mouseCursor.isOnLeft) {this.lookDirection = "west";}
 	    else {this.lookDirection = "east";}
 	    
+	    lookDirectionForSprite = this.lookDirection;
 	    //Päivittää pelaajan collidereja ja mahdollistaa törmäykset
 	    this.colliders.forEach(collider -> collider.update());
 	    
@@ -345,7 +346,7 @@ import javafx.scene.Cursor;
 	    if(this.isShielding && this.energy == 0) {this.isShielding = false;}
 	    
 	    if (this.isDead) { game.isOver = true;}
-	   
+	      
 	    this.arm.get().direction.update(this.location.locationInImage(), this.game.mouseCursor.location);
 	      
 	    GameWindow.PlayerHUD.healthBar.setValue(this.HP / this.maxHP);
