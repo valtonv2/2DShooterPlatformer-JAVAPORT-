@@ -304,7 +304,7 @@ class Level {
 		  this.function = function;
 		  location = new GamePos(new Pair<Double, Double>(startX, startY), false);
 		  locationForCollider = new GamePos( new Pair<Double, Double>(startX + 25.0, startY + 25.0), false);
-		  tileImage = new Rectangle(width2, height2, location.locationInImage().getKey(), location.locationInImage().getValue());
+		  tileImage = new Rectangle(location.locationInImage().getKey(), location.locationInImage().getValue(), width2, height2);
 		  
 		  
 		  tileImage.setFill(pattern);
