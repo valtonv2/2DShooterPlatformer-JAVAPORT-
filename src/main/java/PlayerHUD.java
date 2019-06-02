@@ -64,6 +64,7 @@ class EquipmentBox {
   
   
   public void moveRight() {
+	  System.out.println("Tried to move right in equipmentmenu");
     
     if(this.selectedIndex < this.possibleContents().size() - 1) {
     	
@@ -80,7 +81,7 @@ class EquipmentBox {
   }
   
    public void moveLeft() {
-    
+	   System.out.println("Tried to move left in equipmentmenu");
 	   if(this.selectedIndex > 0) {
 		    	
 		    selectedIndex =  selectedIndex - 1;
@@ -88,7 +89,7 @@ class EquipmentBox {
 		    	
 	   }else{
 		    	
-		    this.selectedIndex = this.possibleContents().size() - 1;
+		    this.selectedIndex = Math.max(this.possibleContents().size() - 1, 0);
 		    this.updateItems();
 		    	
 		    }
@@ -99,15 +100,18 @@ class EquipmentBox {
 	   
 	 Optional<Item> possibleItem = box.containedItem;
      
+	 //Jos esineellä ei enää ole käyttökertoja se poistetaan
      if(possibleItem.isPresent() && possibleItem.get() instanceof UtilityItem && ((UtilityItem) possibleItem.get()).isSpent()){
        this.box.removeItem();
        player().equippedUtilityItem = Optional.empty();
+       player().inventory.remove(possibleItem.get().name, possibleItem.get());
      }
      
-     if (IntStream.range(0, possibleContents().size()-1).anyMatch(num -> num == selectedIndex)) selectedIndex = Math.max(this.possibleContents().size()-1,0);
+     //if (IntStream.range(0, possibleContents().size()-1).anyMatch(num -> num == selectedIndex)) selectedIndex = Math.max(this.possibleContents().size()-1,0);
        
-     if(this.possibleContents().size() == 0) {System.out.println("Tried to update utilityitems but there were none in player inventory");} 
-     else {
+     if(this.possibleContents().size() == 0) {
+    	 System.out.println("Tried to update utilityitems but there were none in player inventory");
+     } else {
     	 UtilityItem item = possibleContents().get(selectedIndex);
          box.insertItem(item);
     	 player().equipUtilItem(item);

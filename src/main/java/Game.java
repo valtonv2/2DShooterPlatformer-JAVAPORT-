@@ -89,6 +89,7 @@ public class Game {
     	   this.currentLevel = firstLevel();
     	   break;
        case 2:
+    	   System.out.println("Moving to level 2");
     	   this.currentLevel = secondLevel();
     	   break;
        default:

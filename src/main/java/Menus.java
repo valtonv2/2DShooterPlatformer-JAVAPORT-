@@ -574,7 +574,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    private Text annotationText = new Text(0,0,"");
 	   
 	        
-	    private AnimatedButton level1Button = new AnimatedButton(
+	     AnimatedButton level1Button = new AnimatedButton(
 	    		this,
 	      "Level 1", //Button text
 	       new Pair<Double, Double>(30.0, -245.0), //Offset from center
@@ -602,7 +602,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      
 	        });
 	    
-	    private AnimatedButton level2Button = new AnimatedButton(
+	     AnimatedButton level2Button = new AnimatedButton(
 	    		this,
 	  	      "Level 2", //Button text
 	  	       new Pair<Double, Double>(30.0, -100.0), //Offset from center
@@ -689,6 +689,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    	content = new Group();
 	    	scene = new Scene(content, 800.0, 800.0);
 	    	name = "Level Select Menu";
+	    	 this.level2Button.lock();
 	    	
 	    }
 	    
@@ -733,14 +734,6 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	      
 	      buttons.stream().forEach(button -> button.refreshLocation());
 	      
-	      if(GameWindow.currentGame.levelCompletionStatus.get(0) == false && !this.level2Button.isLocked){
-	          this.level2Button.lock();
-
-	        }
-	      else if(GameWindow.currentGame.levelCompletionStatus.get(0) == true && this.level2Button.isLocked){
-	          this.level2Button.unlock();
-	         
-	        }
 	      
 	      if (buttons.stream().anyMatch(button -> button.buttonAnnouncement.isPresent())) { this.annotationText.setText(buttons.stream().filter(button -> button.buttonAnnouncement.isPresent()).findAny().get().buttonAnnouncement.get());}
 	      else {this.annotationText.setText("");
@@ -1362,10 +1355,12 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
   }
   
   public void lock() {
+	  System.out.println("Button locked");
 	  this.isLocked = true;
   }
   
   public void unlock() {
+	  System.out.println("Button unlocked");
 	  this.isLocked = false;
   }
   
@@ -1547,6 +1542,7 @@ private abstract class GameButton{
   GameMenu menu;
   public abstract void refreshLocation();
   public abstract Group fullImage();
+
   public  Optional<String> buttonAnnouncement = Optional.empty();
   
 

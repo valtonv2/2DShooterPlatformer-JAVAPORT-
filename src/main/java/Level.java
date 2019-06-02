@@ -179,6 +179,7 @@ class Level {
           GameWindow.menuClock.start();
           GameWindow.clock.stop();
           GameWindow.PlayerHUD.clearAll();                                      //Pelaajan HUD on bugien välttämiseksi tyhjennettävä
+          GameWindow.Menus.LevelSelectMenu.level2Button.unlock();
           GameWindow.stage.setScene(GameWindow.Menus.LevelSelectMenu.scene);
           GameWindow.Menus.currentMenu = GameWindow.Menus.LevelSelectMenu;
      
