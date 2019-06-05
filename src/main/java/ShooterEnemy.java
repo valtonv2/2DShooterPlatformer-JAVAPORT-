@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Random;
 import javafx.scene.media.*;
 
-
 class ShooterEnemy extends Enemy {
 	  
 
@@ -172,7 +171,7 @@ class ShooterEnemy extends Enemy {
     //Vihollisen toiminnon valinta. Valitaan satunnaisesti kun aikaisempi toiminto valmistuu
     if (this.isReadyForNextAction && this.isActive) {
       
-        int chooser = 0;
+        int chooser = 1;
       
         if(chooser == 0){
           this.isReadyForNextAction = false;

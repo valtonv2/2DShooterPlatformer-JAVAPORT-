@@ -126,6 +126,7 @@ class GameCamera {
     
 	zoomTransform.setPivotX(GameWindow.stage.getWidth()/2);
 	zoomTransform.setPivotY(GameWindow.stage.getHeight()/2);
+	
 	this.drawDistance = GameWindow.stage.getWidth()/2+200;
     game.projectiles.forEach(projectile -> projectile.updateState());           //Ammusten tilanpäivitys
     game.enemies.forEach(enemy -> enemy.update());                              //Vihollisten tilan päivitys
@@ -146,14 +147,25 @@ class GameCamera {
   //Kameran zoomaus
   public void changeZoom(Double newLevel) {
     this.zoomCoefficient = newLevel;
+    zoomTransform.setX(zoomCoefficient);
+	zoomTransform.setY(zoomCoefficient);
+
   }
   
   public void zoomIn(Double amount) {
 	  
 	  if(this.zoomCoefficient<5) {
 		  this.zoomCoefficient += amount;
+		 
+		  zoomTransform.setX(zoomCoefficient);
+		  zoomTransform.setY(zoomCoefficient);
+	
 	  }else{ 
 		  this.zoomCoefficient = 5.0;
+		  
+		  zoomTransform.setX(zoomCoefficient);
+		  zoomTransform.setY(zoomCoefficient);
+
 	  }
   }
   
@@ -161,8 +173,13 @@ class GameCamera {
 	  
 	  if(this.zoomCoefficient>0.1) { 
 		  this.zoomCoefficient =  this.zoomCoefficient - amount; 
+		  
+		  zoomTransform.setX(zoomCoefficient);
+		  zoomTransform.setY(zoomCoefficient);
 	  }else{ 
 		  this.zoomCoefficient = 0.1;
+		  zoomTransform.setX(zoomCoefficient);
+		  zoomTransform.setY(zoomCoefficient);
 	  }
   }
   

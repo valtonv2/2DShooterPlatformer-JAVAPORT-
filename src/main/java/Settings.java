@@ -7,7 +7,7 @@ class Settings{
   
   
   //��niasetukset
-  public static boolean muteSound = false;
+  public static boolean muteSound = true;
   
   public static Double musicVolume() { 
 	 
