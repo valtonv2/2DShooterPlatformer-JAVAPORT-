@@ -30,6 +30,7 @@ class ShooterEnemy extends Enemy {
   private Boolean moves = false;
   private Boolean idles = false;
   public Player player;
+  private Random rand = new Random();
   private int itemDropIndex = 0;
 
   private GameSprite newImage = new GameSprite("file:src/main/resources/Pictures/Enemy.png", Optional.empty(), new Pair<Double, Double>(60.0, 90.0), this, new Pair<Double, Double>(-30.0, -45.0), Optional.empty());
@@ -171,7 +172,7 @@ class ShooterEnemy extends Enemy {
     //Vihollisen toiminnon valinta. Valitaan satunnaisesti kun aikaisempi toiminto valmistuu
     if (this.isReadyForNextAction && this.isActive) {
       
-        int chooser = 1;
+        int chooser = rand.nextInt(2);
       
         if(chooser == 0){
           this.isReadyForNextAction = false;
@@ -225,11 +226,12 @@ class ShooterEnemy extends Enemy {
     if (this.actionCounter == 15) {
       this.isReadyForNextAction = true;
       this.actionCounter = 0;
+      
+    this.actionCounter += 1.0;
+    }
     
     this.location.move(this.xSpeed, this.ySpeed);
     
-    this.actionCounter += 1.0;
-    }
   }
   
   public void takeDamage(Double amount)  {
