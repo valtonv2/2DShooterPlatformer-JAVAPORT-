@@ -166,7 +166,8 @@ class FollowingEnemy extends Enemy{
     return new Pair<String, String>(xStatus, yStatus);
       
   }
-  
+
+ 
  private void shoot() {
 	 
 	 if(this.equippedWeapon.isPresent()) {

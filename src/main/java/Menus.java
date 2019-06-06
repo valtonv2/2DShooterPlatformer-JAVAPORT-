@@ -921,7 +921,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	    private AnimatedButton slot3Button = new AnimatedButton(
 	    		this,
 	       "Slot 3", //Button text
-	       new Pair<Double, Double>(-100.0, -100.0), //Offset from center
+	       new Pair<Double, Double>(-100.0, 100.0), //Offset from center
 	       new Pair<Double, Double>(200.0, 100.0),  //Dimensions
 	       "file:src/main/resources/Pictures/GrayRectButtonNormal.png", //Normal image path
 	       "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
@@ -1098,7 +1098,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
     private AnimatedButton slot3Button = new AnimatedButton(
     		this,
        "Slot 3", //Button text
-       new Pair<Double, Double>(-100.0, -100.0), //Offset from center
+       new Pair<Double, Double>(-100.0, 100.0), //Offset from center
        new Pair<Double, Double>(200.0, 100.0),  //Dimensions
        "file:src/main/resources/Pictures/GrayRectButtonNormal.png", //Normal image path
        "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
