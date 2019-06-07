@@ -90,7 +90,11 @@ class GameCamera {
     
     List<Group>enemies = game.enemies.stream().map(enemy -> enemy.image()).collect(Collectors.toList());
     
-
+    ArrayList<Node>effects = new ArrayList<Node>();
+    
+    if(!level().effects.isEmpty()) {
+    	level().effects.stream().map(effect -> effect.image.image()).forEach(image -> effects.add(image));
+    }
   
     		
     		//.filter(enemy -> Helper.absoluteDistance(enemy.location.locationInGame(), this.location.locationInGame()) <= drawDistance ).flatMap(enemy -> enemy.image).collect(Collectors.toList());
@@ -98,6 +102,7 @@ class GameCamera {
     
     ArrayList<Node> worldObjects = new ArrayList<Node>(); 
     worldObjects.add(GameWindow.currentGame.currentLevel.backGround());
+    worldObjects.addAll(effects);
     worldObjects.addAll(tiles);
     worldObjects.addAll(items);
     worldObjects.add(moonMan);
@@ -131,6 +136,7 @@ class GameCamera {
     game.projectiles.forEach(projectile -> projectile.updateState());           //Ammusten tilanpäivitys
     game.enemies.forEach(enemy -> enemy.update());                              //Vihollisten tilan päivitys
     level().moveBackGround(-0.1 * game.player.xSpeed, -0.1 * game.player.ySpeed);  //Taustan siirto
+    level().effects.stream().forEach(effect -> effect.move());
     if(followPlayer) { location.teleport(followee.location.locationInGame()); }       //Pelaajan seuraaminen
     if(zoomCoefficient < 1){
     drawDistance = GameWindow.stage.getWidth()/2+200 + (1/zoomCoefficient)*(GameWindow.stage.getWidth()/2)+500;      //Piirtoetäisyyden päivitys

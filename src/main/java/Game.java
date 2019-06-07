@@ -33,7 +33,13 @@ public class Game {
   public Level currentLevel = firstLevel();
   public String currentLevelName = "";
   
-  private Level firstLevel() {return new Level("Large City", 1,"file:src/main/resources/Pictures/LevelImageLarge.png", "file:src/main/resources/Pictures/DarkClouds.png", this);}
+  private Level firstLevel() {
+	  
+	  Level level = new Level("Large City", 1,"file:src/main/resources/Pictures/LevelImageLarge.png", "file:src/main/resources/Pictures/DarkClouds.png", this);
+	  level.effects.add(new Effect("file:src/main/resources/Pictures/Clouds.png", 3480.0, 900.0, 1.5, 0.0, 2000.0));
+	  return level;
+	  
+  }
   private Level secondLevel(){return new Level("Boxes", 2, "file:src/main/resources/Pictures/LevelFloatingBoxes.png", "file:src/main/resources/Pictures/Earth.jpg", this);}
   
   public ArrayList<Boolean> levelCompletionStatus = new ArrayList<Boolean>();

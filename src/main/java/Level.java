@@ -42,6 +42,8 @@ class Level {
   
   private Rectangle bgRect = new Rectangle(bgX, bgY, 8000, 8000);
   
+  public ArrayList<Effect> effects = new ArrayList<Effect>();
+  
   public Rectangle backGround() { 
 	  bgRect.setX(bgX);
 	  bgRect.setY(bgY);

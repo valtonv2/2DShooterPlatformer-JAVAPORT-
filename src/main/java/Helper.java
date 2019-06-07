@@ -589,6 +589,21 @@ public GamePos(Pair<Double, Double> inGameCoord, Boolean isCenterOfAll) {
 	 
  }
  
+ public Double distance(GamePos other) {
+	 
+	 Pair<Double, Double> first = this.locationInGame();
+	 Pair<Double, Double> second = other.locationInGame();
+	 
+	 Double xDiff = Math.abs(second.getKey() - first.getKey());
+	 Double yDiff = Math.abs(second.getValue() - first.getValue());
+	 
+	 Double result = Math.sqrt(Math.pow(xDiff,2) + Math.pow(yDiff, 2));
+	 
+	 return result;
+	 
+	 
+ }
+ 
  public String toString() {return "GP: (" + this.locationInGame() + ")";}
  
   
