@@ -50,7 +50,9 @@ public class LevelCreator {
 	public void refresh() {
 		
 		levelArea.refresh();
-		
+		window.getChildren().clear();
+		window.getChildren().add(levelArea.areaImage);
+		System.out.println("Refreshing");
 	}
 	
 }
@@ -75,7 +77,7 @@ class LevelArea {
 			for(int x = 0; x<xBlocks; x++) {
 				
 				this.area.add(new GridTile(new GamePos(new Pair<Double, Double>(x*50.0, y*50.0), false)));
-				
+				System.out.println("(" + x*50 + " ; " + y*50 + ")");
 			}
 		}
 	}
@@ -101,6 +103,12 @@ class GridTile{
    public GridTile(GamePos location) {
 	   
 	   this.location = location;
+	   
+	   this.selectedImage.setX(this.location.locationInGame().getKey());
+	   this.selectedImage.setY(this.location.locationInGame().getValue());
+	   
+	   this.idleImage.setX(this.location.locationInGame().getKey());
+	   this.idleImage.setY(this.location.locationInGame().getValue());
 
 	   EventHandler<MouseEvent> mouseEnterHandler = new EventHandler<MouseEvent>() {
 		  	public void handle(MouseEvent event) {

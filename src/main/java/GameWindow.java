@@ -137,13 +137,15 @@ public void start(Stage primaryStage) {
     
     try{
     
+    levelCreator.refresh();
+    	
     Menus.currentMenu.scene.setCursor(Cursor.DEFAULT);
     Menus.currentMenu.refresh();
     if(Menus.currentMenu.theme.isPresent() && !Menus.currentMenu.theme.get().isPlaying()) Menus.currentMenu.theme.get().play(Settings.musicVolume());
     if(Menus.currentMenu.theme.isPresent() && Menus.currentMenu.theme.get().isPlaying()){
       Menus.currentMenu.theme.get().setVolume(Settings.musicVolume());
       
-      levelCreator.refresh();
+      
      
     }
    
