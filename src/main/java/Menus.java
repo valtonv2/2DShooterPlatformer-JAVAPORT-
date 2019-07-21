@@ -182,6 +182,25 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 		    	  }
 	 	    		
 	 	    	        });
+	    
+	    private AnimatedButton creatorButton = new AnimatedButton(
+	    		this,
+	 	    "Level Creator", //Button text
+	 	     new Pair<Double, Double>(-300.0, 200.0), //Offset from center
+	 	     new Pair<Double, Double>(200.0, 50.0),  //Dimensions
+	 	     "file:src/main/resources/Pictures/GrayRectButtonNormal.png", //Normal image path
+	 	     "file:src/main/resources/Pictures/GrayRectButtonHover.png", //Hover image path
+	 	     "file:src/main/resources/Pictures/GrayRectButtonpressed.png",//Pressed image path
+	 	     Optional.empty(), //Announcement
+	 	    new Runnable(){    //Action
+	 		      
+		    	  @Override
+		    	  public void run() {
+		    	  
+	 	    	      
+		    		  GameWindow.stage.setScene(GameWindow.levelCreator.scene);
+	 	    		
+		    	  }});
 	    	    
 	    
 	    private AnimatedButton exitButton = new AnimatedButton(
@@ -231,6 +250,7 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
 	          buttons.add(loadButton); 
 	          buttons.add(saveButton); 
 	    	  buttons.add(exitButton);
+	    	  buttons.add(creatorButton);
 	    	  } 
 	      
 	      if(content.getChildren().isEmpty()) {

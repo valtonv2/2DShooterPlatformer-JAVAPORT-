@@ -33,6 +33,7 @@ public static Stage stage;
 public static Menus Menus;
 public static Optional<GameCamera> gameCamera = Optional.empty(); //GamePos-luokka laskee sijainnit kuvassa tämän suhteen. 
 public static Game currentGame;
+public static LevelCreator levelCreator;
 public static PlayerHUD PlayerHUD;
 
 public static AnimationTimer clock = new AnimationTimer() {
@@ -72,6 +73,8 @@ public void start(Stage primaryStage) {
     gameCamera = Optional.ofNullable(currentGame.camera);
     
     PlayerHUD = new PlayerHUD();
+    
+    levelCreator = new LevelCreator();
     
     primaryStage.setScene(Menus.mainMenu.scene);
     
@@ -139,6 +142,8 @@ public void start(Stage primaryStage) {
     if(Menus.currentMenu.theme.isPresent() && !Menus.currentMenu.theme.get().isPlaying()) Menus.currentMenu.theme.get().play(Settings.musicVolume());
     if(Menus.currentMenu.theme.isPresent() && Menus.currentMenu.theme.get().isPlaying()){
       Menus.currentMenu.theme.get().setVolume(Settings.musicVolume());
+      
+      levelCreator.refresh();
      
     }
    
