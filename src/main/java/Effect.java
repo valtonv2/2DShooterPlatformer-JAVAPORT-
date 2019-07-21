@@ -57,12 +57,21 @@ class Effect extends UsesGameSprite{
 		
 	}
 	
+	private GamePos playerLocation() {
+		
+		Optional<GamePos> playerLoc = Optional.ofNullable(GameWindow.currentGame.player.location);
+		
+		if(playerLoc.isPresent()) return playerLoc.get();
+		else return new GamePos(new Pair<Double, Double>(0.0, 0.0), false);
+		
+	}
+	
 	
 	public void move() {
 		
-		if(this.location.distance(this.startLocation) > this.limitDistance) {
+		if(this.location.distance(playerLocation()) > this.limitDistance) {
 			
-			this.location.teleport(this.startLocation.locationInGame());
+			this.location.teleport(new Pair<Double, Double>(playerLocation().locationInGame().getKey() - limitDistance + 1, playerLocation().locationInGame().getValue()));
 		
 		}else {
 			

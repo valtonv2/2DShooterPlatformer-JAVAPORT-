@@ -36,7 +36,7 @@ public class Game {
   private Level firstLevel() {
 	  
 	  Level level = new Level("Large City", 1,"file:src/main/resources/Pictures/LevelImageLarge.png", "file:src/main/resources/Pictures/DarkClouds.png", this);
-	  level.effects.add(new Effect("file:src/main/resources/Pictures/Clouds.png", 3480.0, 900.0, 1.5, 0.0, 2000.0));
+	  level.effects.add(new Effect("file:src/main/resources/Pictures/Clouds.png", 3480.0, 900.0, 0.5, 0.0, 2000.0));
 	  return level;
 	  
   }
