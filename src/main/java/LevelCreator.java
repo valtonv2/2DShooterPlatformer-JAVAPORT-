@@ -24,6 +24,8 @@ import java.util.Optional;
 
 import javafx.event.EventHandler;
 import javafx.scene.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -42,7 +44,33 @@ public class LevelCreator {
 	public LevelCreator() {
 		
 		levelArea.refresh();
-		window.getChildren().add(levelArea.areaImage);
+		window.getChildren().add(levelArea.areaImage());
+		
+		 EventHandler<KeyEvent> movementHandler = new EventHandler<KeyEvent>() {
+			  	public void handle(KeyEvent event) {
+			  		
+			  		if(event.getCode() == KeyCode.W) window.setLayoutY(window.getLayoutY()-8);
+			  		if(event.getCode() == KeyCode.S) window.setLayoutY(window.getLayoutY()+8);
+			  		if(event.getCode() == KeyCode.A) window.setLayoutX(window.getLayoutX()-8);
+			  		if(event.getCode() == KeyCode.D) window.setLayoutX(window.getLayoutX()+8);
+			  		
+			  		if(event.getCode() == KeyCode.UP) {
+			  			window.setScaleX(window.getScaleX()+0.1);
+			  			window.setScaleY(window.getScaleY()+0.1);
+			  		}
+			  		
+			  		if(event.getCode() == KeyCode.DOWN) {
+			  			window.setScaleX(window.getScaleX()-0.1);
+			  			window.setScaleY(window.getScaleY()-0.1);
+			  		}
+			  		
+			  		
+			  		
+			  		
+			  	}
+		  };
+		  
+		  scene.addEventFilter(KeyEvent.KEY_PRESSED, movementHandler);
 		
 		
 	}
@@ -50,8 +78,8 @@ public class LevelCreator {
 	public void refresh() {
 		
 		levelArea.refresh();
-		window.getChildren().clear();
-		window.getChildren().add(levelArea.areaImage);
+		//window.getChildren().clear();
+		//window.getChildren().add(levelArea.areaImage);
 		System.out.println("Refreshing");
 	}
 	
@@ -64,7 +92,8 @@ class LevelArea {
 	int yBlocks; //Height of area in blocks
 	
 	ArrayList<GridTile> area = new ArrayList<GridTile>();
-	Group areaImage = new Group();
+	Group tileImages = new Group();
+	Group tileSensors = new Group();
 	
 	
 	public LevelArea(int xBlocks, int yBlocks) {
@@ -80,12 +109,24 @@ class LevelArea {
 				System.out.println("(" + x*50 + " ; " + y*50 + ")");
 			}
 		}
+		area.stream().forEach(tile -> tileSensors.getChildren().add(tile.sensor));
+		
 	}
 	
 	
 	public void refresh() {
-		areaImage = new Group();
-		area.stream().forEach(tile -> areaImage.getChildren().add(tile.image()));
+		tileImages.getChildren().clear();
+		area.stream().forEach(tile -> tileImages.getChildren().add(tile.image()));
+	}
+	
+	public Group areaImage() {
+		
+		Group group = new Group();
+		group.getChildren().add(tileImages);
+		group.getChildren().add(tileSensors);
+		return group;
+		
+		
 	}
 	
 }
@@ -97,8 +138,9 @@ class GridTile{
    Optional<GameTile> content = Optional.ofNullable(null);
    Boolean isSelected = false;
    
-   Rectangle selectedImage = new Rectangle(50, 50, Color.ALICEBLUE);
+   Rectangle selectedImage = new Rectangle(50, 50, Color.BLACK);
    Rectangle idleImage = new Rectangle(50, 50, Color.ORANGERED);
+   Rectangle sensor = new Rectangle(50, 50, Color.TRANSPARENT);
    
    public GridTile(GamePos location) {
 	   
@@ -109,6 +151,9 @@ class GridTile{
 	   
 	   this.idleImage.setX(this.location.locationInGame().getKey());
 	   this.idleImage.setY(this.location.locationInGame().getValue());
+	   
+	   this.sensor.setX(this.location.locationInGame().getKey());
+	   this.sensor.setY(this.location.locationInGame().getValue());
 
 	   EventHandler<MouseEvent> mouseEnterHandler = new EventHandler<MouseEvent>() {
 		  	public void handle(MouseEvent event) {
@@ -122,8 +167,9 @@ class GridTile{
 		  	}
 	  };
 	  
-	  idleImage.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterHandler);
-	  selectedImage.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitHandler);
+	  sensor.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterHandler);
+	  sensor.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitHandler);
+
    }
    
    public Group image() {
@@ -147,6 +193,7 @@ class GridTile{
 		   
 	   } 
    }
+   
    
    public void addContent(GameTile content) {
 	   this.content = Optional.of(content);
