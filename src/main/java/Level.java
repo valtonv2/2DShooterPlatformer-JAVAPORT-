@@ -1,6 +1,7 @@
 package main.java;
 
 import javafx.scene.shape.*;
+import javafx.scene.transform.Rotate;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -249,6 +250,14 @@ class Level {
     
     public Rectangle tileImage;
     abstract Rectangle image(); 
+    
+    
+    public void rotate(Double deg) {
+    	
+    	Rotate transform = new Rotate(deg, location.locationInImage().getKey()+25, location.locationInImage().getValue()+25);
+    	tileImage.getTransforms().add(transform);
+    	
+    }
     	
 
    

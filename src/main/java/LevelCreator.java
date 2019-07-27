@@ -21,13 +21,16 @@
 package main.java;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javafx.event.EventHandler;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
@@ -36,32 +39,38 @@ public class LevelCreator {
 	
 	LevelArea levelArea = new LevelArea(20, 20);
 	
+	CreatorCursor cursor = new CreatorCursor();
+	
 	//The container for the level creator elements. Is given to GameWindow.
 	public Group window = new Group();
+	
+	private Group area = new Group();
 	
 	public Scene scene = new Scene(window, 800, 800);
 	
 	public LevelCreator() {
 		
 		levelArea.refresh();
-		window.getChildren().add(levelArea.areaImage());
+		area.getChildren().add(levelArea.areaImage());
+		window.getChildren().add(area);
+		
 		
 		 EventHandler<KeyEvent> movementHandler = new EventHandler<KeyEvent>() {
 			  	public void handle(KeyEvent event) {
 			  		
-			  		if(event.getCode() == KeyCode.W) window.setLayoutY(window.getLayoutY()-8);
-			  		if(event.getCode() == KeyCode.S) window.setLayoutY(window.getLayoutY()+8);
-			  		if(event.getCode() == KeyCode.A) window.setLayoutX(window.getLayoutX()-8);
-			  		if(event.getCode() == KeyCode.D) window.setLayoutX(window.getLayoutX()+8);
+			  		if(event.getCode() == KeyCode.W) area.setLayoutY(area.getLayoutY()-8);
+			  		if(event.getCode() == KeyCode.S) area.setLayoutY(area.getLayoutY()+8);
+			  		if(event.getCode() == KeyCode.A) area.setLayoutX(area.getLayoutX()-8);
+			  		if(event.getCode() == KeyCode.D) area.setLayoutX(area.getLayoutX()+8);
 			  		
 			  		if(event.getCode() == KeyCode.UP) {
-			  			window.setScaleX(window.getScaleX()+0.1);
-			  			window.setScaleY(window.getScaleY()+0.1);
+			  			area.setScaleX(area.getScaleX()+0.1);
+			  			area.setScaleY(area.getScaleY()+0.1);
 			  		}
 			  		
 			  		if(event.getCode() == KeyCode.DOWN) {
-			  			window.setScaleX(window.getScaleX()-0.1);
-			  			window.setScaleY(window.getScaleY()-0.1);
+			  			area.setScaleX(area.getScaleX()-0.1);
+			  			area.setScaleY(area.getScaleY()-0.1);
 			  		}
 			  		
 			  		
@@ -70,7 +79,20 @@ public class LevelCreator {
 			  	}
 		  };
 		  
+		  
+		  EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+			  	public void handle(MouseEvent event) {
+			  		
+			  		cursor.placeBlock();
+			  	
+			  	}
+		  };
+		  
+		  
+		  
+		  
 		  scene.addEventFilter(KeyEvent.KEY_PRESSED, movementHandler);
+		  scene.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseHandler);
 		
 		
 	}
@@ -94,6 +116,8 @@ class LevelArea {
 	ArrayList<GridTile> area = new ArrayList<GridTile>();
 	Group tileImages = new Group();
 	Group tileSensors = new Group();
+	
+	
 	
 	
 	public LevelArea(int xBlocks, int yBlocks) {
@@ -129,6 +153,12 @@ class LevelArea {
 		
 	}
 	
+	public Optional<GridTile> selectedTile() {
+		
+		return Optional.ofNullable(this.area.stream().filter(tile -> tile.isSelected).collect(Collectors.toList()).get(0));
+		
+	}
+	
 }
 
 
@@ -138,22 +168,24 @@ class GridTile{
    Optional<GameTile> content = Optional.ofNullable(null);
    Boolean isSelected = false;
    
-   Rectangle selectedImage = new Rectangle(50, 50, Color.BLACK);
-   Rectangle idleImage = new Rectangle(50, 50, Color.ORANGERED);
+   Rectangle selectedImage = new Rectangle(50, 50, Color.DIMGREY);
+   Rectangle idleImage = new Rectangle(50, 50, Color.GRAY);
    Rectangle sensor = new Rectangle(50, 50, Color.TRANSPARENT);
    
    public GridTile(GamePos location) {
 	   
 	   this.location = location;
 	   
-	   this.selectedImage.setX(this.location.locationInGame().getKey());
-	   this.selectedImage.setY(this.location.locationInGame().getValue());
+	   this.selectedImage.setX(this.location.locationInImage().getKey());
+	   this.selectedImage.setY(this.location.locationInImage().getValue());
+	   this.selectedImage.setOpacity(0.75);
 	   
-	   this.idleImage.setX(this.location.locationInGame().getKey());
-	   this.idleImage.setY(this.location.locationInGame().getValue());
+	   this.idleImage.setX(this.location.locationInImage().getKey());
+	   this.idleImage.setY(this.location.locationInImage().getValue());
+	   this.idleImage.setOpacity(0.25);
 	   
-	   this.sensor.setX(this.location.locationInGame().getKey());
-	   this.sensor.setY(this.location.locationInGame().getValue());
+	   this.sensor.setX(this.location.locationInImage().getKey());
+	   this.sensor.setY(this.location.locationInImage().getValue());
 
 	   EventHandler<MouseEvent> mouseEnterHandler = new EventHandler<MouseEvent>() {
 		  	public void handle(MouseEvent event) {
@@ -203,5 +235,75 @@ class GridTile{
 	   this.content = Optional.empty();
    }
    
+   
+}
+
+
+class CreatorCursor{
+	
+	  private Image decorativeTileSprite = new Image("file:src/main/resources/Pictures/DecorativeTexture.png");
+	  private ImagePattern decorativeTilePattern = new ImagePattern(decorativeTileSprite, 0,0,1,1,true);
+	  private Image backWallImage = new Image("file:src/main/resources/Pictures/Tiilitekstuuri.jpg");
+	  private ImagePattern backWallPattern = new ImagePattern(backWallImage, 0,0,1,1,true);
+	  private Image floorImage = new Image("file:src/main/resources/Pictures/floorTexture.png");
+	  private ImagePattern floorPattern = new ImagePattern(floorImage, 0,0,1,1,true);
+	  private Image ladderImage = new Image("file:src/main/resources/Pictures/Ladder.png");
+	  private ImagePattern ladderPattern = new ImagePattern(ladderImage, 0,0,1,1,true);
+	  private Image goalImage = new Image("file:src/main/resources/Pictures/FailTexture.png");
+	  private ImagePattern goalPattern = new ImagePattern(goalImage, 0,0,1,1,true);
+	
+	  private tile decTile = new tile(0.0, 0.0, false, false, decorativeTilePattern, 50.0, 50.0);
+	  private tile floorTile = new tile(0.0, 0.0, true, false, floorPattern, 50.0, 50.0);
+	  
+	
+	
+	private Optional<GameTile> heldBlock = Optional.of(decTile); 
+	
+	
+	
+	public void switchBlock(GameTile tile) {
+		
+		this.heldBlock = Optional.of(tile);
+		
+	}
+
+	
+	public void placeBlock() {
+		
+		if(hoverLocation().isPresent() && heldBlock.isPresent()) {
+			
+			heldBlock.get().location = hoverLocation().get().location;
+			hoverLocation().get().addContent(heldBlock.get());
+		}
+		else System.out.println("Could not place block");
+		
+	}
+	
+	
+	public Optional<GridTile> hoverLocation() {
+		
+		return GameWindow.levelCreator.levelArea.selectedTile();
+		
+	}
+	
+	public void rotateRight() {
+		
+		if(this.heldBlock.isPresent()) this.heldBlock.get().rotate(90.0);
+		else System.out.println("No block present for rotation");
+		
+	}
+	
+    public void rotateLeft() {
+		
+		if(this.heldBlock.isPresent()) this.heldBlock.get().rotate(-90.0);
+		else System.out.println("No block present for rotation");
+		
+	}
+	
 	
 }
+	
+	
+	
+	
+	
