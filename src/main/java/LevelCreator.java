@@ -272,8 +272,9 @@ class CreatorCursor{
 		
 		if(hoverLocation().isPresent() && heldBlock.isPresent()) {
 			
-			heldBlock.get().location = hoverLocation().get().location;
-			hoverLocation().get().addContent(heldBlock.get());
+			GameTile copy = heldBlock.get().copy();
+			copy.location = hoverLocation().get().location;
+			hoverLocation().get().addContent(copy);
 		}
 		else System.out.println("Could not place block");
 		

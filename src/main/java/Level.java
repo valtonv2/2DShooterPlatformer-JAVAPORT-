@@ -250,6 +250,7 @@ class Level {
     
     public Rectangle tileImage;
     abstract Rectangle image(); 
+    abstract GameTile copy();
     
     
     public void rotate(Double deg) {
@@ -287,6 +288,12 @@ class Level {
 		  this.tileImage.setX(location.locationInImage().getKey());
 		  this.tileImage.setY(location.locationInImage().getValue());
 		  return this.tileImage;
+		  
+	  }
+	  
+	   protected tile copy() {
+		  
+		  return new tile(this.startX, this.startY, this.hasCoillision, this.isLadder, this.pattern, this.width2, this.height2);
 		  
 	  }
   }
@@ -327,6 +334,12 @@ class Level {
 		  this.tileImage.setX(location.locationInImage().getKey());
 		  this.tileImage.setY(location.locationInImage().getValue());
 		  return this.tileImage;
+		  
+	  }
+    
+    protected TriggerTile copy() {
+		  
+		  return new TriggerTile(this.startX, this.startY, this.hasCoillision, this.isLadder, this.pattern, this.width2, this.height2, this.function);
 		  
 	  }
 }
