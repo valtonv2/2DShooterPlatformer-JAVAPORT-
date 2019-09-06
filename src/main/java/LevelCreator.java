@@ -19,6 +19,7 @@
  * Block placements are saved in text format. One block could look like this ;TYPE:X:Y:COILLISION;
  */
 package main.java;
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,11 +36,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 
 
+
 public class LevelCreator {
+	
+	CreatorCursor cursor = new CreatorCursor();
 	
 	LevelArea levelArea = new LevelArea(20, 20);
 	
-	CreatorCursor cursor = new CreatorCursor();
+	BlockMenu blockMenu = new BlockMenu();
 	
 	//The container for the level creator elements. Is given to GameWindow.
 	public Group window = new Group();
@@ -53,6 +57,8 @@ public class LevelCreator {
 		levelArea.refresh();
 		area.getChildren().add(levelArea.areaImage());
 		window.getChildren().add(area);
+		window.getChildren().add(blockMenu.content);
+		
 		
 		
 		 EventHandler<KeyEvent> movementHandler = new EventHandler<KeyEvent>() {
@@ -100,6 +106,7 @@ public class LevelCreator {
 	public void refresh() {
 		
 		levelArea.refresh();
+		blockMenu.refreshContent();
 		//window.getChildren().clear();
 		//window.getChildren().add(levelArea.areaImage);
 		System.out.println("Refreshing");
@@ -168,7 +175,30 @@ class GridTile{
    Optional<GameTile> content = Optional.ofNullable(null);
    Boolean isSelected = false;
    
-   Rectangle selectedImage = new Rectangle(50, 50, Color.DIMGREY);
+   Group selectedImage() {
+	   
+	   Optional<GameTile> cursorTile = GameWindow.levelCreator.cursor.heldBlock;
+	   Rectangle normal = new Rectangle(50, 50, Color.DIMGRAY);
+	   normal.setOpacity(0.5);
+	   
+	   if(cursorTile.isPresent()) {
+		   
+		   Group group = new Group();
+		   group.getChildren().add(cursorTile.get().tileImage);
+		   group.getChildren().add(normal);
+		   group.setLayoutX(this.location.locationInImage().getKey());
+		   group.setLayoutY(this.location.locationInImage().getValue());
+
+		   return group;
+	   }else { 
+		   Group group = new Group();
+		   group.getChildren().add(normal);
+		   group.setLayoutX(this.location.locationInImage().getKey());
+		   group.setLayoutY(this.location.locationInImage().getValue());
+		   return group; 
+	   }
+	   
+   } 
    Rectangle idleImage = new Rectangle(50, 50, Color.GRAY);
    Rectangle sensor = new Rectangle(50, 50, Color.TRANSPARENT);
    
@@ -176,9 +206,6 @@ class GridTile{
 	   
 	   this.location = location;
 	   
-	   this.selectedImage.setX(this.location.locationInImage().getKey());
-	   this.selectedImage.setY(this.location.locationInImage().getValue());
-	   this.selectedImage.setOpacity(0.75);
 	   
 	   this.idleImage.setX(this.location.locationInImage().getKey());
 	   this.idleImage.setY(this.location.locationInImage().getValue());
@@ -210,7 +237,7 @@ class GridTile{
 		   Group group = new Group();
 		   group.getChildren().add(content.get().image());
 		   
-		   if(this.isSelected) group.getChildren().add(selectedImage);   
+		   if(this.isSelected) group.getChildren().add(selectedImage());   
 		   else group.getChildren().add(idleImage);
 		   
 		   return group;
@@ -218,7 +245,7 @@ class GridTile{
 	   }else {
 		   Group group = new Group();
 		  
-		   if(this.isSelected) group.getChildren().add(selectedImage);   
+		   if(this.isSelected) group.getChildren().add(selectedImage());   
 		   else group.getChildren().add(idleImage);
 		   
 		   return group;
@@ -257,7 +284,7 @@ class CreatorCursor{
 	  
 	
 	
-	private Optional<GameTile> heldBlock = Optional.of(decTile); 
+	public Optional<GameTile> heldBlock = Optional.of(decTile); 
 	
 	
 	
@@ -305,6 +332,51 @@ class CreatorCursor{
 }
 	
 	
+class BlockMenu extends MovableMenu {
 	
+	private AnimatedButton decorativeTileButton = new AnimatedButton(
+	         this,
+	    	 "", //Button text
+	    	  new Pair<Double, Double>(0.0, 0.0), //Offset from center
+	    	  new Pair<Double, Double>(50.0, 50.0),  //Dimensions
+	    	  "file:src/main/resources/Pictures/DecorativeTexture.png", //Normal image path
+	    	  "file:src/main/resources/Pictures/DecorativeTexture.png", //Hover image path
+	    	  "file:src/main/resources/Pictures/DecorativeTexture.png",//Pressed image path
+	    	  Optional.empty(), //Announcement
+	    	  new Runnable(){    //Action
+	    	      
+		    	  @Override
+		    	  public void run() {
+		    	  
+		    		  System.out.println("Click");
+	    	   
+	    		  
+		    	  }
+	    		  
+	    	    	   });
+	
+	public BlockMenu() {
+		
+		backGround.setFill(Color.DARKSLATEGREY);
+		content.getChildren().add(backGround);
+		buttons.add(decorativeTileButton);
+		content.addEventFilter(MouseEvent.MOUSE_DRAGGED, dragHandler);
+		
+	}
+
+	@Override
+	public void refresh() {
+		
+		
+	}
+	
+
+	
+	
+	
+	
+	
+	
+}
 	
 	

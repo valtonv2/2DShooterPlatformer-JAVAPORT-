@@ -42,11 +42,11 @@ public GameMenu currentMenu = mainMenu;  //Tämän perusteella GUI osaa kutsua o
   
   public Boolean fullScreenStatus() { return GameWindow.stage.isFullScreen();}
   public void menuStatus() {System.out.println(this.mainMenu.name);}
-  
+}
 
   
 
- public class MainMenu extends GameMenu {
+ class MainMenu extends GameMenu {
 	    
 	    private Text header = new Text(0,0,"");
 	    private Text annotationText = new Text(0,0,"");
@@ -1550,7 +1550,7 @@ abstract class GameMenu{
   
   public String name;
   Scene scene;
-  protected Group content;
+  protected Group content = new Group();
   public abstract void refresh();
   public Optional<AudioClip> theme = Optional.empty();
   
@@ -1558,7 +1558,7 @@ abstract class GameMenu{
   
 }
 
-private abstract class GameButton{
+abstract class GameButton{
   GameMenu menu;
   public abstract void refreshLocation();
   public abstract Group fullImage();
@@ -1569,4 +1569,38 @@ private abstract class GameButton{
 
 }
 
+abstract class MovableMenu extends GameMenu{
+	
+	Double xDim = 150.0;
+	Double yDim = 300.0;
+	
+	Double x = 0.0;
+	Double y = 0.0;
+	
+	
+	
+	Rectangle backGround = new Rectangle(x, y, xDim, yDim);
+	
+	ArrayList<GameButton> buttons = new ArrayList<GameButton>();
+	
+	EventHandler<MouseEvent> dragHandler = new EventHandler<MouseEvent>() {
+	  	public void handle(MouseEvent event) {
+	  		content.setLayoutX(event.getSceneX());
+	  		content.setLayoutY(event.getSceneY());
+	  	}
+  };
+	
+	public void refreshContent() {
+		
+		backGround.setWidth(xDim);
+		backGround.setHeight(yDim);
+		backGround.setX(x);
+		backGround.setY(y);
+		
+		buttons.stream().forEach(button -> button.refreshLocation());
+		
+	}
+	
 }
+
+
