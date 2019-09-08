@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
+import javafx.scene.text.Text;
 
 
 
@@ -183,8 +184,12 @@ class GridTile{
 	   
 	   if(cursorTile.isPresent()) {
 		   
+		   Rectangle cursorTileImage = cursorTile.get().tileImage;
+		   cursorTileImage.setX(0.0);
+		   cursorTileImage.setY(0.0);
+		   
 		   Group group = new Group();
-		   group.getChildren().add(cursorTile.get().tileImage);
+		   group.getChildren().add(cursorTileImage);
 		   group.getChildren().add(normal);
 		   group.setLayoutX(this.location.locationInImage().getKey());
 		   group.setLayoutY(this.location.locationInImage().getValue());
@@ -379,4 +384,87 @@ class BlockMenu extends MovableMenu {
 	
 }
 	
+//Uusi parempi nappiluokka joka ei ole riippuvainen menusta
+
+	class MultiPurposeButton{
+		
+		Pair<Double, Double> location = new Pair<Double, Double>(0.0,0.0);
+		
+		Pair<Double, Double> dimensions = new Pair<Double, Double>(25.0,25.0);
+		
+		Runnable action;
+		
+		Boolean isLocked = false;
+		
+		Boolean staysDown = false;
+		
+		Rectangle hitBox = new Rectangle(dimensions.getKey(), dimensions.getValue());
+		Rectangle idleImage = new Rectangle(dimensions.getKey(), dimensions.getValue());
+		Rectangle hoverImage = new Rectangle(dimensions.getKey(), dimensions.getValue());
+		Rectangle pressedImage = new Rectangle(dimensions.getKey(), dimensions.getValue());
+		Text text = new Text("X");
+		
+		//Simple constructor
+		public MultiPurposeButton(String textForButton, Double locationX, Double locationY, Runnable action) {
+			
+			this.text = new Text(textForButton);
+			this.location = new Pair<Double, Double>(locationX, locationY);
+			
+			this.idleImage.setFill(new ImagePattern( new javafx.scene.image.Image("file:src/main/resources/Pictures/GrayRectButtonNormal.png"), 1.0,1.0,1.0,1.0,true));
+			this.hoverImage.setFill(new ImagePattern( new javafx.scene.image.Image("file:src/main/resources/Pictures/GrayRectButtonHover.png"), 1.0,1.0,1.0,1.0,true));
+			this.pressedImage.setFill(new ImagePattern( new javafx.scene.image.Image("file:src/main/resources/Pictures/GrayRectButtonPressed.png"), 1.0,1.0,1.0,1.0,true));
+			
+			this.action = action;
+			
+			 EventHandler<MouseEvent> mouseClickHandler = new EventHandler<MouseEvent>() {
+				  	public void handle(MouseEvent event) {
+				  		
+				  		try{
+				  		
+				  		   if(!lockStatus()){
+				  			   
+				  		    action.run();
+			
+				  		   }
+				  		   
+				  		 }catch(Exception e){
+				  		     GameWindow.exceptionScreen(e);
+				  		   }
+				  	}
+			  };
+			  
+			  hitBox.setOnMousePressed(mouseClickHandler);
+		}
+		
+		
+		
+		Group image() {
+				
+			Group container = new Group();
+			
+			container.getChildren().add(idleImage);
+			container.getChildren().add(text);
+			container.getChildren().add(hitBox);
+			
+			container.setLayoutX(location.getKey());
+			container.setLayoutY(location.getValue());
+			
+			return container;
+				
+		}
+		
+		void changeLocation(Pair<Double, Double> location) {
+			
+			this.location = location;
+			
+		}
+		
 	
+	void lock(){this.isLocked = true;}
+	
+	void unlock(){this.isLocked = false;}
+	
+	Boolean lockStatus() {return this.isLocked;}
+		
+		
+	}

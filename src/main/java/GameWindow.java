@@ -137,7 +137,7 @@ public void start(Stage primaryStage) {
     
     try{
     
-    levelCreator.refresh();
+   levelCreator.refresh();
     	
     Menus.currentMenu.scene.setCursor(Cursor.DEFAULT);
     Menus.currentMenu.refresh();
